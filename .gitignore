@@ -1,47 +1,104 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
+# Editor temporary/working/backup files #
+#########################################
+.#*
+[#]*#
+*~
+*$
+*.bak
+*.diff
+.idea/
+.cache/
+*.iml
+*.ipr
+*.iws
+*.org
+.project
+pmip
+*.rej
+.settings/
+.*.sw[nop]
+.sw[nop]
+*.tmp
+*.vim
+tags
+cscope.out
+# gnu global
+GPATH
+GRTAGS
+GSYMS
+GTAGS
 
-# Folder config file
-Desktop.ini
+# Compiled source #
+###################
+*.a
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.py[ocd]
+*.so
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.bz2
+*.bzip2
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.tbz2
+*.tgz
+*.zip
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
+# Python files #
+################
+# setup.py working directory
+build
+# sphinx build directory
+_build
+# setup.py dist directory
+dist
+doc/build
+doc/cdoc/build
+# Egg metadata
+*.egg-info
+# The shelf plugin uses this dir
+./.shelf
+MANIFEST
 
-# Windows shortcuts
-*.lnk
+# Paver generated files #
+#########################
+/release
 
-# =========================
-# Operating System Files
-# =========================
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
 
-# OSX
-# =========================
+# Patches #
+###########
+*.patch
+*.diff
 
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
+# OS generated files #
+######################
+.DS_Store*
 .VolumeIcon.icns
+.fseventsd
+Icon?
+.gdb_history
+ehthumbs.db
+Thumbs.db
 
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
+# Things specific to this project #
+###################################
+
+# IPython Notebook Checkpoints
+.ipynb_checkpoints/
