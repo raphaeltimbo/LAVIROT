@@ -107,7 +107,7 @@ class BeamElement(object):
 
         #  ========== Mass Matrix ==========
 
-    def M0e(self):
+    def M(self):
         phi = self.phi
         L = self.L
 
@@ -118,7 +118,7 @@ class BeamElement(object):
         m05 = (8 + 14*phi + 7*phi**2)*L**2
         m06 = -(6 + 14*phi + 7*phi**2)*L**2
 
-        M0e = np.array([[m01,     0,     0,   m02,   m03,     0,     0,   m04],
+        M = np.array([[m01,     0,     0,   m02,   m03,     0,     0,   m04],
                         [  0,   m01,  -m02,     0,     0,   m03,  -m04,     0],
                         [  0,  -m02,   m05,     0,     0,   m04,   m06,     0],
                         [m02,     0,     0,   m05,  -m04,     0,     0,   m06],
@@ -127,7 +127,7 @@ class BeamElement(object):
                         [  0,  -m04,   m06,     0,     0,   m02,   m05,     0],
                         [m04,     0,     0,   m06,  -m02,     0,     0,   m05]])
 
-        M0e = self.rho * self.A * self.L * M0e/(840*(1 + phi)**2)
+        M = self.rho * self.A * self.L * M/(840*(1 + phi)**2)
 
         if self.rotary_inertia:
             ms1 = 36;
@@ -144,17 +144,17 @@ class BeamElement(object):
                            [ ms2,     0,     0,   ms4,  -ms2,     0,     0,   ms3]])
 
             Ms = self.rho * self.Ie * Ms/(30*L*(1 + phi)**2)
-            M0e = M0e + Ms
+            M = M + Ms
 
-        return M0e
+        return M
 
     #  ========== Stiffness Matrix ==========
 
-    def K0e(self):
+    def K(self):
         phi = self.phi
         L = self.L
 
-        K0e = np.array([[12,     0,            0,          6*L,  -12,     0,            0,          6*L],
+        K = np.array([[12,     0,            0,          6*L,  -12,     0,            0,          6*L],
                         [0,     12,         -6*L,            0,    0,   -12,         -6*L,            0],
                         [0,   -6*L, (4+phi)*L**2,            0,    0,   6*L, (2-phi)*L**2,            0],
                         [6*L,    0,            0, (4+phi)*L**2, -6*L,     0,            0, (2-phi)*L**2],
@@ -163,15 +163,15 @@ class BeamElement(object):
                         [0,   -6*L, (2-phi)*L**2,            0,    0,   6*L, (4+phi)*L**2,            0],
                         [6*L,    0,            0, (2-phi)*L**2, -6*L,     0,            0, (4+phi)*L**2]])
 
-        K0e = self.E * self.Ie * K0e/((1 + phi)*L**3)
+        K = self.E * self.Ie * K/((1 + phi)*L**3)
 
-        return K0e
+        return K
 
-    def G0e(self):
+    def G(self):
         phi = self.phi
         L = self.L
 
-        G0e = np.zeros((8, 8))
+        G = np.zeros((8, 8))
 
         if self.gyroscopic:
             g1 = 36
@@ -179,7 +179,7 @@ class BeamElement(object):
             g3 = (4 + 5 * phi + 10 * phi**2) * L**2
             g4 = (-1 - 5 * phi + 5 * phi**2) * L**2
 
-            G0e = np.array([[  0,  g1,  g2,   0,   0,  g1,  g2,   0],
+            G = np.array([[  0,  g1,  g2,   0,   0,  g1,  g2,   0],
                             [ g1,   0,   0,  g2, -g1,   0,   0,  g2],
                             [-g2,   0,   0, -g3,  g2,   0,   0, -g4],
                             [  0, -g2,  g3,   0,   0,  g2,  g4,   0],
@@ -188,9 +188,9 @@ class BeamElement(object):
                             [-g2,   0,   0, -g4,  g2,   0,   0, -g3],
                             [  0, -g2,  g4,   0,   0,  g2,  g3,   0]])
 
-            G0e = - self.rho * self.Ie * G0e / (15 * L * (1 + phi)**2)
+            G = - self.rho * self.Ie * G / (15 * L * (1 + phi)**2)
 
-        return G0e
+        return G
 
         #  TODO Stiffness Matrix due to an axial load
         #  TODO Stiffness Matrix due to an axial torque
@@ -232,23 +232,66 @@ class DiskElement(object):
         self.Id = 0.015625 * rho * np.pi * width*(o_d**4 - i_d**4) + self.m*(width**2)/12
         self.Ip = 0.03125 * rho * np.pi * width * (o_d**4 - i_d**4)
 
-    def M0(self):
+    def M(self):
         m = self.m
         Id = self.Id
 
-        M0 = np.array([[m, 0,  0,  0],
+        M = np.array([[m, 0,  0,  0],
                        [0, m,  0,  0],
                        [0, 0, Id,  0],
                        [0, 0,  0, Id]])
 
-        return M0
+        return M
 
-    def G0(self):
+    def G(self):
         Ip = self.Ip
 
-        G0 = np.array([[0, 0,   0,  0],
+        G = np.array([[0, 0,   0,  0],
                        [0, 0,   0,  0],
                        [0, 0,   0, Ip],
                        [0, 0, -Ip,  0]])
 
-        return G0
+        return G
+
+
+class Bearing(object):
+    """A bearing element.
+
+    This class will create a bearing element.
+
+    Parameters
+    ----------
+    kxx: float
+        Direct stiffness in the x direction
+    kyy: float
+        Direct stiffness in the y direction
+    cxx: float
+        Direct stiffness in the x direction
+    cyy: float
+        Direct stiffness in the y direction
+
+    Returns
+    ----------
+    A bearing element.
+
+    Examples:
+
+    """
+
+    def __init__(self, kxx, kyy, cxx, cyy):
+        self.kxx = kxx
+        self.kyy = kyy
+        self.cxx = cxx
+        self.cyy = cyy
+
+    def K(self):
+        K = np.array([[kxx,   0],
+                      [  0, kyy]])
+
+        return K
+
+    def C(self):
+        C = np.array([[cxx,   0],
+                      [  0, cyy]])
+
+        return C
