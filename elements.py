@@ -50,7 +50,18 @@ class BeamElement(object):
     A beam element.
 
     Examples:
-
+    >>> n_ = 1
+    >>> x1_ = 0
+    >>> le_ = 0.25
+    >>> i_d_ = 0
+    >>> o_d_ = 0.05
+    >>> E_ = 211e9
+    >>> G_ = 81.2e9
+    >>> rho_ = 7810
+    >>> Euler_Bernoulli_Element = BeamElement(n_, x1_, le_, i_d_, o_d_, E_, G_, rho_)
+    >>> Iimoshenko_Element = BeamElement(n_, x1_, le_, i_d_, o_d_, E_, G_, rho_,
+    ...                          rotary_inertia=True,
+    ...                          shear_effects=True)
     """
 
     def __init__(self, n, x1, L, i_d, o_d, E, G, rho,
@@ -185,6 +196,7 @@ class BeamElement(object):
         #  TODO Stiffness Matrix due to an axial torque
         #  TODO Skew-symmetric speed dependent contribution to element stiffness matrix from the internal damping.
 
+
 class DiskElement(object):
     """A disk element.
 
@@ -193,17 +205,50 @@ class DiskElement(object):
     Parameters
     ----------
     n: int
-
+        Node in which the disk will be inserted
+    rho: float
+        Mass density
+    width: float
+        The disk width
+    i_d: float
+        Inner diameter
+    o_d: float
+        Outer diameter
 
     Returns
     ----------
-    A beam element.
+    A disk element.
 
     Examples:
 
     """
 
-    def __init__(self, n, x1, L, i_d, o_):
-        pass
+    def __init__(self, rho, width, i_d, o_d):
+        self.rho = rho
+        self.width = width
+        self.i_d = i_d
+        self.o_d = o_d
+        self.m = 0.25 * rho * np.pi * width * (o_d**2 - i_d**2)
+        self.Id = 0.015625 * rho * np.pi * width*(o_d**4 - i_d**4) + self.m*(width**2)/12
+        self.Ip = 0.03125 * rho * np.pi * width * (o_d**4 - i_d**4)
 
-        #  TODO Add disk element
+    def M0(self):
+        m = self.m
+        Id = self.Id
+
+        M0 = np.array([[m, 0,  0,  0],
+                       [0, m,  0,  0],
+                       [0, 0, Id,  0],
+                       [0, 0,  0, Id]])
+
+        return M0
+
+    def G0(self):
+        Ip = self.Ip
+
+        G0 = np.array([[0, 0,   0,  0],
+                       [0, 0,   0,  0],
+                       [0, 0,   0, Ip],
+                       [0, 0, -Ip,  0]])
+
+        return G0
