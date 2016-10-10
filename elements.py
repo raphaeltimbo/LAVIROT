@@ -18,7 +18,7 @@ class BeamElement(object):
         Element number
     x1: float
         Position of the element first node
-    le: float
+    L: float
         Element length
     i_d: float3
         Inner diameter of the element
@@ -53,7 +53,7 @@ class BeamElement(object):
 
     """
 
-    def __init__(self, n, x1, le, i_d, o_d, E, G, rho,
+    def __init__(self, n, x1, L, i_d, o_d, E, G, rho,
                  axial_force=0, torque=0,
                  shear_effects=False,
                  rotary_inertia=False,
@@ -61,7 +61,7 @@ class BeamElement(object):
 
         self.n = n
         self.x1 = x1
-        self.le = le
+        self.L = L
         self.i_d = i_d
         self.o_d = o_d
         self.E = E
@@ -72,7 +72,7 @@ class BeamElement(object):
         #  Ie is the second moment of area of the cross section about
         #  the neutral plane Ie = pi*r**2/4
         self.Ie = np.pi*(o_d**4 - i_d**4)/64
-        self.phi = 0
+        phi = 0
 
         if shear_effects:
             #  Shear coefficient (phi)
@@ -86,16 +86,18 @@ class BeamElement(object):
             kappa = 6*r12*((1+self.poisson)/
                        ((r12*(7 + 6*self.poisson) +
                          r2*(20 + 12*self.poisson))))
-            print(kappa)
-            self.phi = 12*E*self.Ie/(G*kappa*self.A*self.le**2)
+            phi = 12*E*self.Ie/(G*kappa*self.A*L**2)
 
-        #  Mass Matrix
-        m01 = 312 + 588*self.phi + 280*self.phi**2
-        m02 = (44 + 77*self.phi + 35*self.phi**2)*self.le
-        m03 = 108 + 252*self.phi + 140*self.phi**2
-        m04 = -(26 + 63*self.phi + 35*self.phi**2)*self.le
-        m05 = (8 + 14*self.phi + 7*self.phi**2)*self.le**2
-        m06 = -(6 + 14*self.phi + 7*self.phi**2)*self.le**2
+        self.phi = phi
+
+        #  ========== Mass Matrix ==========
+
+        m01 = 312 + 588*phi + 280*phi**2
+        m02 = (44 + 77*phi + 35*phi**2)*L
+        m03 = 108 + 252*phi + 140*phi**2
+        m04 = -(26 + 63*phi + 35*phi**2)*L
+        m05 = (8 + 14*phi + 7*phi**2)*L**2
+        m06 = -(6 + 14*phi + 7*phi**2)*L**2
 
         M0e = np.array([[m01,     0,     0,   m02,   m03,     0,     0,   m04],
                         [  0,   m01,  -m02,     0,     0,   m03,  -m04,     0],
@@ -106,13 +108,13 @@ class BeamElement(object):
                         [  0,  -m04,   m06,     0,     0,   m02,   m05,     0],
                         [m04,     0,     0,   m06,  -m02,     0,     0,   m05]])
 
-        self.M0e = self.rho * self.A * self.le * M0e/(840*(1 + self.phi)**2)
+        self.M0e = self.rho * self.A * L * M0e/(840*(1 + phi)**2)
 
         if rotary_inertia:
             ms1 = 36;
-            ms2 = (3 - 15*self.phi)*self.le
-            ms3 = (4 + 5*self.phi + 10*self.phi**2)*self.le**2
-            ms4 = (-1 - 5*self.phi + 5*self.phi**2)*self.le**2
+            ms2 = (3 - 15*phi)*L
+            ms3 = (4 + 5*phi + 10*phi**2)*L**2
+            ms4 = (-1 - 5*phi + 5*phi**2)*L**2
             Ms = np.array([[ms1,      0,     0,   ms2,  -ms1,     0,     0,   ms2],
                            [   0,   ms1,  -ms2,     0,     0,  -ms1,  -ms2,     0],
                            [   0,  -ms2,   ms3,     0,     0,   ms2,   ms4,     0],
@@ -122,11 +124,21 @@ class BeamElement(object):
                            [   0,  -ms2,   ms4,     0,     0,   ms2,   ms3,     0],
                            [ ms2,     0,     0,   ms4,  -ms2,     0,     0,   ms3]])
 
-            Ms = self.rho*self.Ie*Ms/(30*self.le*(1 + self.phi)**2)
+            Ms = self.rho * self.Ie * Ms/(30*L*(1 + phi)**2)
             self.M0e = self.M0e + Ms
 
-        #  Stifness matrix
+        #  ========== Stiffness Matrix ==========
 
+        K0e = np.array([[12,     0,            0,          6*L,  -12,     0,            0,          6*L],
+                        [0,     12,         -6*L,            0,    0,   -12,         -6*L,            0],
+                        [0,   -6*L, (4+phi)*L**2,            0,    0,   6*L, (2-phi)*L**2,            0],
+                        [6*L,    0,            0, (4+phi)*L**2, -6*L,     0,            0, (2-phi)*L**2],
+                        [-12,    0,            0,         -6*L,   12,     0,            0,         -6*L],
+                        [0,    -12,          6*L,            0,    0,    12,          6*L,            0],
+                        [0,   -6*L, (2-phi)*L**2,            0,    0,   6*L, (4+phi)*L**2,            0],
+                        [6*L,    0,            0, (2-phi)*L**2, -6*L,     0,            0, (4+phi)*L**2]])
+
+        self.K0e = E * self.Ie * K0e/((1 + phi)*L**3)
 
 
         #  TODO Montar matriz de rigidez
