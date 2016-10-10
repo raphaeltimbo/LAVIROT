@@ -141,4 +141,7 @@ class BeamElement(object):
         self.K0e = E * self.Ie * K0e/((1 + phi)*L**3)
 
 
-        #  TODO Montar matriz de rigidez
+        #  TODO Gyroscopic Matrix
+        #  TODO Stiffness Matrix due to an axial load
+        #  TODO Stiffness Matrix due to an axial torque
+        #  TODO Skew-symmetric speed dependent contribution to element stiffness matrix from the internal damping.
