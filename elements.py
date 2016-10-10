@@ -140,8 +140,23 @@ class BeamElement(object):
 
         self.K0e = E * self.Ie * K0e/((1 + phi)*L**3)
 
+        if gyroscopic:
+            g1 = 36
+            g2 = (3 - 15 * phi) * L
+            g3 = (4 + 5 * phi + 10 * phi**2) * L**2
+            g4 = (-1 - 5 * phi + 5 * phi**2) * L**2
 
-        #  TODO Gyroscopic Matrix
+            G0e = np.array([[  0,  g1,  g2,   0,   0,  g1,  g2,   0],
+                            [ g1,   0,   0,  g2, -g1,   0,   0,  g2],
+                            [-g2,   0,   0, -g3,  g2,   0,   0, -g4],
+                            [  0, -g2,  g3,   0,   0,  g2,  g4,   0],
+                            [  0,  g1, -g2,   0,   0, -g1, -g2,   0],
+                            [-g1,   0,   0, -g2,  g1,   0,   0, -g2],
+                            [-g2,   0,   0, -g4,  g2,   0,   0, -g3],
+                            [  0, -g2,  g4,   0,   0,  g2,  g3,   0]])
+
+            self.G0e = - rho * self.Ie * G0e / (15 * L * (1 + phi)**2)
+
         #  TODO Stiffness Matrix due to an axial load
         #  TODO Stiffness Matrix due to an axial torque
         #  TODO Skew-symmetric speed dependent contribution to element stiffness matrix from the internal damping.
