@@ -36,8 +36,8 @@ def test_euler_bernoulli_beam_element():
     assert_almost_equal(eb.poisson, 0.29926108)
     assert_almost_equal(eb.A, 0.00196349)
     assert_almost_equal(eb.Ie*1e7, 3.06796157)
-    assert_array_almost_equal(eb.M0e, M0e_eb, decimal=5)
-    assert_array_almost_equal(eb.K0e/1e7, K0e_eb, decimal=5)
+    assert_array_almost_equal(eb.M0e(), M0e_eb, decimal=5)
+    assert_array_almost_equal(eb.K0e()/1e7, K0e_eb, decimal=5)
 
 def test_timoshenko_beam_element():
     M0e_tim = np.array([[ 1.42051,  0.     ,  0.     ,  0.04932,  0.49635,  0.     ,  0.     , -0.03055],
@@ -76,9 +76,9 @@ def test_timoshenko_beam_element():
     assert_almost_equal(tim.poisson, 0.29926108)
     assert_almost_equal(tim.A, 0.00196349)
     assert_almost_equal(tim.Ie*1e7, 3.06796157)
-    assert_array_almost_equal(tim.M0e, M0e_tim, decimal=5)
-    assert_array_almost_equal(tim.K0e / 1e7, K0e_tim, decimal=5)
-    assert_array_almost_equal(tim.G0e * 1e3, G0e_tim, decimal=5)
+    assert_array_almost_equal(tim.M0e(), M0e_tim, decimal=5)
+    assert_array_almost_equal(tim.K0e() / 1e7, K0e_tim, decimal=5)
+    assert_array_almost_equal(tim.G0e() * 1e3, G0e_tim, decimal=5)
 
 
 
