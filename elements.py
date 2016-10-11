@@ -15,7 +15,7 @@ class BeamElement(object):
     Parameters
     ----------
     n: int
-        Element number
+        Element number (coincident with it's first node)
     x1: float
         Position of the element first node
     L: float
@@ -223,7 +223,8 @@ class DiskElement(object):
 
     """
 
-    def __init__(self, rho, width, i_d, o_d):
+    def __init__(self, n, rho, width, i_d, o_d):
+        self.n = n
         self.rho = rho
         self.width = width
         self.i_d = i_d

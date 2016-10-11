@@ -1,4 +1,5 @@
 from LAVIROT.elements import *
+from LAVIROT.rotor import *
 from numpy.testing import (assert_array_almost_equal,
                            assert_almost_equal)
 
@@ -91,8 +92,37 @@ def test_disk_element():
                     [ 0.     ,  0.     ,  0.     ,  0.32956],
                     [ 0.     ,  0.     , -0.32956,  0.     ]])
 
-    disk = DiskElement(rho_, 0.07, 0.05, 0.28)
+    disk = DiskElement(0, rho_, 0.07, 0.05, 0.28)
     assert_almost_equal(disk.M(), Md1, decimal=5)
     assert_almost_equal(disk.G(), Gd1, decimal=5)
 
 #  TODO Add test for rotor mass matrix
+def test_rotor():
+    Mr1 = np.array([[ 1.421,  0.   ,  0.   ,  0.049,  0.496,  0.   ,  0.   , -0.031,  0.   ,  0.   ,  0.   ,  0.   ],
+                    [ 0.   ,  1.421, -0.049,  0.   ,  0.   ,  0.496,  0.031,  0.   ,  0.   ,  0.   ,  0.   ,  0.   ],
+                    [ 0.   , -0.049,  0.002,  0.   ,  0.   , -0.031, -0.002,  0.   ,  0.   ,  0.   ,  0.   ,  0.   ],
+                    [ 0.049,  0.   ,  0.   ,  0.002,  0.031,  0.   ,  0.   , -0.002,  0.   ,  0.   ,  0.   ,  0.   ],
+                    [ 0.496,  0.   ,  0.   ,  0.031,  2.841,  0.   ,  0.   ,  0.   ,  0.496,  0.   ,  0.   , -0.031],
+                    [ 0.   ,  0.496, -0.031,  0.   ,  0.   ,  2.841,  0.   ,  0.   ,  0.   ,  0.496,  0.031,  0.   ],
+                    [ 0.   ,  0.031, -0.002,  0.   ,  0.   ,  0.   ,  0.005,  0.   ,  0.   , -0.031, -0.002,  0.   ],
+                    [-0.031,  0.   ,  0.   , -0.002,  0.   ,  0.   ,  0.   ,  0.005,  0.031,  0.   ,  0.   , -0.002],
+                    [ 0.   ,  0.   ,  0.   ,  0.   ,  0.496,  0.   ,  0.   ,  0.031,  1.421,  0.   ,  0.   , -0.049],
+                    [ 0.   ,  0.   ,  0.   ,  0.   ,  0.   ,  0.496, -0.031,  0.   ,  0.   ,  1.421,  0.049,  0.   ],
+                    [ 0.   ,  0.   ,  0.   ,  0.   ,  0.   ,  0.031, -0.002,  0.   ,  0.   ,  0.049,  0.002,  0.   ],
+                    [ 0.   ,  0.   ,  0.   ,  0.   , -0.031,  0.   ,  0.   , -0.002, -0.049,  0.   ,  0.   ,  0.002]])
+
+    tim0 = BeamElement(0, x1_, le_, i_d_, o_d_, E_, G_, rho_,
+                       shear_effects=True,
+                       rotary_inertia=True,
+                       gyroscopic=True)
+    tim1 = BeamElement(1, x1_, le_, i_d_, o_d_, E_, G_, rho_,
+                       shear_effects=True,
+                       rotary_inertia=True,
+                       gyroscopic=True)
+
+    shaft_elm = [tim0, tim1]
+    rotor1 = Rotor(shaft_elm, [], [])
+    assert_almost_equal(rotor1.M, Mr1, decimal=3)
+
+#  TODO add test for rotor with disks and bearings
+
