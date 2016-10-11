@@ -27,20 +27,31 @@ class Rotor(object):
         self.shaft_elements = shaft_elements
         self.bearing_elements = bearing_elements
         self.disk_elements = disk_elements
-        #  number of elements
-        self.n = len(shaft_elements)
+        #  number of dofs
+        self.ndof = 4 * len(shaft_elements) + 4
 
         #  ========== Assembly the rotor matrices ==========
 
         #  Create the matrices
-        M0 = np.zeros((self.n, self.n))
-        C0 = np.zeros((self.n, self.n))
-        G0 = np.zeros((self.n, self.n))
-        K0 = np.zeros((self.n, self.n))
+        M0 = np.zeros((self.ndof, self.ndof))
+        C0 = np.zeros((self.ndof, self.ndof))
+        G0 = np.zeros((self.ndof, self.ndof))
+        K0 = np.zeros((self.ndof, self.ndof))
 
         #  Skew-symmetric speed dependent contribution to element stiffness matrix
         #  from the internal damping.
-        K1 = np.zeros((self.n, self.n))
+        K1 = np.zeros((self.ndof, self.ndof))
+
+        #  Shaft elements
+        for elm in shaft_elements:
+            node = elm.n
+            n1 = 4 * node
+            n2 = 4 * node + 8
+
+            M0[n1:n2, n1:n2] += elm.M()
+
+        self.M = M0
+
 
 
 

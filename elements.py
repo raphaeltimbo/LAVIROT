@@ -26,7 +26,7 @@ class BeamElement(object):
         Outer diameter of the element
     E: float
         Young's modulus
-    G: float
+    G_s: float
         Shear modulus
     rho: float
         Density
@@ -64,7 +64,7 @@ class BeamElement(object):
     ...                          shear_effects=True)
     """
 
-    def __init__(self, n, x1, L, i_d, o_d, E, G, rho,
+    def __init__(self, n, x1, L, i_d, o_d, E, G_s, rho,
                  axial_force=0, torque=0,
                  shear_effects=False,
                  rotary_inertia=False,
@@ -80,8 +80,8 @@ class BeamElement(object):
         self.i_d = i_d
         self.o_d = o_d
         self.E = E
-        self.G = G
-        self.poisson = 0.5*(E/G) - 1
+        self.G_s = G_s
+        self.poisson = 0.5*(E/G_s) - 1
         self.rho = rho
         self.A = np.pi*(o_d**2 - i_d**2)/4
         #  Ie is the second moment of area of the cross section about
@@ -101,7 +101,7 @@ class BeamElement(object):
             kappa = 6*r12*((1+self.poisson)/
                        ((r12*(7 + 6*self.poisson) +
                          r2*(20 + 12*self.poisson))))
-            phi = 12*E*self.Ie/(G*kappa*self.A*L**2)
+            phi = 12*E*self.Ie/(G_s*kappa*self.A*L**2)
 
         self.phi = phi
 
