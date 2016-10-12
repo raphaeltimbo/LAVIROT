@@ -194,7 +194,8 @@ class BeamElement(object):
 
         #  TODO Stiffness Matrix due to an axial load
         #  TODO Stiffness Matrix due to an axial torque
-        #  TODO Skew-symmetric speed dependent contribution to element stiffness matrix from the internal damping.
+        #  TODO add speed as an argument so that skew-symmetric stiffness matrix can be evaluated (default to None)
+        #  TODO Skew-symmetric speed dependent contribution to element stiffness matrix from the internal damping
 
 
 class DiskElement(object):
@@ -278,20 +279,30 @@ class Bearing(object):
     Examples:
 
     """
-
-    def __init__(self, kxx, kyy, cxx, cyy):
+    #  TODO implement for more complex cases (kxy, kthetatheta etc.)
+    #  TODO consider kxx, kxy, kyx, kyy, cxx, cxy, cyx, cyy, mxx, myy, myx, myy (to import from XLTRC)
+    #  TODO add speed as an argument
+    #  TODO arguments should be lists related to speed
+    #  TODO evaluate the use of pandas tables to display
+    def __init__(self, n, kxx, kyy, cxx, cyy):
+        self.n = n
         self.kxx = kxx
         self.kyy = kyy
         self.cxx = cxx
         self.cyy = cyy
 
     def K(self):
+        kxx = self.kxx
+        kyy = self.kyy
+
         K = np.array([[kxx,   0],
                       [  0, kyy]])
 
         return K
 
     def C(self):
+        cxx = self.cxx
+        cyy = self.cyy
         C = np.array([[cxx,   0],
                       [  0, cyy]])
 

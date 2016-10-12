@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.linalg as la
 
 class Rotor(object):
     """A rotor object.
@@ -64,7 +65,57 @@ class Rotor(object):
             M0[n1:n2, n1:n2] += elm.M()
             G0[n1:n2, n1:n2] += elm.G()
 
+        for elm in bearing_elements:
+            node = elm.n
+            n1 = 4 * node
+            n2 = n1 + 2 # Simple bearing
+
+            C0[n1:n2, n1:n2] += elm.C()
+            K0[n1:n2, n1:n2] += elm.K()
+            #  TODO implement this for bearing with mode dofs
+
+        # creates the state space matrix
+        Z = np.zeros((self.ndof, self.ndof))
+        I = np.eye(self.ndof)
+        Minv = la.pinv(M0)
+
+        A = np.vstack([np.hstack([Z, I]),
+                       np.hstack([-Minv @ K0, -Minv @ C0])])
+
+        self.A = A
         self.M = M0
         self.C = C0
         self.G = G0
         self.K = K0
+
+    @staticmethod
+    def index(eigenvalues):
+        """
+        Function used to generate an index that will sort
+        eigenvalues and eigenvectors.
+        """
+        # positive in increasing order
+        idxp = eigenvalues.imag.argsort()[int(len(eigenvalues)/2):]
+        # negative in decreasing order
+        idxn = eigenvalues.imag.argsort()[int(len(eigenvalues)/2) - 1::-1]
+
+        idx = np.hstack([idxp, idxn])
+
+        #  TODO implement sort that considers the cross of eigenvalues
+        return idx
+
+    def eigen(self):
+        """
+        This method will return the eigenvalues and eigenvectors of the
+        state space matrix A.
+        """
+        return la.eig(self.A)
+
+    def eigen_sorted(self):
+        """
+        This method will return the eigenvalues and eigenvectors of the
+        state space matrix A sorted by the index method.
+        """
+        evalues, evectors = la.eig(self.A)
+        idx = self.index(evalues)
+        return evalues[idx], evectors[:, idx]
