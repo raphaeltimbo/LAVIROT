@@ -5,7 +5,7 @@ from numpy.testing import (assert_array_almost_equal,
 
 
 n_ = 1
-x1_ = 0
+x0_ = 0
 le_ = 0.25
 i_d_ = 0
 o_d_ = 0.05
@@ -33,8 +33,15 @@ def test_euler_bernoulli_beam_element():
                        [ 0.     , -0.62145,  0.05179,  0.     ,  0.     ,  0.62145,  0.10357,  0.     ],
                        [ 0.62145,  0.     ,  0.     ,  0.05179, -0.62145,  0.     ,  0.     ,  0.10357]])
 
-    eb = BeamElement(n_, x1_, le_, i_d_, o_d_, E_, G_, rho_)
+    eb = BeamElement(n_, x0_, le_, i_d_, o_d_, E_, G_, rho_)
     assert eb.phi == 0
+    assert eb.x0 == 0
+    assert eb.L == 0.25
+    assert eb.i_d == 0
+    assert eb.o_d == 0.05
+    assert eb.E == 211e9
+    assert eb.G_s == 81.2e9
+    assert eb.rho == 7810
     assert_almost_equal(eb.poisson, 0.29926108)
     assert_almost_equal(eb.A, 0.00196349)
     assert_almost_equal(eb.Ie*1e7, 3.06796157)
@@ -70,9 +77,9 @@ def test_timoshenko_beam_element():
                         [  0.22681,  -0.     ,  -0.     ,  -0.04727,  -0.22681,  -0.     ,  -0.     ,   0.1524 ],
                         [ -0.     ,   0.22681,   0.04727,  -0.     ,  -0.     ,  -0.22681,  -0.1524 ,  -0.     ]])
 
-    tim = BeamElement(n_, x1_, le_, i_d_, o_d_, E_, G_, rho_,
-                     rotary_inertia=True,
-                     shear_effects=True)
+    tim = BeamElement(n_, x0_, le_, i_d_, o_d_, E_, G_, rho_,
+                      rotary_inertia=True,
+                      shear_effects=True)
     assert_almost_equal(tim.phi, 0.08795566)
     assert_almost_equal(tim.poisson, 0.29926108)
     assert_almost_equal(tim.A, 0.00196349)

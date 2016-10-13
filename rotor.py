@@ -25,6 +25,7 @@ class Rotor(object):
     """
 
     def __init__(self, shaft_elements, disk_elements, bearing_elements):
+        #  TODO consider speed as a rotor property. Setter should call __init__ again
         self.shaft_elements = shaft_elements
         self.bearing_elements = bearing_elements
         self.disk_elements = disk_elements
@@ -104,18 +105,16 @@ class Rotor(object):
         #  TODO implement sort that considers the cross of eigenvalues
         return idx
 
-    def eigen(self):
-        """
-        This method will return the eigenvalues and eigenvectors of the
-        state space matrix A.
-        """
-        return la.eig(self.A)
-
-    def eigen_sorted(self):
+    def eigen(self, sorted_=True):
         """
         This method will return the eigenvalues and eigenvectors of the
         state space matrix A sorted by the index method.
+        To avoid sorting use sorted_=False
         """
         evalues, evectors = la.eig(self.A)
+        if sorted_ is False:
+            return evalues, evectors
+
         idx = self.index(evalues)
+
         return evalues[idx], evectors[:, idx]

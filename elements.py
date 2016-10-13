@@ -16,7 +16,7 @@ class BeamElement(object):
     ----------
     n: int
         Element number (coincident with it's first node)
-    x1: float
+    x0: float
         Position of the element first node
     L: float
         Element length
@@ -64,7 +64,7 @@ class BeamElement(object):
     ...                          shear_effects=True)
     """
 
-    def __init__(self, n, x1, L, i_d, o_d, E, G_s, rho,
+    def __init__(self, n, x0, L, i_d, o_d, E, G_s, rho,
                  axial_force=0, torque=0,
                  shear_effects=False,
                  rotary_inertia=False,
@@ -75,7 +75,7 @@ class BeamElement(object):
         self.gyroscopic = gyroscopic
 
         self.n = n
-        self.x1 = x1
+        self.x0 = x0
         self.L = L
         self.i_d = i_d
         self.o_d = o_d
@@ -192,10 +192,11 @@ class BeamElement(object):
 
         return G
 
-        #  TODO Stiffness Matrix due to an axial load
-        #  TODO Stiffness Matrix due to an axial torque
+        #  TODO stiffness Matrix due to an axial load
+        #  TODO stiffness Matrix due to an axial torque
         #  TODO add speed as an argument so that skew-symmetric stiffness matrix can be evaluated (default to None)
-        #  TODO Skew-symmetric speed dependent contribution to element stiffness matrix from the internal damping
+        #  TODO skew-symmetric speed dependent contribution to element stiffness matrix from the internal damping
+        #  TODO add tappered element. Modify shaft element to accept i_d and o_d as a list with to entries.
 
 
 class DiskElement(object):
