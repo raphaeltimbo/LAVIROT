@@ -2,6 +2,7 @@ import numpy as np
 
 
 class BeamElement(object):
+    #  TODO detail this class atributes inside the docstring
     """A beam element.
 
     This class will create a shaft element that may take into
@@ -45,9 +46,9 @@ class BeamElement(object):
         Default is False
 
 
-    Returns
+    Attributes
     ----------
-    A beam element.
+
 
     Examples:
     >>> n_ = 1
@@ -59,7 +60,7 @@ class BeamElement(object):
     >>> G_ = 81.2e9
     >>> rho_ = 7810
     >>> Euler_Bernoulli_Element = BeamElement(n_, x1_, le_, i_d_, o_d_, E_, G_, rho_)
-    >>> Iimoshenko_Element = BeamElement(n_, x1_, le_, i_d_, o_d_, E_, G_, rho_,
+    >>> Timoshenko_Element = BeamElement(n_, x1_, le_, i_d_, o_d_, E_, G_, rho_,
     ...                          rotary_inertia=True,
     ...                          shear_effects=True)
     """
@@ -98,6 +99,7 @@ class BeamElement(object):
             #kappa = 6*r12*((1+self.poisson)/
             #           ((r12*(7 + 12*self.poisson + 4*self.poisson**2) +
             #             4*r2*(5 + 6*self.poisson + 2*self.poisson**2))))
+            #  kappa as per Cowper (1996)
             kappa = 6*r12*((1+self.poisson)/
                        ((r12*(7 + 6*self.poisson) +
                          r2*(20 + 12*self.poisson))))
@@ -108,6 +110,34 @@ class BeamElement(object):
         #  ========== Mass Matrix ==========
 
     def M(self):
+        """
+        This method will return the mass matrix for an instance of a beam
+        element.
+
+        Parameters
+        ----------
+        self
+
+        Returns
+        ----------
+        Mass matrix for the beam element.
+
+
+        References
+        ----------
+        .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
+        & AW Lees, published by Cambridge University Press, 2010 pp. 166.
+
+        Examples:
+        >>> Timoshenko_Element = BeamElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        ...                                  rotary_inertia=True,
+        ...                                  shear_effects=True)
+        >>> Timoshenko_Element.M()[:4, :4]
+        array([[ 1.42050794,  0.        ,  0.        ,  0.04931719],
+               [ 0.        ,  1.42050794, -0.04931719,  0.        ],
+               [ 0.        , -0.04931719,  0.00231392,  0.        ],
+               [ 0.04931719,  0.        ,  0.        ,  0.00231392]])
+        """
         phi = self.phi
         L = self.L
 
@@ -119,13 +149,13 @@ class BeamElement(object):
         m06 = -(6 + 14*phi + 7*phi**2)*L**2
 
         M = np.array([[m01,     0,     0,   m02,   m03,     0,     0,   m04],
-                        [  0,   m01,  -m02,     0,     0,   m03,  -m04,     0],
-                        [  0,  -m02,   m05,     0,     0,   m04,   m06,     0],
-                        [m02,     0,     0,   m05,  -m04,     0,     0,   m06],
-                        [m03,     0,     0,  -m04,   m01,     0,     0,  -m02],
-                        [  0,   m03,   m04,     0,     0,   m01,   m02,     0],
-                        [  0,  -m04,   m06,     0,     0,   m02,   m05,     0],
-                        [m04,     0,     0,   m06,  -m02,     0,     0,   m05]])
+                      [  0,   m01,  -m02,     0,     0,   m03,  -m04,     0],
+                      [  0,  -m02,   m05,     0,     0,   m04,   m06,     0],
+                      [m02,     0,     0,   m05,  -m04,     0,     0,   m06],
+                      [m03,     0,     0,  -m04,   m01,     0,     0,  -m02],
+                      [  0,   m03,   m04,     0,     0,   m01,   m02,     0],
+                      [  0,  -m04,   m06,     0,     0,   m02,   m05,     0],
+                      [m04,     0,     0,   m06,  -m02,     0,     0,   m05]])
 
         M = self.rho * self.A * self.L * M/(840*(1 + phi)**2)
 
@@ -200,6 +230,7 @@ class BeamElement(object):
 
 
 class DiskElement(object):
+    #  TODO detail this class atributes inside the docstring
     """A disk element.
 
     This class will create a disk element.
@@ -217,9 +248,9 @@ class DiskElement(object):
     o_d: float
         Outer diameter
 
-    Returns
+    Attributes
     ----------
-    A disk element.
+
 
     Examples:
 
@@ -258,6 +289,7 @@ class DiskElement(object):
 
 
 class Bearing(object):
+    #  TODO detail this class atributes inside the docstring
     """A bearing element.
 
     This class will create a bearing element.
@@ -273,7 +305,7 @@ class Bearing(object):
     cyy: float
         Direct stiffness in the y direction
 
-    Returns
+    Attributes
     ----------
     A bearing element.
 
