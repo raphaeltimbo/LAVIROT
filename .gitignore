@@ -7,6 +7,7 @@
 *.bak
 *.diff
 .idea/
+.DOCUMENTOS/
 .cache/
 *.iml
 *.ipr

@@ -33,6 +33,8 @@ def plot_rotor(rotor):
     #  plot shaft centerline
     shaft_end = rotor.nodes_pos[-1]
     ax.plot([-.2 * shaft_end, 1.2 * shaft_end], [0, 0], 'k-.')
+    max_diameter = max([disk.o_d for disk in rotor.disk_elements])
+    ax.set_ylim(-1.2*max_diameter, 1.2*max_diameter)
 
     #  plot nodes
     for node, position in enumerate(rotor.nodes_pos):
@@ -43,16 +45,39 @@ def plot_rotor(rotor):
 
     #  plot shaft elements
     for sh_elm in rotor.shaft_elements:
-        up_position = [sh_elm.z, sh_elm.i_d]
-        down_position = [sh_elm.z, -sh_elm.o_d + sh_elm.i_d]
+        position_u = [sh_elm.z, sh_elm.i_d]    #  upper
+        position_l = [sh_elm.z, -sh_elm.o_d + sh_elm.i_d]    # lower
         width = sh_elm.L
         height = sh_elm.o_d - sh_elm.i_d
 
         #  plot the upper half of the shaft
-        ax.add_patch(mpatches.Rectangle(up_position, width, height,
+        ax.add_patch(mpatches.Rectangle(position_u, width, height,
                                         facecolor="#aeaeae", edgecolor='#767676', alpha=0.8))
         #  plot the lower half of the shaft
-        ax.add_patch(mpatches.Rectangle(down_position, width, height,
+        ax.add_patch(mpatches.Rectangle(position_l, width, height,
                                         facecolor="#aeaeae", edgecolor='#767676', alpha=0.8))
+
+    #  plot disk elements
+    for disk in rotor.disk_elements:
+        zpos = rotor.nodes_pos[disk.n]
+        ypos = rotor.shaft_elements[disk.n].o_d
+        D = disk.o_d
+        hw = disk.width/2    #  half width
+
+        #  node (x pos), outer diam. (y pos)
+        disk_points_u = [[zpos, ypos],    #  upper
+                         [zpos + hw, ypos + 0.1*D],
+                         [zpos + hw, ypos + 0.9*D],
+                         [zpos - hw, ypos + 0.9*D],
+                         [zpos - hw, ypos + 0.1*D],
+                         [zpos, ypos]]
+        disk_points_l = [[zpos, -(ypos)],    #  upper
+                         [zpos + hw, -(ypos + 0.1*D)],
+                         [zpos + hw, -(ypos + 0.9*D)],
+                         [zpos - hw, -(ypos + 0.9*D)],
+                         [zpos - hw, -(ypos + 0.1*D)],
+                         [zpos, -(ypos)]]
+        ax.add_patch(mpatches.Polygon(disk_points_u))
+        ax.add_patch(mpatches.Polygon(disk_points_l))
 
     plt.show()
