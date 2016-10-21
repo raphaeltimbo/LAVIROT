@@ -2,14 +2,14 @@ import numpy as np
 
 
 class BeamElement(object):
-    #  TODO detail this class atributes inside the docstring
+    #  TODO detail this class attributes inside the docstring
     """A beam element.
 
     This class will create a shaft element that may take into
     account shear, rotary inertia an gyroscopic effects.
     The matrices will be defined considering the following local
     coordinate vector:
-    [u1, v1, theta1, psi1, u2, v2, theta2, psi2].T
+    [x1, y1, alpha1, beta1, x2, y2, alpha2, beta2].T
     Where theta1 and theta2 are the bending on the yz plane and
     psi1 and psi2 are the bending on the xz plane.
 
@@ -17,7 +17,7 @@ class BeamElement(object):
     ----------
     n: int
         Element number (coincident with it's first node)
-    x0: float
+    z: float
         Position of the element first node
     L: float
         Element length
@@ -52,20 +52,20 @@ class BeamElement(object):
 
     Examples:
     >>> n_ = 1
-    >>> x1_ = 0
+    >>> z1_ = 0
     >>> le_ = 0.25
     >>> i_d_ = 0
     >>> o_d_ = 0.05
     >>> E_ = 211e9
     >>> G_ = 81.2e9
     >>> rho_ = 7810
-    >>> Euler_Bernoulli_Element = BeamElement(n_, x1_, le_, i_d_, o_d_, E_, G_, rho_)
-    >>> Timoshenko_Element = BeamElement(n_, x1_, le_, i_d_, o_d_, E_, G_, rho_,
+    >>> Euler_Bernoulli_Element = BeamElement(n_, z1_, le_, i_d_, o_d_, E_, G_, rho_)
+    >>> Timoshenko_Element = BeamElement(n_, z1_, le_, i_d_, o_d_, E_, G_, rho_,
     ...                          rotary_inertia=True,
     ...                          shear_effects=True)
     """
 
-    def __init__(self, n, x0, L, i_d, o_d, E, G_s, rho,
+    def __init__(self, n, z, L, i_d, o_d, E, G_s, rho,
                  axial_force=0, torque=0,
                  shear_effects=False,
                  rotary_inertia=False,
@@ -76,7 +76,7 @@ class BeamElement(object):
         self.gyroscopic = gyroscopic
 
         self.n = n
-        self.x0 = x0
+        self.z = z
         self.L = L
         self.i_d = i_d
         self.o_d = o_d
@@ -160,7 +160,7 @@ class BeamElement(object):
         M = self.rho * self.A * self.L * M/(840*(1 + phi)**2)
 
         if self.rotary_inertia:
-            ms1 = 36;
+            ms1 = 36
             ms2 = (3 - 15*phi)*L
             ms3 = (4 + 5*phi + 10*phi**2)*L**2
             ms4 = (-1 - 5*phi + 5*phi**2)*L**2
@@ -181,6 +181,34 @@ class BeamElement(object):
     #  ========== Stiffness Matrix ==========
 
     def K(self):
+        """
+        This method will return the stiffness matrix for an instance of a beam
+        element.
+
+        Parameters
+        ----------
+        self
+
+        Returns
+        ----------
+        Stiffness matrix for the beam element.
+
+
+        References
+        ----------
+        .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
+        & AW Lees, published by Cambridge University Press, 2010 pp. 166.
+
+        Examples:
+        >>> Timoshenko_Element = BeamElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        ...                                  rotary_inertia=True,
+        ...                                  shear_effects=True)
+        >>> Timoshenko_Element.K()[:4, :4]/1e6
+        array([[ 45.69644273,   0.        ,   0.        ,   5.71205534],
+               [  0.        ,  45.69644273,  -5.71205534,   0.        ],
+               [  0.        ,  -5.71205534,   0.97294287,   0.        ],
+               [  5.71205534,   0.        ,   0.        ,   0.97294287]])
+        """
         phi = self.phi
         L = self.L
 
@@ -198,6 +226,34 @@ class BeamElement(object):
         return K
 
     def G(self):
+        """
+        This method will return the gyroscopic matrix for an instance of a beam
+        element.
+
+        Parameters
+        ----------
+        self
+
+        Returns
+        ----------
+        Gyroscopic matrix for the beam element.
+
+
+        References
+        ----------
+        .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
+        & AW Lees, published by Cambridge University Press, 2010 pp. 166.
+
+        Examples:
+        >>> Timoshenko_Element = BeamElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        ...                                  rotary_inertia=True,
+        ...                                  shear_effects=True)
+        >>> Timoshenko_Element.G()[:4, :4]
+        array([[-0.        , -0.01943344, -0.00022681, -0.        ],
+               [-0.01943344, -0.        , -0.        , -0.00022681],
+               [ 0.00022681, -0.        , -0.        ,  0.0001524 ],
+               [-0.        ,  0.00022681, -0.0001524 , -0.        ]])
+        """
         phi = self.phi
         L = self.L
 
@@ -230,7 +286,7 @@ class BeamElement(object):
 
 
 class DiskElement(object):
-    #  TODO detail this class atributes inside the docstring
+    #  TODO detail this class attributes inside the docstring
     """A disk element.
 
     This class will create a disk element.
@@ -267,6 +323,32 @@ class DiskElement(object):
         self.Ip = 0.03125 * rho * np.pi * width * (o_d**4 - i_d**4)
 
     def M(self):
+        """
+        This method will return the mass matrix for an instance of a disk
+        element.
+
+        Parameters
+        ----------
+        self
+
+        Returns
+        ----------
+        Mass matrix for the disk element.
+
+
+        References
+        ----------
+        .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
+        & AW Lees, published by Cambridge University Press, 2010 pp. 158.
+
+        Examples:
+        >>> disk = DiskElement(0, 7810, 0.07, 0.05, 0.28)
+        >>> disk.M()
+        array([[ 32.58972765,   0.        ,   0.        ,   0.        ],
+               [  0.        ,  32.58972765,   0.        ,   0.        ],
+               [  0.        ,   0.        ,   0.17808928,   0.        ],
+               [  0.        ,   0.        ,   0.        ,   0.17808928]])
+        """
         m = self.m
         Id = self.Id
 
@@ -278,6 +360,32 @@ class DiskElement(object):
         return M
 
     def G(self):
+        """
+        This method will return the gyroscopic matrix for an instance of a disk
+        element.
+
+        Parameters
+        ----------
+        self
+
+        Returns
+        ----------
+        Gyroscopic matrix for the disk element.
+
+
+        References
+        ----------
+        .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
+        & AW Lees, published by Cambridge University Press, 2010 pp. 158.
+
+        Examples:
+        >>> disk = DiskElement(0, 7810, 0.07, 0.05, 0.28)
+        >>> disk.G()
+        array([[ 0.        ,  0.        ,  0.        ,  0.        ],
+               [ 0.        ,  0.        ,  0.        ,  0.        ],
+               [ 0.        ,  0.        ,  0.        ,  0.32956362],
+               [ 0.        ,  0.        , -0.32956362,  0.        ]])
+        """
         Ip = self.Ip
 
         G = np.array([[0, 0,   0,  0],
