@@ -31,6 +31,11 @@ class Rotor(object):
         self.disk_elements = disk_elements
         #  number of dofs
         self.ndof = 4 * len(shaft_elements) + 4
+        #  nodes position
+        nodes_pos = [s.z for s in self.shaft_elements]
+        nodes_pos.append(self.shaft_elements[-1].z  # append position for last node
+                     + self.shaft_elements[-1].L)
+        self.nodes_pos = nodes_pos
 
         #  ========== Assembly the rotor matrices ==========
 
