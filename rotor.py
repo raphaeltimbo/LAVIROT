@@ -31,11 +31,26 @@ class Rotor(object):
         self.disk_elements = disk_elements
         #  number of dofs
         self.ndof = 4 * len(shaft_elements) + 4
-        #  nodes position
+
+        #  nodes axial position
         nodes_pos = [s.z for s in self.shaft_elements]
-        nodes_pos.append(self.shaft_elements[-1].z  # append position for last node
-                     + self.shaft_elements[-1].L)
+        # append position for last node
+        nodes_pos.append(self.shaft_elements[-1].z
+                         + self.shaft_elements[-1].L)
         self.nodes_pos = nodes_pos
+
+        #  TODO for tappered elements i_d and o_d will be a list with two elements
+        #  diameter at node position
+        nodes_i_d = [s.i_d for s in self.shaft_elements]
+        # append i_d for last node
+        nodes_i_d.append(self.shaft_elements[-1].i_d)
+        self.nodes_i_d = nodes_i_d
+
+        nodes_o_d = [s.o_d for s in self.shaft_elements]
+        # append o_d for last node
+        nodes_o_d.append(self.shaft_elements[-1].o_d)
+        self.nodes_o_d = nodes_o_d
+
 
         #  ========== Assembly the rotor matrices ==========
 
@@ -63,6 +78,7 @@ class Rotor(object):
         #  TODO Add error for elements with the same n (node)
 
         #  Disk elements
+        #  TODO check when disk diameter in no consistent with shaft diameter
         for elm in disk_elements:
             node = elm.n
             n1 = 4 * node

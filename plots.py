@@ -45,7 +45,7 @@ def plot_rotor(rotor):
 
     #  plot shaft elements
     for sh_elm in rotor.shaft_elements:
-        position_u = [sh_elm.z, sh_elm.i_d]    #  upper
+        position_u = [sh_elm.z, sh_elm.i_d]    # upper
         position_l = [sh_elm.z, -sh_elm.o_d + sh_elm.i_d]    # lower
         width = sh_elm.L
         height = sh_elm.o_d - sh_elm.i_d
@@ -62,16 +62,16 @@ def plot_rotor(rotor):
         zpos = rotor.nodes_pos[disk.n]
         ypos = rotor.shaft_elements[disk.n].o_d
         D = disk.o_d
-        hw = disk.width/2    #  half width
+        hw = disk.width/2    # half width
 
         #  node (x pos), outer diam. (y pos)
-        disk_points_u = [[zpos, ypos],    #  upper
+        disk_points_u = [[zpos, ypos],    # upper
                          [zpos + hw, ypos + 0.1*D],
                          [zpos + hw, ypos + 0.9*D],
                          [zpos - hw, ypos + 0.9*D],
                          [zpos - hw, ypos + 0.1*D],
                          [zpos, ypos]]
-        disk_points_l = [[zpos, -(ypos)],    #  upper
+        disk_points_l = [[zpos, -(ypos)],    # upper
                          [zpos + hw, -(ypos + 0.1*D)],
                          [zpos + hw, -(ypos + 0.9*D)],
                          [zpos - hw, -(ypos + 0.9*D)],
@@ -79,5 +79,20 @@ def plot_rotor(rotor):
                          [zpos, -(ypos)]]
         ax.add_patch(mpatches.Polygon(disk_points_u))
         ax.add_patch(mpatches.Polygon(disk_points_l))
+
+    #  plot bearings
+    for bearing in rotor.bearing_elements:
+        zpos = rotor.nodes_pos[bearing.n]
+        #  TODO this will need to be modified for tapppered elements
+        #  check if the bearing is in the last node
+        ypos = -rotor.nodes_o_d[bearing.n]
+        h = -0.5*ypos   # height
+
+        #  node (x pos), outer diam. (y pos)
+        bearing_points = [[zpos, ypos],    # upper
+                         [zpos + h/2, ypos - h],
+                         [zpos - h/2, ypos - h],
+                         [zpos, ypos]]
+        ax.add_patch(mpatches.Polygon(bearing_points, color='#e75555'))
 
     plt.show()
