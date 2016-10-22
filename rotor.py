@@ -30,6 +30,8 @@ class Rotor(object):
         self.shaft_elements = shaft_elements
         self.bearing_elements = bearing_elements
         self.disk_elements = disk_elements
+        #  TODO check when disk diameter in no consistent with shaft diameter
+        #  TODO add error for elements added to the same n (node)
         #  number of dofs
         self.ndof = 4 * len(shaft_elements) + 4
 
@@ -52,66 +54,6 @@ class Rotor(object):
         nodes_o_d.append(self.shaft_elements[-1].o_d)
         self.nodes_o_d = nodes_o_d
 
-
-        #  ========== Assembly the rotor matrices ==========
-
-
-
-
-
-        C0 = np.zeros((self.ndof, self.ndof))
-        G0 = np.zeros((self.ndof, self.ndof))
-        K0 = np.zeros((self.ndof, self.ndof))
-
-        #  Skew-symmetric speed dependent contribution to element stiffness matrix
-        #  from the internal damping.
-        #  TODO add the contribution for K1 matrix
-        K1 = np.zeros((self.ndof, self.ndof))
-
-        #  Shaft elements
-        for elm in shaft_elements:
-            node = elm.n
-            n1 = 4 * node   # first dof
-            n2 = n1 + 8     # last dof
-
-
-            G0[n1:n2, n1:n2] += elm.G()
-            K0[n1:n2, n1:n2] += elm.K()
-
-        #  TODO Add error for elements with the same n (node)
-
-        #  Disk elements
-        #  TODO check when disk diameter in no consistent with shaft diameter
-        for elm in disk_elements:
-            node = elm.n
-            n1 = 4 * node
-            n2 = n1 + 4     # Disk is inserted in the dofs (4) of the first node
-
-
-            G0[n1:n2, n1:n2] += elm.G()
-
-        for elm in bearing_elements:
-            node = elm.n
-            n1 = 4 * node
-            n2 = n1 + 2 # Simple bearing
-
-            C0[n1:n2, n1:n2] += elm.C()
-            K0[n1:n2, n1:n2] += elm.K()
-            #  TODO implement this for bearing with mode dofs
-
-        # creates the state space matrix
-        Z = np.zeros((self.ndof, self.ndof))
-        I = np.eye(self.ndof)
-        Minv = la.pinv(self.M())
-        #  TODO define w
-        A = np.vstack([np.hstack([Z, I]),
-                       np.hstack([-Minv @ K0, -Minv @ C0])])
-
-        self.A = A
-        self.C = C0
-        self.G = G0
-        self.K = K0
-
     @staticmethod
     def dofs(element):
         """This function will return the first and last dof
@@ -128,20 +70,78 @@ class Rotor(object):
             node = element.n
             n1 = 4 * node
             n2 = n1 + 2
+        # TODO implement this for bearing with more dofs
         return n1, n2
 
     def M(self):
         """This method returns the rotor mass matrix"""
         #  Create the matrices
         M0 = np.zeros((self.ndof, self.ndof))
+
         for elm in self.shaft_elements:
             n1, n2 = self.dofs(elm)
             M0[n1:n2, n1:n2] += elm.M()
+
         for elm in self.disk_elements:
             n1, n2 = self.dofs(elm)
             M0[n1:n2, n1:n2] += elm.M()
 
         return M0
+
+    def K(self):
+        """This method returns the rotor stiffness matrix"""
+        #  Create the matrices
+        K0 = np.zeros((self.ndof, self.ndof))
+
+        for elm in self.shaft_elements:
+            n1, n2 = self.dofs(elm)
+            K0[n1:n2, n1:n2] += elm.K()
+
+        for elm in self.bearing_elements:
+            n1, n2 = self.dofs(elm)
+            K0[n1:n2, n1:n2] += elm.K()
+        #  Skew-symmetric speed dependent contribution to element stiffness matrix
+        #  from the internal damping.
+        #  TODO add the contribution for K1 matrix
+
+        return K0
+
+    def C(self):
+        """This method returns the rotor stiffness matrix"""
+        #  Create the matrices
+        C0 = np.zeros((self.ndof, self.ndof))
+
+        for elm in self.bearing_elements:
+            n1, n2 = self.dofs(elm)
+            C0[n1:n2, n1:n2] += elm.C()
+
+        return C0
+
+    def G(self):
+        """This method returns the rotor stiffness matrix"""
+        #  Create the matrices
+        G0 = np.zeros((self.ndof, self.ndof))
+
+        for elm in self.shaft_elements:
+            n1, n2 = self.dofs(elm)
+            G0[n1:n2, n1:n2] += elm.G()
+
+        for elm in self.disk_elements:
+            n1, n2 = self.dofs(elm)
+            G0[n1:n2, n1:n2] += elm.G()
+
+        return G0
+
+    def A(self, w=0):
+        """This method creates a speed dependent space state matrix"""
+        Z = np.zeros((self.ndof, self.ndof))
+        I = np.eye(self.ndof)
+        Minv = la.pinv(self.M())
+        #  TODO implement K(w) and C(w) for shaft, bearings etc.
+        A = np.vstack([np.hstack([Z, I]),
+                       np.hstack([-Minv @ self.K(), -Minv @ (self.C() + self.G()*w)])])
+
+        return A
 
     @staticmethod
     def index(eigenvalues):
@@ -159,13 +159,13 @@ class Rotor(object):
         #  TODO implement sort that considers the cross of eigenvalues
         return idx
 
-    def eigen(self, sorted_=True):
+    def eigen(self, w=0, sorted_=True):
         """
         This method will return the eigenvalues and eigenvectors of the
         state space matrix A sorted by the index method.
         To avoid sorting use sorted_=False
         """
-        evalues, evectors = la.eig(self.A)
+        evalues, evectors = la.eig(self.A(w))
         if sorted_ is False:
             return evalues, evectors
 

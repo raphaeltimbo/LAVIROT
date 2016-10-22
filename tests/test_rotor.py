@@ -191,15 +191,15 @@ def test_rotor_no_damping_2_shaft_elements_1_disk_2_simple_bearings():
     shaft_elm = [tim0, tim1]
     disk0 = DiskElement(1, rho_, 0.07, 0.05, 0.28)
     stf = 1e6
-    bearing0 = Bearing(0, stf, stf, 0, 0)
-    bearing1 = Bearing(2, stf, stf, 0, 0)
+    bearing0 = BearingElement(0, stf, stf, 0, 0)
+    bearing1 = BearingElement(2, stf, stf, 0, 0)
 
     rotor1 = Rotor(shaft_elm, [disk0], [bearing0, bearing1])
     assert_almost_equal(rotor1.M(), Mr1, decimal=3)
-    assert_almost_equal(rotor1.A[:12, :12], A0_0, decimal=3)
-    assert_almost_equal(rotor1.A[:12, 12:24], A0_1, decimal=3)
-    assert_almost_equal(rotor1.A[12:24, :12]/1e7, A1_0, decimal=3)
-    assert_almost_equal(rotor1.A[12:24, 12:24]/1e7, A1_1, decimal=3)
+    assert_almost_equal(rotor1.A()[:12, :12], A0_0, decimal=3)
+    assert_almost_equal(rotor1.A()[:12, 12:24], A0_1, decimal=3)
+    assert_almost_equal(rotor1.A()[12:24, :12]/1e7, A1_0, decimal=3)
+    assert_almost_equal(rotor1.A()[12:24, 12:24]/1e7, A1_1, decimal=3)
     #  sorted eigenvalues, eigenvectors
     rotor1_evals, rotor1_evects = rotor1.eigen()
     assert_almost_equal(rotor1_evals, evals_sorted, decimal=3)
@@ -210,4 +210,5 @@ def test_rotor_no_damping_2_shaft_elements_1_disk_2_simple_bearings():
     assert_almost_equal(rotor1_evects[:, 0:4], evects, decimal=3)
 #  TODO implement more tests using a simple rotor with 2 elements and one disk
 #  TODO add test for rotor with disks and bearings
+#  TODO add test for damped case
 

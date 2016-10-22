@@ -396,7 +396,7 @@ class DiskElement(object):
         return G
 
 
-class Bearing(object):
+class BearingElement(object):
     #  TODO detail this class atributes inside the docstring
     """A bearing element.
 
