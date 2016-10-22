@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class BeamElement(object):
+class ShaftElement(object):
     #  TODO detail this class attributes inside the docstring
     """A beam element.
 
@@ -59,8 +59,8 @@ class BeamElement(object):
     >>> E_ = 211e9
     >>> G_ = 81.2e9
     >>> rho_ = 7810
-    >>> Euler_Bernoulli_Element = BeamElement(n_, z1_, le_, i_d_, o_d_, E_, G_, rho_)
-    >>> Timoshenko_Element = BeamElement(n_, z1_, le_, i_d_, o_d_, E_, G_, rho_,
+    >>> Euler_Bernoulli_Element = ShaftElement(n_, z1_, le_, i_d_, o_d_, E_, G_, rho_)
+    >>> Timoshenko_Element = ShaftElement(n_, z1_, le_, i_d_, o_d_, E_, G_, rho_,
     ...                          rotary_inertia=True,
     ...                          shear_effects=True)
     """
@@ -129,7 +129,7 @@ class BeamElement(object):
         & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
         Examples:
-        >>> Timoshenko_Element = BeamElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> Timoshenko_Element = ShaftElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.M()[:4, :4]
@@ -200,7 +200,7 @@ class BeamElement(object):
         & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
         Examples:
-        >>> Timoshenko_Element = BeamElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> Timoshenko_Element = ShaftElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.K()[:4, :4]/1e6
@@ -245,7 +245,7 @@ class BeamElement(object):
         & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
         Examples:
-        >>> Timoshenko_Element = BeamElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> Timoshenko_Element = ShaftElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.G()[:4, :4]

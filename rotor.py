@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.linalg as la
 
+
 class Rotor(object):
     """A rotor object.
 
@@ -54,8 +55,10 @@ class Rotor(object):
 
         #  ========== Assembly the rotor matrices ==========
 
-        #  Create the matrices
-        M0 = np.zeros((self.ndof, self.ndof))
+
+
+
+
         C0 = np.zeros((self.ndof, self.ndof))
         G0 = np.zeros((self.ndof, self.ndof))
         K0 = np.zeros((self.ndof, self.ndof))
@@ -71,7 +74,7 @@ class Rotor(object):
             n1 = 4 * node   # first dof
             n2 = n1 + 8     # last dof
 
-            M0[n1:n2, n1:n2] += elm.M()
+
             G0[n1:n2, n1:n2] += elm.G()
             K0[n1:n2, n1:n2] += elm.K()
 
@@ -84,7 +87,7 @@ class Rotor(object):
             n1 = 4 * node
             n2 = n1 + 4     # Disk is inserted in the dofs (4) of the first node
 
-            M0[n1:n2, n1:n2] += elm.M()
+
             G0[n1:n2, n1:n2] += elm.G()
 
         for elm in bearing_elements:
@@ -99,16 +102,46 @@ class Rotor(object):
         # creates the state space matrix
         Z = np.zeros((self.ndof, self.ndof))
         I = np.eye(self.ndof)
-        Minv = la.pinv(M0)
-
+        Minv = la.pinv(self.M())
+        #  TODO define w
         A = np.vstack([np.hstack([Z, I]),
                        np.hstack([-Minv @ K0, -Minv @ C0])])
 
         self.A = A
-        self.M = M0
         self.C = C0
         self.G = G0
         self.K = K0
+
+    @staticmethod
+    def dofs(element):
+        """This function will return the first and last dof
+        for a given element"""
+        if type(element).__name__ == 'ShaftElement':
+            node = element.n
+            n1 = 4 * node
+            n2 = n1 + 8
+        if type(element).__name__ == 'DiskElement':
+            node = element.n
+            n1 = 4 * node
+            n2 = n1 + 4
+        if type(element).__name__ == 'BearingElement':
+            node = element.n
+            n1 = 4 * node
+            n2 = n1 + 2
+        return n1, n2
+
+    def M(self):
+        """This method returns the rotor mass matrix"""
+        #  Create the matrices
+        M0 = np.zeros((self.ndof, self.ndof))
+        for elm in self.shaft_elements:
+            n1, n2 = self.dofs(elm)
+            M0[n1:n2, n1:n2] += elm.M()
+        for elm in self.disk_elements:
+            n1, n2 = self.dofs(elm)
+            M0[n1:n2, n1:n2] += elm.M()
+
+        return M0
 
     @staticmethod
     def index(eigenvalues):

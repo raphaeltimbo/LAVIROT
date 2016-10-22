@@ -32,7 +32,7 @@ def test_euler_bernoulli_beam_element():
                        [ 0.     , -0.62145,  0.05179,  0.     ,  0.     ,  0.62145,  0.10357,  0.     ],
                        [ 0.62145,  0.     ,  0.     ,  0.05179, -0.62145,  0.     ,  0.     ,  0.10357]])
 
-    eb = BeamElement(n_, z_, le_, i_d_, o_d_, E_, G_, rho_)
+    eb = ShaftElement(n_, z_, le_, i_d_, o_d_, E_, G_, rho_)
     assert eb.phi == 0
     assert eb.z == 0
     assert eb.L == 0.25
@@ -76,9 +76,9 @@ def test_timoshenko_beam_element():
                         [  0.22681,  -0.     ,  -0.     ,  -0.04727,  -0.22681,  -0.     ,  -0.     ,   0.1524 ],
                         [ -0.     ,   0.22681,   0.04727,  -0.     ,  -0.     ,  -0.22681,  -0.1524 ,  -0.     ]])
 
-    tim = BeamElement(n_, z_, le_, i_d_, o_d_, E_, G_, rho_,
-                      rotary_inertia=True,
-                      shear_effects=True)
+    tim = ShaftElement(n_, z_, le_, i_d_, o_d_, E_, G_, rho_,
+                       rotary_inertia=True,
+                       shear_effects=True)
     assert_almost_equal(tim.phi, 0.08795566)
     assert_almost_equal(tim.poisson, 0.29926108)
     assert_almost_equal(tim.A, 0.00196349)
