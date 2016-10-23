@@ -12,8 +12,8 @@ class ShaftElement(object):
 
     .. math:: [x_1, y_1, \alpha_1, \beta_1, x_2, y_2, \alpha_2, \beta_2]^T
 
-    Where theta1 and theta2 are the bending on the yz plane and
-    psi1 and psi2 are the bending on the xz plane.
+    Where :math:`\alpha_1` and :math:`\alpha_2` are the bending on the yz plane and
+    :math:`\beta_1` and :math:`\beta_2` are the bending on the xz plane.
 
     Parameters
     ----------
@@ -23,7 +23,7 @@ class ShaftElement(object):
         Position of the element first node
     L: float
         Element length
-    i_d: float3
+    i_d: float
         Inner diameter of the element
     o_d: float
         Outer diameter of the element
@@ -54,18 +54,18 @@ class ShaftElement(object):
 
     Examples
     --------
-    >>> n_ = 1
-    >>> z1_ = 0
-    >>> le_ = 0.25
-    >>> i_d_ = 0
-    >>> o_d_ = 0.05
-    >>> E_ = 211e9
-    >>> G_ = 81.2e9
-    >>> rho_ = 7810
-    >>> Euler_Bernoulli_Element = ShaftElement(n_, z1_, le_, i_d_, o_d_, E_, G_, rho_)
-    >>> Timoshenko_Element = ShaftElement(n_, z1_, le_, i_d_, o_d_, E_, G_, rho_,
-    ...                          rotary_inertia=True,
-    ...                          shear_effects=True)
+    >>> n = 1
+    >>> z1 = 0
+    >>> le = 0.25
+    >>> i_d = 0
+    >>> o_d = 0.05
+    >>> E = 211e9
+    >>> G_s = 81.2e9
+    >>> rho = 7810
+    >>> Euler_Bernoulli_Element = ShaftElement(n, z1, le, i_d, o_d, E, G_s, rho)
+    >>> Timoshenko_Element = ShaftElement(n, z1, le, i_d, o_d, E, G_s, rho,
+    ...                                   rotary_inertia=True,
+    ...                                   shear_effects=True)
     """
 
     def __init__(self, n, z, L, i_d, o_d, E, G_s, rho,
@@ -125,7 +125,7 @@ class ShaftElement(object):
         References
         ----------
         .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
-        & AW Lees, published by Cambridge University Press, 2010 pp. 166.
+           & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
         Examples
         --------
@@ -191,11 +191,10 @@ class ShaftElement(object):
         -------
         Stiffness matrix for the beam element.
 
-
         References
         ----------
         .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
-        & AW Lees, published by Cambridge University Press, 2010 pp. 166.
+           & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
         Examples
         --------
@@ -240,7 +239,7 @@ class ShaftElement(object):
         References
         ----------
         .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
-        & AW Lees, published by Cambridge University Press, 2010 pp. 166.
+           & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
         Examples
         --------
@@ -307,7 +306,6 @@ class DiskElement(object):
     Attributes
     ----------
 
-
     Examples
     --------
 
@@ -336,11 +334,10 @@ class DiskElement(object):
         -------
         Mass matrix for the disk element.
 
-
         References
         ----------
         .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
-        & AW Lees, published by Cambridge University Press, 2010 pp. 158.
+           & AW Lees, published by Cambridge University Press, 2010 pp. 158.
 
         Examples
         --------
@@ -374,11 +371,10 @@ class DiskElement(object):
         -------
         Gyroscopic matrix for the disk element.
 
-
         References
         ----------
         .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
-        & AW Lees, published by Cambridge University Press, 2010 pp. 158.
+           & AW Lees, published by Cambridge University Press, 2010 pp. 158.
 
         Examples
         --------
@@ -419,7 +415,6 @@ class BearingElement(object):
 
     Attributes
     ----------
-    A bearing element.
 
     Examples
     --------

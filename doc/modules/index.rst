@@ -7,3 +7,5 @@ LaviRot Modules Reference
    :maxdepth: 2
 
    elements.rst
+   rotor.rst
+   plots.rst
