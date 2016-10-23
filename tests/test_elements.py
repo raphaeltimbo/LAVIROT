@@ -1,5 +1,5 @@
-from LAVIROT.elements import *
-from LAVIROT.rotor import *
+from LaviRot.elements import *
+from LaviRot.rotor import *
 from numpy.testing import assert_almost_equal
 
 

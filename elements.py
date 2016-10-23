@@ -3,13 +3,15 @@ import numpy as np
 
 class ShaftElement(object):
     #  TODO detail this class attributes inside the docstring
-    """A beam element.
+    r"""A beam element.
 
     This class will create a shaft element that may take into
     account shear, rotary inertia an gyroscopic effects.
     The matrices will be defined considering the following local
     coordinate vector:
-    [x1, y1, alpha1, beta1, x2, y2, alpha2, beta2].T
+
+    .. math:: [x_1, y_1, \alpha_1, \beta_1, x_2, y_2, \alpha_2, \beta_2]^T
+
     Where theta1 and theta2 are the bending on the yz plane and
     psi1 and psi2 are the bending on the xz plane.
 
@@ -50,7 +52,8 @@ class ShaftElement(object):
     ----------
 
 
-    Examples:
+    Examples
+    --------
     >>> n_ = 1
     >>> z1_ = 0
     >>> le_ = 0.25
@@ -107,11 +110,8 @@ class ShaftElement(object):
 
         self.phi = phi
 
-        #  ========== Mass Matrix ==========
-
     def M(self):
-        """
-        This method will return the mass matrix for an instance of a beam
+        r"""This method will return the mass matrix for an instance of a beam
         element.
 
         Parameters
@@ -119,16 +119,16 @@ class ShaftElement(object):
         self
 
         Returns
-        ----------
+        -------
         Mass matrix for the beam element.
-
 
         References
         ----------
         .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
         & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
-        Examples:
+        Examples
+        --------
         >>> Timoshenko_Element = ShaftElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
@@ -178,8 +178,6 @@ class ShaftElement(object):
 
         return M
 
-    #  ========== Stiffness Matrix ==========
-
     def K(self):
         """
         This method will return the stiffness matrix for an instance of a beam
@@ -190,7 +188,7 @@ class ShaftElement(object):
         self
 
         Returns
-        ----------
+        -------
         Stiffness matrix for the beam element.
 
 
@@ -199,7 +197,8 @@ class ShaftElement(object):
         .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
         & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
-        Examples:
+        Examples
+        --------
         >>> Timoshenko_Element = ShaftElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
@@ -235,16 +234,16 @@ class ShaftElement(object):
         self
 
         Returns
-        ----------
+        -------
         Gyroscopic matrix for the beam element.
-
 
         References
         ----------
         .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
         & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
-        Examples:
+        Examples
+        --------
         >>> Timoshenko_Element = ShaftElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
@@ -253,6 +252,7 @@ class ShaftElement(object):
                [-0.01943344, -0.        , -0.        , -0.00022681],
                [ 0.00022681, -0.        , -0.        ,  0.0001524 ],
                [-0.        ,  0.00022681, -0.0001524 , -0.        ]])
+
         """
         phi = self.phi
         L = self.L
@@ -308,7 +308,8 @@ class DiskElement(object):
     ----------
 
 
-    Examples:
+    Examples
+    --------
 
     """
 
@@ -332,7 +333,7 @@ class DiskElement(object):
         self
 
         Returns
-        ----------
+        -------
         Mass matrix for the disk element.
 
 
@@ -341,7 +342,8 @@ class DiskElement(object):
         .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
         & AW Lees, published by Cambridge University Press, 2010 pp. 158.
 
-        Examples:
+        Examples
+        --------
         >>> disk = DiskElement(0, 7810, 0.07, 0.05, 0.28)
         >>> disk.M()
         array([[ 32.58972765,   0.        ,   0.        ,   0.        ],
@@ -369,7 +371,7 @@ class DiskElement(object):
         self
 
         Returns
-        ----------
+        -------
         Gyroscopic matrix for the disk element.
 
 
@@ -378,7 +380,8 @@ class DiskElement(object):
         .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
         & AW Lees, published by Cambridge University Press, 2010 pp. 158.
 
-        Examples:
+        Examples
+        --------
         >>> disk = DiskElement(0, 7810, 0.07, 0.05, 0.28)
         >>> disk.G()
         array([[ 0.        ,  0.        ,  0.        ,  0.        ],
@@ -386,6 +389,7 @@ class DiskElement(object):
                [ 0.        ,  0.        ,  0.        ,  0.32956362],
                [ 0.        ,  0.        , -0.32956362,  0.        ]])
         """
+
         Ip = self.Ip
 
         G = np.array([[0, 0,   0,  0],
@@ -417,7 +421,8 @@ class BearingElement(object):
     ----------
     A bearing element.
 
-    Examples:
+    Examples
+    --------
 
     """
     #  TODO implement for more complex cases (kxy, kthetatheta etc.)
