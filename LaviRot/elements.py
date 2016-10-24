@@ -1,6 +1,9 @@
 import numpy as np
 
 
+__all__ = ["ShaftElement", "DiskElement", "BearingElement"]
+
+
 class ShaftElement(object):
     #  TODO detail this class attributes inside the docstring
     r"""A beam element.

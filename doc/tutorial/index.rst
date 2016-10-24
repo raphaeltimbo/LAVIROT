@@ -1,10 +1,10 @@
-.. _tutorial:
+Tutorial
+========
 
 
-LaviRot Tutorial
-================
+Contents:
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-   intro.rst
+
