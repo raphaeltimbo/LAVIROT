@@ -55,7 +55,7 @@ class Rotor(object):
         self.nodes_o_d = nodes_o_d
 
     @staticmethod
-    def dofs(element):
+    def _dofs(element):
         """This function will return the first and last dof
         for a given element"""
         if type(element).__name__ == 'ShaftElement':
@@ -79,11 +79,11 @@ class Rotor(object):
         M0 = np.zeros((self.ndof, self.ndof))
 
         for elm in self.shaft_elements:
-            n1, n2 = self.dofs(elm)
+            n1, n2 = self._dofs(elm)
             M0[n1:n2, n1:n2] += elm.M()
 
         for elm in self.disk_elements:
-            n1, n2 = self.dofs(elm)
+            n1, n2 = self._dofs(elm)
             M0[n1:n2, n1:n2] += elm.M()
 
         return M0
@@ -94,11 +94,11 @@ class Rotor(object):
         K0 = np.zeros((self.ndof, self.ndof))
 
         for elm in self.shaft_elements:
-            n1, n2 = self.dofs(elm)
+            n1, n2 = self._dofs(elm)
             K0[n1:n2, n1:n2] += elm.K()
 
         for elm in self.bearing_elements:
-            n1, n2 = self.dofs(elm)
+            n1, n2 = self._dofs(elm)
             K0[n1:n2, n1:n2] += elm.K()
         #  Skew-symmetric speed dependent contribution to element stiffness matrix
         #  from the internal damping.
@@ -112,7 +112,7 @@ class Rotor(object):
         C0 = np.zeros((self.ndof, self.ndof))
 
         for elm in self.bearing_elements:
-            n1, n2 = self.dofs(elm)
+            n1, n2 = self._dofs(elm)
             C0[n1:n2, n1:n2] += elm.C()
 
         return C0
@@ -123,11 +123,11 @@ class Rotor(object):
         G0 = np.zeros((self.ndof, self.ndof))
 
         for elm in self.shaft_elements:
-            n1, n2 = self.dofs(elm)
+            n1, n2 = self._dofs(elm)
             G0[n1:n2, n1:n2] += elm.G()
 
         for elm in self.disk_elements:
-            n1, n2 = self.dofs(elm)
+            n1, n2 = self._dofs(elm)
             G0[n1:n2, n1:n2] += elm.G()
 
         return G0
@@ -144,7 +144,7 @@ class Rotor(object):
         return A
 
     @staticmethod
-    def index(eigenvalues):
+    def _index(eigenvalues):
         """
         Function used to generate an index that will sort
         eigenvalues and eigenvectors.
@@ -169,6 +169,6 @@ class Rotor(object):
         if sorted_ is False:
             return evalues, evectors
 
-        idx = self.index(evalues)
+        idx = self._index(evalues)
 
         return evalues[idx], evectors[:, idx]

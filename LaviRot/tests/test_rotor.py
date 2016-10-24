@@ -43,8 +43,8 @@ def test_rotor_no_damping_2_shaft_elements():
 
     shaft_elm = [tim0, tim1]
     rotor1 = Rotor(shaft_elm, [], [])
-    assert_almost_equal([4, 2, 0, 5, 3, 1], rotor1.index(evalues))
-    assert_almost_equal([4, 2, 0, 5, 3, 1], rotor1.index(evalues2))
+    assert_almost_equal([4, 2, 0, 5, 3, 1], rotor1._index(evalues))
+    assert_almost_equal([4, 2, 0, 5, 3, 1], rotor1._index(evalues2))
     assert_almost_equal(rotor1.M(), Mr1, decimal=3)
 
 

@@ -2,10 +2,8 @@
 
 
 """
-from . import elements
-from . import rotor
-from . import plots
-
-__all__ = ["elements", "rotor", "plots"]
+from .elements import *
+from .rotor import *
+from .plots import *
 
 __version__ = '1.0'
