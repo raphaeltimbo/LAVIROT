@@ -1,24 +1,42 @@
+import pytest
 from LaviRot.elements import *
 from LaviRot.rotor import *
 from numpy.testing import assert_almost_equal
 
 
+@pytest.fixture
+def rotor1():
+    #  Rotor without damping with 2 shaft elements - no disks and no bearings
+    n_ = 1
+    z_ = 0
+    le_ = 0.25
+    i_d_ = 0
+    o_d_ = 0.05
+    E_ = 211e9
+    G_ = 81.2e9
+    rho_ = 7810
 
-n_ = 1
-z_ = 0
-le_ = 0.25
-i_d_ = 0
-o_d_ = 0.05
-E_ = 211e9
-G_ = 81.2e9
-rho_ = 7810
+    tim0 = ShaftElement(0, 0.0, le_, i_d_, o_d_, E_, G_, rho_,
+                        shear_effects=True,
+                        rotary_inertia=True,
+                        gyroscopic=True)
+    tim1 = ShaftElement(1, 0.25, le_, i_d_, o_d_, E_, G_, rho_,
+                        shear_effects=True,
+                        rotary_inertia=True,
+                        gyroscopic=True)
+
+    shaft_elm = [tim0, tim1]
+    return Rotor(shaft_elm, [], [])
 
 
-def test_rotor_no_damping_2_shaft_elements():
-
+def test_index_eigenvalues(rotor1):
     evalues = np.array([-3.8 + 68.6j, -3.8 - 68.6j, -1.8 + 30.j, -1.8 - 30.j, -0.7 + 14.4j, -0.7 - 14.4j])
-    evalues2 = np.array([ 0.+68.7j,  0.-68.7j,  0.+30.1j,  0.-30.1j, -0.+14.4j, -0.-14.4j])
+    evalues2 = np.array([0. + 68.7j, 0. - 68.7j, 0. + 30.1j, 0. - 30.1j, -0. + 14.4j, -0. - 14.4j])
+    assert_almost_equal([4, 2, 0, 5, 3, 1], rotor1._index(evalues))
+    assert_almost_equal([4, 2, 0, 5, 3, 1], rotor1._index(evalues2))
 
+
+def test_mass_matrix(rotor1):
     Mr1 = np.array([[ 1.421,  0.   ,  0.   ,  0.049,  0.496,  0.   ,  0.   , -0.031,  0.   ,  0.   ,  0.   ,  0.   ],
                     [ 0.   ,  1.421, -0.049,  0.   ,  0.   ,  0.496,  0.031,  0.   ,  0.   ,  0.   ,  0.   ,  0.   ],
                     [ 0.   , -0.049,  0.002,  0.   ,  0.   , -0.031, -0.002,  0.   ,  0.   ,  0.   ,  0.   ,  0.   ],
@@ -32,6 +50,21 @@ def test_rotor_no_damping_2_shaft_elements():
                     [ 0.   ,  0.   ,  0.   ,  0.   ,  0.   ,  0.031, -0.002,  0.   ,  0.   ,  0.049,  0.002,  0.   ],
                     [ 0.   ,  0.   ,  0.   ,  0.   , -0.031,  0.   ,  0.   , -0.002, -0.049,  0.   ,  0.   ,  0.002]])
 
+    assert_almost_equal(rotor1.M(), Mr1, decimal=3)
+
+
+@pytest.fixture
+def rotor2():
+    #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
+    n_ = 1
+    z_ = 0
+    le_ = 0.25
+    i_d_ = 0
+    o_d_ = 0.05
+    E_ = 211e9
+    G_ = 81.2e9
+    rho_ = 7810
+
     tim0 = ShaftElement(0, 0.0, le_, i_d_, o_d_, E_, G_, rho_,
                         shear_effects=True,
                         rotary_inertia=True,
@@ -42,15 +75,16 @@ def test_rotor_no_damping_2_shaft_elements():
                         gyroscopic=True)
 
     shaft_elm = [tim0, tim1]
-    rotor1 = Rotor(shaft_elm, [], [])
-    assert_almost_equal([4, 2, 0, 5, 3, 1], rotor1._index(evalues))
-    assert_almost_equal([4, 2, 0, 5, 3, 1], rotor1._index(evalues2))
-    assert_almost_equal(rotor1.M(), Mr1, decimal=3)
+    disk0 = DiskElement(1, rho_, 0.07, 0.05, 0.28)
+    stf = 1e6
+    bearing0 = BearingElement(0, stf, stf, 0, 0)
+    bearing1 = BearingElement(2, stf, stf, 0, 0)
+
+    return Rotor(shaft_elm, [disk0], [bearing0, bearing1])
 
 
-def test_rotor_no_damping_2_shaft_elements_1_disk_2_simple_bearings():
-
-    Mr1 = np.array([[  1.421,   0.   ,   0.   ,   0.049,   0.496,   0.   ,   0.   ,  -0.031,   0.   ,   0.   ,   0.   ,   0.   ],
+def test_mass_matrix(rotor2):
+    Mr2 = np.array([[  1.421,   0.   ,   0.   ,   0.049,   0.496,   0.   ,   0.   ,  -0.031,   0.   ,   0.   ,   0.   ,   0.   ],
                     [  0.   ,   1.421,  -0.049,   0.   ,   0.   ,   0.496,   0.031,   0.   ,   0.   ,   0.   ,   0.   ,   0.   ],
                     [  0.   ,  -0.049,   0.002,   0.   ,   0.   ,  -0.031,  -0.002,   0.   ,   0.   ,   0.   ,   0.   ,   0.   ],
                     [  0.049,   0.   ,   0.   ,   0.002,   0.031,   0.   ,   0.   ,  -0.002,   0.   ,   0.   ,   0.   ,   0.   ],
@@ -62,7 +96,10 @@ def test_rotor_no_damping_2_shaft_elements_1_disk_2_simple_bearings():
                     [  0.   ,   0.   ,   0.   ,   0.   ,   0.   ,   0.496,  -0.031,   0.   ,   0.   ,   1.421,   0.049,   0.   ],
                     [  0.   ,   0.   ,   0.   ,   0.   ,   0.   ,   0.031,  -0.002,   0.   ,   0.   ,   0.049,   0.002,   0.   ],
                     [  0.   ,   0.   ,   0.   ,   0.   ,  -0.031,   0.   ,   0.   ,  -0.002,  -0.049,   0.   ,   0.   ,   0.002]])
+    assert_almost_equal(rotor2.M(), Mr2, decimal=3)
 
+
+def test_a0_0_matrix(rotor2):
     A0_0 = np.array([[ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
@@ -75,7 +112,10 @@ def test_rotor_no_damping_2_shaft_elements_1_disk_2_simple_bearings():
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.]])
+    assert_almost_equal(rotor2.A()[:12, :12], A0_0, decimal=3)
 
+
+def test_a0_1_matrix(rotor2):
     A0_1 = np.array([[ 1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
@@ -88,7 +128,10 @@ def test_rotor_no_damping_2_shaft_elements_1_disk_2_simple_bearings():
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  1.]])
+    assert_almost_equal(rotor2.A()[:12, 12:24], A0_1, decimal=3)
 
+
+def test_a1_0_matrix(rotor2):
     A1_0 = np.array([[  20.63 ,   -0.   ,    0.   ,    4.114,  -20.958,    0.   ,    0.   ,    1.11 ,    0.056,   -0.   ,   -0.   ,   -0.014],
                      [   0.   ,   20.63 ,   -4.114,    0.   ,   -0.   ,  -20.958,   -1.11 ,    0.   ,   -0.   ,    0.056,    0.014,    0.   ],
                      [   0.   ,  697.351, -131.328,    0.   ,   -0.   , -705.253,  -44.535,    0.   ,   -0.   ,    2.079,    0.596,    0.   ],
@@ -101,7 +144,10 @@ def test_rotor_no_damping_2_shaft_elements_1_disk_2_simple_bearings():
                      [   0.   ,    0.056,   -0.014,    0.   ,   -0.   ,  -20.958,    1.11 ,    0.   ,    0.   ,   20.63 ,    4.114,   -0.   ],
                      [  -0.   ,   -2.079,    0.596,   -0.   ,    0.   ,  705.253,  -44.535,   -0.   ,   -0.   , -697.351, -131.328,    0.   ],
                      [   2.079,    0.   ,   -0.   ,    0.596, -705.253,   -0.   ,    0.   ,  -44.535,  697.351,    0.   ,    0.   , -131.328]])
+    assert_almost_equal(rotor2.A()[12:24, :12]/1e7, A1_0, decimal=3)
 
+
+def test_a1_1_matrix(rotor2):
     A1_1 = np.array([[ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
@@ -114,7 +160,10 @@ def test_rotor_no_damping_2_shaft_elements_1_disk_2_simple_bearings():
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.]])
+    assert_almost_equal(rotor2.A()[12:24, 12:24] / 1e7, A1_1, decimal=3)
 
+
+def test_evals_sorted(rotor2):
     evals_sorted = np.array([-0. + 215.371j, 0. + 215.371j, -0. + 598.025j, 0. + 598.025j,
                              -0. + 3956.225j, 0. + 3956.225j, 0. + 4965.29j, -0. + 4965.29j,
                              0. + 33048.281j, -0. + 33048.281j, 0. + 33249.826j, -0. + 33249.826j,
@@ -122,6 +171,32 @@ def test_rotor_no_damping_2_shaft_elements_1_disk_2_simple_bearings():
                              -0. - 3956.225j, 0. - 3956.225j, 0. - 4965.29j, -0. - 4965.29j,
                              0. - 33048.281j, -0. - 33048.281j, 0. - 33249.826j, -0. - 33249.826j])
 
+    evals_sorted_w_10000 = np.array([  0.000   +34.822j,   0.505  +215.369j,  -0.505  +215.369j,   0.000 +3470.898j,
+                                      -0.000 +3850.213j, -41.763 +3990.229j,  41.763 +3990.229j,  -0.000+18487.595j,
+                                      0.000+31729.443j,   0.000+32081.816j,  -0.000+34446.625j,  -0.000+34689.405j,
+                                      0.000   -34.822j,   0.505  -215.369j,  -0.505  -215.369j,   0.000 -3470.898j,
+                                      -0.000 -3850.213j, -41.763 -3990.229j,  41.763 -3990.229j,  -0.000-18487.595j,
+                                      0.000-31729.443j,   0.000-32081.816j,  -0.000-34446.625j,  -0.000-34689.405j])
+
+    rotor2_evals, rotor2_evects = rotor2.eigen()
+    assert_almost_equal(rotor2_evals, evals_sorted, decimal=3)
+    assert_almost_equal(rotor2.evalues, evals_sorted, decimal=3)
+    rotor2.w = 10000
+    assert_almost_equal(rotor2.evalues, evals_sorted_w_10000, decimal=3)
+
+
+def test_evals_not_sorted(rotor2):
+    evals = np.array([ 0.+33249.826j,  0.-33249.826j, -0.+33249.826j, -0.-33249.826j,
+                      0.+33048.281j,  0.-33048.281j, -0.+33048.281j, -0.-33048.281j,
+                      0. +4965.29j ,  0. -4965.29j , -0. +4965.29j , -0. -4965.29j ,
+                      -0. +3956.225j, -0. -3956.225j,  0. +3956.225j,  0. -3956.225j,
+                      -0.  +598.025j, -0.  -598.025j,  0.  +598.025j,  0.  -598.025j,
+                      0.  +215.371j,  0.  -215.371j, -0.  +215.371j, -0.  -215.371j])
+    rotor2_evals, rotor2_evects = rotor2.eigen(sorted_=False)
+    assert_almost_equal(rotor2_evals, evals, decimal=3)
+
+
+def test_evects_sorted(rotor2):
     evects_sorted = np.array([[ -7.761e-05 +2.403e-04j,  -1.486e-17 -2.245e-03j,   1.465e-18 +2.330e-04j,   3.661e-06 -1.012e-04j],
                               [  2.608e-17 -2.444e-03j,  -5.110e-05 -9.991e-04j,  -1.072e-05 -4.068e-05j,  -1.167e-18 -2.140e-04j],
                               [  3.367e-17 +1.108e-03j,   2.317e-05 +4.530e-04j,  -4.168e-05 -1.581e-04j,  -2.554e-18 -8.320e-04j],
@@ -146,14 +221,12 @@ def test_rotor_no_damping_2_shaft_elements_1_disk_2_simple_bearings():
                               [  5.264e-01 +1.730e-14j,   2.152e-01 -1.100e-02j,  -2.433e-02 +6.411e-03j,  -1.280e-01 +5.915e-16j],
                               [  2.387e-01 +3.537e-14j,   9.756e-02 -4.989e-03j,   9.458e-02 -2.493e-02j,   4.975e-01 -8.464e-15j],
                               [  2.347e-02 +7.578e-03j,  -2.192e-01 +2.158e-13j,   5.417e-01 +3.773e-15j,  -2.353e-01 -8.511e-03j]])
+    rotor2_evals, rotor2_evects = rotor2.eigen()
+    assert_almost_equal(rotor2_evects[:, 0:4], evects_sorted, decimal=3)
+    assert_almost_equal(rotor2.evectors[:, 0:4], evects_sorted, decimal=3)
 
-    evals = np.array([ 0.+33249.826j,  0.-33249.826j, -0.+33249.826j, -0.-33249.826j,
-                      0.+33048.281j,  0.-33048.281j, -0.+33048.281j, -0.-33048.281j,
-                      0. +4965.29j ,  0. -4965.29j , -0. +4965.29j , -0. -4965.29j ,
-                      -0. +3956.225j, -0. -3956.225j,  0. +3956.225j,  0. -3956.225j,
-                      -0.  +598.025j, -0.  -598.025j,  0.  +598.025j,  0.  -598.025j,
-                      0.  +215.371j,  0.  -215.371j, -0.  +215.371j, -0.  -215.371j])
 
+def test_evects_not_sorted(rotor2):
     evects = np.array([[  4.167e-07 +2.184e-07j,   4.167e-07 -2.184e-07j,  -4.174e-07 +2.245e-07j,  -4.174e-07 -2.245e-07j],
                        [  2.753e-18 +4.801e-07j,   2.753e-18 -4.801e-07j,  -2.779e-18 +4.765e-07j,  -2.779e-18 -4.765e-07j],
                        [  8.682e-17 +1.518e-05j,   8.682e-17 -1.518e-05j,  -8.766e-17 +1.507e-05j,  -8.766e-17 -1.507e-05j],
@@ -178,37 +251,10 @@ def test_rotor_no_damping_2_shaft_elements_1_disk_2_simple_bearings():
                        [ -1.596e-02 -9.137e-17j,  -1.596e-02 +9.137e-17j,  -1.584e-02 +9.410e-17j,  -1.584e-02 -9.410e-17j],
                        [  5.048e-01 +0.000e+00j,   5.048e-01 -0.000e+00j,   5.011e-01 +0.000e+00j,   5.011e-01 -0.000e+00j],
                        [ -2.296e-01 +4.381e-01j,  -2.296e-01 -4.381e-01j,  -2.361e-01 -4.389e-01j,  -2.361e-01 +4.389e-01j]])
+    rotor2_evals, rotor2_evects = rotor2.eigen(sorted_=False)
+    assert_almost_equal(rotor2_evects[:, 0:4], evects, decimal=3)
 
-    tim0 = ShaftElement(0, 0.0, le_, i_d_, o_d_, E_, G_, rho_,
-                        shear_effects=True,
-                        rotary_inertia=True,
-                        gyroscopic=True)
-    tim1 = ShaftElement(1, 0.25, le_, i_d_, o_d_, E_, G_, rho_,
-                        shear_effects=True,
-                        rotary_inertia=True,
-                        gyroscopic=True)
 
-    shaft_elm = [tim0, tim1]
-    disk0 = DiskElement(1, rho_, 0.07, 0.05, 0.28)
-    stf = 1e6
-    bearing0 = BearingElement(0, stf, stf, 0, 0)
-    bearing1 = BearingElement(2, stf, stf, 0, 0)
-
-    rotor1 = Rotor(shaft_elm, [disk0], [bearing0, bearing1])
-    assert_almost_equal(rotor1.M(), Mr1, decimal=3)
-    assert_almost_equal(rotor1.A()[:12, :12], A0_0, decimal=3)
-    assert_almost_equal(rotor1.A()[:12, 12:24], A0_1, decimal=3)
-    assert_almost_equal(rotor1.A()[12:24, :12]/1e7, A1_0, decimal=3)
-    assert_almost_equal(rotor1.A()[12:24, 12:24]/1e7, A1_1, decimal=3)
-    #  sorted eigenvalues, eigenvectors
-    rotor1_evals, rotor1_evects = rotor1.eigen()
-    assert_almost_equal(rotor1_evals, evals_sorted, decimal=3)
-    assert_almost_equal(rotor1_evects[:, 0:4], evects_sorted, decimal=3)
-    #  not sorted
-    rotor1_evals, rotor1_evects = rotor1.eigen(sorted_=False)
-    assert_almost_equal(rotor1_evals, evals, decimal=3)
-    assert_almost_equal(rotor1_evects[:, 0:4], evects, decimal=3)
 #  TODO implement more tests using a simple rotor with 2 elements and one disk
-#  TODO add test for rotor with disks and bearings
 #  TODO add test for damped case
 

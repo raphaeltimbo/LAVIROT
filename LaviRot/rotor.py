@@ -25,14 +25,18 @@ class Rotor(object):
 
     """
 
-    def __init__(self, shaft_elements, disk_elements, bearing_elements):
+    def __init__(self, shaft_elements, disk_elements, bearing_elements, w=0):
         #  TODO consider speed as a rotor property. Setter should call __init__ again
+        self._w = w
         self.shaft_elements = shaft_elements
         self.bearing_elements = bearing_elements
         self.disk_elements = disk_elements
+        # Values for evalues and evectors will be calculated by self._calc_system
+        self.evalues = None
+        self.evectors = None
         #  TODO check when disk diameter in no consistent with shaft diameter
         #  TODO add error for elements added to the same n (node)
-        #  number of dofs
+        # number of dofs
         self.ndof = 4 * len(shaft_elements) + 4
 
         #  nodes axial position
@@ -53,6 +57,21 @@ class Rotor(object):
         # append o_d for last node
         nodes_o_d.append(self.shaft_elements[-1].o_d)
         self.nodes_o_d = nodes_o_d
+
+        # call self._calc_system() to calculate current evalues and evectors
+        self._calc_system()
+
+    def _calc_system(self):
+        self.evalues, self.evectors = self.eigen(self._w)
+
+    @property
+    def w(self):
+        return self._w
+
+    @w.setter
+    def w(self, value):
+        self._w = value
+        self._calc_system()
 
     @staticmethod
     def _dofs(element):
