@@ -159,8 +159,23 @@ class Rotor(object):
         #  TODO implement sort that considers the cross of eigenvalues
         return idx
 
+    def eigen(self, w=0, sorted_=True):
+        """
+        This method will return the eigenvalues and eigenvectors of the
+        state space matrix A sorted by the index method.
+
+        To avoid sorting use sorted_=False
+        """
+        evalues, evectors = la.eig(self.A(w))
+        if sorted_ is False:
+            return evalues, evectors
+
+        idx = self._index(evalues)
+
+        return evalues[idx], evectors[:, idx]
+
     @staticmethod
-    def _orbit(vector):
+    def _kappa(vector):
         """
         This function calculates the matrix
          :math:
@@ -178,7 +193,7 @@ class Rotor(object):
                       [rv * np.cos(nv), -rv * np.sin(nv)]])
         H = T @ T.T
 
-        lam = eigen(H)[0]
+        lam = la.eig(H)[0]
         #  TODO normalize the orbit (after all orbits have been calculated?)
         # lam is the eigenvalue -> sqrt(lam) is the minor/major axis.
         # kappa encodes the relation between the axis and the precession.
@@ -201,21 +216,11 @@ class Rotor(object):
         elif 0 < diff < np.pi:
             kappa *= -1
 
-        orb = {'Minor axes': minor, 'Major axes': major, 'kappa': kappa}
+        k = {'Minor axes': minor, 'Major axes': major, 'kappa': kappa}
 
-        return orb
+        return k
 
-    def eigen(self, w=0, sorted_=True):
-        """
-        This method will return the eigenvalues and eigenvectors of the
-        state space matrix A sorted by the index method.
-
-        To avoid sorting use sorted_=False
-        """
-        evalues, evectors = la.eig(self.A(w))
-        if sorted_ is False:
-            return evalues, evectors
-
-        idx = self._index(evalues)
-
-        return evalues[idx], evectors[:, idx]
+    def orbit(self):
+        pass
+    #  TODO make w a property. Make eigen an attribute.
+    #  TODO when w is changed, eigen is calculated and is available to methods.

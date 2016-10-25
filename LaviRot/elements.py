@@ -70,7 +70,7 @@ class ShaftElement(object):
     ...                                   rotary_inertia=True,
     ...                                   shear_effects=True)
     """
-
+    #  TODO add __repr__ to the class
     def __init__(self, n, z, L, i_d, o_d, E, G_s, rho,
                  axial_force=0, torque=0,
                  shear_effects=False,
@@ -314,6 +314,7 @@ class DiskElement(object):
 
     """
 
+    #  TODO add __repr__ to the class
     def __init__(self, n, rho, width, i_d, o_d):
         self.n = n
         self.rho = rho
@@ -423,6 +424,8 @@ class BearingElement(object):
     --------
 
     """
+
+    #  TODO add __repr__ to the class
     #  TODO implement for more complex cases (kxy, kthetatheta etc.)
     #  TODO consider kxx, kxy, kyx, kyy, cxx, cxy, cyx, cyy, mxx, myy, myx, myy (to import from XLTRC)
     #  TODO add speed as an argument
