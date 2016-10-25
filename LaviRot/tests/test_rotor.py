@@ -29,14 +29,14 @@ def rotor1():
     return Rotor(shaft_elm, [], [])
 
 
-def test_index_eigenvalues(rotor1):
+def test_index_eigenvalues_rotor1(rotor1):
     evalues = np.array([-3.8 + 68.6j, -3.8 - 68.6j, -1.8 + 30.j, -1.8 - 30.j, -0.7 + 14.4j, -0.7 - 14.4j])
     evalues2 = np.array([0. + 68.7j, 0. - 68.7j, 0. + 30.1j, 0. - 30.1j, -0. + 14.4j, -0. - 14.4j])
     assert_almost_equal([4, 2, 0, 5, 3, 1], rotor1._index(evalues))
     assert_almost_equal([4, 2, 0, 5, 3, 1], rotor1._index(evalues2))
 
 
-def test_mass_matrix(rotor1):
+def test_mass_matrix_rotor1(rotor1):
     Mr1 = np.array([[ 1.421,  0.   ,  0.   ,  0.049,  0.496,  0.   ,  0.   , -0.031,  0.   ,  0.   ,  0.   ,  0.   ],
                     [ 0.   ,  1.421, -0.049,  0.   ,  0.   ,  0.496,  0.031,  0.   ,  0.   ,  0.   ,  0.   ,  0.   ],
                     [ 0.   , -0.049,  0.002,  0.   ,  0.   , -0.031, -0.002,  0.   ,  0.   ,  0.   ,  0.   ,  0.   ],
@@ -83,7 +83,7 @@ def rotor2():
     return Rotor(shaft_elm, [disk0], [bearing0, bearing1])
 
 
-def test_mass_matrix(rotor2):
+def test_mass_matrix_rotor2(rotor2):
     Mr2 = np.array([[  1.421,   0.   ,   0.   ,   0.049,   0.496,   0.   ,   0.   ,  -0.031,   0.   ,   0.   ,   0.   ,   0.   ],
                     [  0.   ,   1.421,  -0.049,   0.   ,   0.   ,   0.496,   0.031,   0.   ,   0.   ,   0.   ,   0.   ,   0.   ],
                     [  0.   ,  -0.049,   0.002,   0.   ,   0.   ,  -0.031,  -0.002,   0.   ,   0.   ,   0.   ,   0.   ,   0.   ],
@@ -99,7 +99,7 @@ def test_mass_matrix(rotor2):
     assert_almost_equal(rotor2.M(), Mr2, decimal=3)
 
 
-def test_a0_0_matrix(rotor2):
+def test_a0_0_matrix_rotor2(rotor2):
     A0_0 = np.array([[ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
@@ -115,7 +115,7 @@ def test_a0_0_matrix(rotor2):
     assert_almost_equal(rotor2.A()[:12, :12], A0_0, decimal=3)
 
 
-def test_a0_1_matrix(rotor2):
+def test_a0_1_matrix_rotor2(rotor2):
     A0_1 = np.array([[ 1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
@@ -131,7 +131,7 @@ def test_a0_1_matrix(rotor2):
     assert_almost_equal(rotor2.A()[:12, 12:24], A0_1, decimal=3)
 
 
-def test_a1_0_matrix(rotor2):
+def test_a1_0_matrix_rotor2(rotor2):
     A1_0 = np.array([[  20.63 ,   -0.   ,    0.   ,    4.114,  -20.958,    0.   ,    0.   ,    1.11 ,    0.056,   -0.   ,   -0.   ,   -0.014],
                      [   0.   ,   20.63 ,   -4.114,    0.   ,   -0.   ,  -20.958,   -1.11 ,    0.   ,   -0.   ,    0.056,    0.014,    0.   ],
                      [   0.   ,  697.351, -131.328,    0.   ,   -0.   , -705.253,  -44.535,    0.   ,   -0.   ,    2.079,    0.596,    0.   ],
@@ -147,7 +147,7 @@ def test_a1_0_matrix(rotor2):
     assert_almost_equal(rotor2.A()[12:24, :12]/1e7, A1_0, decimal=3)
 
 
-def test_a1_1_matrix(rotor2):
+def test_a1_1_matrix_rotor2(rotor2):
     A1_1 = np.array([[ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
                      [ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.],
@@ -163,7 +163,7 @@ def test_a1_1_matrix(rotor2):
     assert_almost_equal(rotor2.A()[12:24, 12:24] / 1e7, A1_1, decimal=3)
 
 
-def test_evals_sorted(rotor2):
+def test_evals_sorted_rotor2(rotor2):
     evals_sorted = np.array([-0. + 215.371j, 0. + 215.371j, -0. + 598.025j, 0. + 598.025j,
                              -0. + 3956.225j, 0. + 3956.225j, 0. + 4965.29j, -0. + 4965.29j,
                              0. + 33048.281j, -0. + 33048.281j, 0. + 33249.826j, -0. + 33249.826j,
@@ -185,7 +185,7 @@ def test_evals_sorted(rotor2):
     assert_almost_equal(rotor2.evalues, evals_sorted_w_10000, decimal=3)
 
 
-def test_evals_not_sorted(rotor2):
+def test_evals_not_sorted_rotor2(rotor2):
     evals = np.array([ 0.+33249.826j,  0.-33249.826j, -0.+33249.826j, -0.-33249.826j,
                       0.+33048.281j,  0.-33048.281j, -0.+33048.281j, -0.-33048.281j,
                       0. +4965.29j ,  0. -4965.29j , -0. +4965.29j , -0. -4965.29j ,
@@ -196,7 +196,7 @@ def test_evals_not_sorted(rotor2):
     assert_almost_equal(rotor2_evals, evals, decimal=3)
 
 
-def test_evects_sorted(rotor2):
+def test_evects_sorted_rotor2(rotor2):
     evects_sorted = np.array([[ -7.761e-05 +2.403e-04j,  -1.486e-17 -2.245e-03j,   1.465e-18 +2.330e-04j,   3.661e-06 -1.012e-04j],
                               [  2.608e-17 -2.444e-03j,  -5.110e-05 -9.991e-04j,  -1.072e-05 -4.068e-05j,  -1.167e-18 -2.140e-04j],
                               [  3.367e-17 +1.108e-03j,   2.317e-05 +4.530e-04j,  -4.168e-05 -1.581e-04j,  -2.554e-18 -8.320e-04j],
@@ -226,7 +226,7 @@ def test_evects_sorted(rotor2):
     assert_almost_equal(rotor2.evectors[:, 0:4], evects_sorted, decimal=3)
 
 
-def test_evects_not_sorted(rotor2):
+def test_evects_not_sorted_rotor2(rotor2):
     evects = np.array([[  4.167e-07 +2.184e-07j,   4.167e-07 -2.184e-07j,  -4.174e-07 +2.245e-07j,  -4.174e-07 -2.245e-07j],
                        [  2.753e-18 +4.801e-07j,   2.753e-18 -4.801e-07j,  -2.779e-18 +4.765e-07j,  -2.779e-18 -4.765e-07j],
                        [  8.682e-17 +1.518e-05j,   8.682e-17 -1.518e-05j,  -8.766e-17 +1.507e-05j,  -8.766e-17 -1.507e-05j],
