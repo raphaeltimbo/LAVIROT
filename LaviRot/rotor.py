@@ -159,10 +159,57 @@ class Rotor(object):
         #  TODO implement sort that considers the cross of eigenvalues
         return idx
 
+    @staticmethod
+    def _orbit(vector):
+        """
+        This function calculates the matrix
+         :math:
+         T = ...
+         and the matrix :math: H = T.T^T.
+         The eigenvalues of H correspond to the minor and
+         major axis of the orbit.
+        """
+        u, v = vector
+        ru = np.absolute(u)
+        rv = np.absolute(v)
+        nu = np.angle(u)
+        nv = np.angle(v)
+        T = np.array([[ru * np.cos(nu), -ru * np.sin(nu)],
+                      [rv * np.cos(nv), -rv * np.sin(nv)]])
+        H = T @ T.T
+
+        lam = eigen(H)[0]
+        #  TODO normalize the orbit (after all orbits have been calculated?)
+        # lam is the eigenvalue -> sqrt(lam) is the minor/major axis.
+        # kappa encodes the relation between the axis and the precession.
+        minor = np.sqrt(min(lam))
+        major = np.sqrt(max(lam))
+        kappa = minor / major
+        diff = nv - nu
+
+        # we need to evaluate if 0 < nv - nu < pi.
+        if diff < -np.pi:
+            diff += 2 * np.pi
+        elif diff > np.pi:
+            diff -= 2 * np.pi
+
+        # if nv = nu or nv = nu + pi then the response is a straight line.
+        if diff == 0 or diff == np.pi:
+            kappa = 0
+
+        # if 0 < nv - nu < pi, then a backward rotating mode exists.
+        elif 0 < diff < np.pi:
+            kappa *= -1
+
+        orb = {'Minor axes': minor, 'Major axes': major, 'kappa': kappa}
+
+        return orb
+
     def eigen(self, w=0, sorted_=True):
         """
         This method will return the eigenvalues and eigenvectors of the
         state space matrix A sorted by the index method.
+
         To avoid sorting use sorted_=False
         """
         evalues, evectors = la.eig(self.A(w))
