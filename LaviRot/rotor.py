@@ -193,51 +193,67 @@ class Rotor(object):
 
         return evalues[idx], evectors[:, idx]
 
-    @staticmethod
-    def _kappa(vector):
+    def kappa(self, node, freq, wd=True):
         """
         This function calculates the matrix
          :math:
          T = ...
-         and the matrix :math: H = T.T^T.
+         and the matrix :math: H = T.T^T for a given node.
          The eigenvalues of H correspond to the minor and
          major axis of the orbit.
         """
-        u, v = vector
+        # get modes of interest based on freqs
+        mode = self.evectors[4*node:4*node+2, freq]
+        # get translation sdofs for specified node for each mode
+        u = mode[0]
+        v = mode[1]
         ru = np.absolute(u)
         rv = np.absolute(v)
-        nu = np.angle(u)
-        nv = np.angle(v)
-        T = np.array([[ru * np.cos(nu), -ru * np.sin(nu)],
-                      [rv * np.cos(nv), -rv * np.sin(nv)]])
-        H = T @ T.T
+        if ru*rv < 1e-16:
+            minor = major = kappa = 0
+        else:
+            nu = np.angle(u)
+            nv = np.angle(v)
+            T = np.array([[ru * np.cos(nu), -ru * np.sin(nu)],
+                          [rv * np.cos(nv), -rv * np.sin(nv)]])
+            H = T @ T.T
 
-        lam = la.eig(H)[0]
-        #  TODO normalize the orbit (after all orbits have been calculated?)
-        # lam is the eigenvalue -> sqrt(lam) is the minor/major axis.
-        # kappa encodes the relation between the axis and the precession.
-        minor = np.sqrt(min(lam))
-        major = np.sqrt(max(lam))
-        kappa = minor / major
-        diff = nv - nu
+            lam = la.eig(H)[0]
 
-        # we need to evaluate if 0 < nv - nu < pi.
-        if diff < -np.pi:
-            diff += 2 * np.pi
-        elif diff > np.pi:
-            diff -= 2 * np.pi
+            #  TODO normalize the orbit (after all orbits have been calculated?)
+            # lam is the eigenvalue -> sqrt(lam) is the minor/major axis.
+            # kappa encodes the relation between the axis and the precession.
+            minor = np.sqrt(lam.min())
+            major = np.sqrt(lam.max())
+            kappa = minor / major
+            diff = nv - nu
 
-        # if nv = nu or nv = nu + pi then the response is a straight line.
-        if diff == 0 or diff == np.pi:
-            kappa = 0
+            # we need to evaluate if 0 < nv - nu < pi.
+            if diff < -np.pi:
+                diff += 2 * np.pi
+            elif diff > np.pi:
+                diff -= 2 * np.pi
 
-        # if 0 < nv - nu < pi, then a backward rotating mode exists.
-        elif 0 < diff < np.pi:
-            kappa *= -1
+            # if nv = nu or nv = nu + pi then the response is a straight line.
+            if diff == 0 or diff == np.pi:
+                kappa = 0
 
-        k = {'Minor axes': minor, 'Major axes': major, 'kappa': kappa}
+            # if 0 < nv - nu < pi, then a backward rotating mode exists.
+            elif 0 < diff < np.pi:
+                kappa *= -1
+
+            if wd:
+                nat_freq = np.imag(self.evalues[freq])
+            else:
+                nat_freq = np.absolute(self.evalues[freq])
+
+        k = ({'Frequency': nat_freq,
+              'Minor axes': minor,
+              'Major axes': major,
+              'kappa': kappa})
 
         return k
+
 
     def orbit(self):
         pass
