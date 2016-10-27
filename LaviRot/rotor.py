@@ -34,6 +34,8 @@ class Rotor(object):
         # Values for evalues and evectors will be calculated by self._calc_system
         self.evalues = None
         self.evectors = None
+        self.wn = None
+        self.wd = None
         #  TODO check when disk diameter in no consistent with shaft diameter
         #  TODO add error for elements added to the same n (node)
         # number of dofs
@@ -45,6 +47,7 @@ class Rotor(object):
         nodes_pos.append(self.shaft_elements[-1].z
                          + self.shaft_elements[-1].L)
         self.nodes_pos = nodes_pos
+        self.nodes = [i for i in range(len(self.nodes_pos))]
 
         #  TODO for tappered elements i_d and o_d will be a list with two elements
         #  diameter at node position
@@ -63,6 +66,8 @@ class Rotor(object):
 
     def _calc_system(self):
         self.evalues, self.evectors = self.eigen(self._w)
+        self.wn = np.absolute(self.evalues)
+        self.wd = np.imag(self.evalues)
 
     @property
     def w(self):
@@ -193,8 +198,9 @@ class Rotor(object):
 
         return evalues[idx], evectors[:, idx]
 
-    def kappa(self, node, freq, wd=True):
+    def kappa(self, node, w, wd=True):
         """
+        w is the the index of the natural frequency of interest
         This function calculates the matrix
          :math:
          T = ...
@@ -202,55 +208,59 @@ class Rotor(object):
          The eigenvalues of H correspond to the minor and
          major axis of the orbit.
         """
-        # get modes of interest based on freqs
-        mode = self.evectors[4*node:4*node+2, freq]
+        if wd:
+            nat_freq = self.wd[w]
+        else:
+            nat_freq = self.wn[w]
+
+        # get mode of interest based on freqs
+        mode = self.evectors[4*node:4*node+2, w]
         # get translation sdofs for specified node for each mode
         u = mode[0]
         v = mode[1]
         ru = np.absolute(u)
         rv = np.absolute(v)
         if ru*rv < 1e-16:
-            minor = major = kappa = 0
-        else:
-            nu = np.angle(u)
-            nv = np.angle(v)
-            T = np.array([[ru * np.cos(nu), -ru * np.sin(nu)],
-                          [rv * np.cos(nv), -rv * np.sin(nv)]])
-            H = T @ T.T
+            k = ({'Frequency': nat_freq,
+                  'Minor axes': 0,
+                  'Major axes': 0,
+                  'kappa': 0})
+            return k
 
-            lam = la.eig(H)[0]
+        nu = np.angle(u)
+        nv = np.angle(v)
+        T = np.array([[ru * np.cos(nu), -ru * np.sin(nu)],
+                      [rv * np.cos(nv), -rv * np.sin(nv)]])
+        H = T @ T.T
 
-            #  TODO normalize the orbit (after all orbits have been calculated?)
-            # lam is the eigenvalue -> sqrt(lam) is the minor/major axis.
-            # kappa encodes the relation between the axis and the precession.
-            minor = np.sqrt(lam.min())
-            major = np.sqrt(lam.max())
-            kappa = minor / major
-            diff = nv - nu
+        lam = la.eig(H)[0]
 
-            # we need to evaluate if 0 < nv - nu < pi.
-            if diff < -np.pi:
-                diff += 2 * np.pi
-            elif diff > np.pi:
-                diff -= 2 * np.pi
+        #  TODO normalize the orbit (after all orbits have been calculated?)
+        # lam is the eigenvalue -> sqrt(lam) is the minor/major axis.
+        # kappa encodes the relation between the axis and the precession.
+        minor = np.sqrt(lam.min())
+        major = np.sqrt(lam.max())
+        kappa = minor / major
+        diff = nv - nu
 
-            # if nv = nu or nv = nu + pi then the response is a straight line.
-            if diff == 0 or diff == np.pi:
-                kappa = 0
+        # we need to evaluate if 0 < nv - nu < pi.
+        if diff < -np.pi:
+            diff += 2 * np.pi
+        elif diff > np.pi:
+            diff -= 2 * np.pi
 
-            # if 0 < nv - nu < pi, then a backward rotating mode exists.
-            elif 0 < diff < np.pi:
-                kappa *= -1
+        # if nv = nu or nv = nu + pi then the response is a straight line.
+        if diff == 0 or diff == np.pi:
+            kappa = 0
 
-            if wd:
-                nat_freq = np.imag(self.evalues[freq])
-            else:
-                nat_freq = np.absolute(self.evalues[freq])
+        # if 0 < nv - nu < pi, then a backward rotating mode exists.
+        elif 0 < diff < np.pi:
+            kappa *= -1
 
         k = ({'Frequency': nat_freq,
-              'Minor axes': minor,
-              'Major axes': major,
-              'kappa': kappa})
+              'Minor axes': np.real(minor),
+              'Major axes': np.real(major),
+              'kappa': np.real(kappa)})
 
         return k
 
@@ -259,3 +269,4 @@ class Rotor(object):
         pass
     #  TODO make w a property. Make eigen an attribute.
     #  TODO when w is changed, eigen is calculated and is available to methods.
+    #  TODO static methods as auxiliary functions
