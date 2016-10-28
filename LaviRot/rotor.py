@@ -25,6 +25,7 @@ class Rotor(object):
     A rotor object.
 
     Examples
+    --------
     >>> #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
     >>> n = 1
     >>> z = 0
@@ -212,7 +213,8 @@ class Rotor(object):
             An array with indices that will sort the
             eigenvalues and eigenvectors.
 
-        Examples:
+        Examples
+        --------
         >>> rotor = rotor_example()
         >>> evalues, evectors = rotor._eigen(0, sorted_=False)
         >>> idx = rotor._index(evalues)
@@ -247,7 +249,8 @@ class Rotor(object):
         evectors array
             An array with the eigenvectors
 
-        Examples:
+        Examples
+        --------
         >>> rotor = rotor_example()
         >>> evalues, evectors = rotor._eigen(0)
         >>> evalues[:2]
@@ -346,7 +349,8 @@ class Rotor(object):
             A list with the value of kappa for each node related
             to the mode/natural frequency of interest.
 
-        Examples:
+        Examples
+        --------
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
         >>> rotor.kappa_mode(0)
@@ -376,7 +380,8 @@ def rotor_example():
     -------
     An instance of a rotor object.
 
-    Examples:
+    Examples
+    --------
     >>> rotor = rotor_example()
     >>> rotor.wd
     array([  34.27731557,   34.27731557,   95.17859364,   95.17859364,

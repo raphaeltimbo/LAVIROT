@@ -48,6 +48,7 @@ extensions = [
 ]
 
 # autosummary_generate = True
+autodoc_member_order = 'bysource'
 
 # numpydoc options
 

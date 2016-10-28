@@ -5,7 +5,6 @@ __all__ = ["ShaftElement", "DiskElement", "BearingElement"]
 
 
 class ShaftElement(object):
-    #  TODO detail this class attributes inside the docstring
     r"""A beam element.
 
     This class will create a shaft element that may take into
@@ -20,40 +19,56 @@ class ShaftElement(object):
 
     Parameters
     ----------
-    n: int
+    n : int
         Element number (coincident with it's first node).
-    z: float
+    z : float
         Position of the element first node.
-    L: float
+    L : float
         Element length.
-    i_d: float
+    i_d : float
         Inner diameter of the element.
-    o_d: float
+    o_d : float
         Outer diameter of the element.
-    E: float
+    E : float
         Young's modulus.
-    G_s: float
+    G_s : float
         Shear modulus.
-    rho: float
+    rho : float
         Density.
-    axial_force: float
+    axial_force : float
         Axial force.
-    torque: float
+    torque : float
         Torque.
-    sheaf_effects: bool
+    shear_effects : bool
         Determine if shear effects are taken into account.
         Default is False.
-    rotary_inertia: bool
+    rotary_inertia : bool
         Determine if rotary_inertia effects are taken into account.
         Default is False.
-    gyroscopic: bool
+    gyroscopic : bool
         Determine if gyroscopic effects are taken into account.
         Default is False.
 
+    Returns
+    -------
 
     Attributes
     ----------
+    poisson : float
+        Poisson coefficient for the element.
+    A : float
+        Element section area.
+    Ie : float
+        Ie is the second moment of area of the cross section about
+        the neutral plane Ie = pi*r**2/4
+    phi : float
+        Constant that is used according to [1]_ to consider rotary
+        inertia and shear effects. If these are not considered phi=0.
 
+    References
+    ----------
+    .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
+       & AW Lees, published by Cambridge University Press, 2010 pp. 158-166.
 
     Examples
     --------
@@ -70,6 +85,7 @@ class ShaftElement(object):
     ...                                   rotary_inertia=True,
     ...                                   shear_effects=True)
     """
+    #  TODO detail this class attributes inside the docstring
     #  TODO add __repr__ to the class
     def __init__(self, n, z, L, i_d, o_d, E, G_s, rho,
                  axial_force=0, torque=0,
@@ -117,18 +133,9 @@ class ShaftElement(object):
         r"""This method will return the mass matrix for an instance of a beam
         element.
 
-        Parameters
-        ----------
-        self
-
         Returns
         -------
         Mass matrix for the beam element.
-
-        References
-        ----------
-        .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
-           & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
         Examples
         --------
@@ -186,18 +193,9 @@ class ShaftElement(object):
         This method will return the stiffness matrix for an instance of a beam
         element.
 
-        Parameters
-        ----------
-        self
-
         Returns
         -------
         Stiffness matrix for the beam element.
-
-        References
-        ----------
-        .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
-           & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
         Examples
         --------
@@ -231,18 +229,9 @@ class ShaftElement(object):
         This method will return the gyroscopic matrix for an instance of a beam
         element.
 
-        Parameters
-        ----------
-        self
-
         Returns
         -------
         Gyroscopic matrix for the beam element.
-
-        References
-        ----------
-        .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
-           & AW Lees, published by Cambridge University Press, 2010 pp. 166.
 
         Examples
         --------
@@ -309,6 +298,11 @@ class DiskElement(object):
     Attributes
     ----------
 
+    References
+    ----------
+    .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
+       & AW Lees, published by Cambridge University Press, 2010 pp. 156-157.
+
     Examples
     --------
 
@@ -337,11 +331,6 @@ class DiskElement(object):
         Returns
         -------
         Mass matrix for the disk element.
-
-        References
-        ----------
-        .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
-           & AW Lees, published by Cambridge University Press, 2010 pp. 158.
 
         Examples
         --------
@@ -374,11 +363,6 @@ class DiskElement(object):
         Returns
         -------
         Gyroscopic matrix for the disk element.
-
-        References
-        ----------
-        .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
-           & AW Lees, published by Cambridge University Press, 2010 pp. 158.
 
         Examples
         --------
@@ -416,9 +400,6 @@ class BearingElement(object):
         Direct stiffness in the x direction.
     cyy: float
         Direct stiffness in the y direction.
-
-    Attributes
-    ----------
 
     Examples
     --------
