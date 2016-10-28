@@ -266,6 +266,14 @@ def test_kappa_rotor2(rotor2):
                                   'Minor axes': 1.3488789677268868e-07,
                                   'kappa': 5.489242205090824e-05}
 
+def test_kappa_mode_rotor2(rotor2):
+    assert rotor2.kappa_mode(0) == [-0.03144693759930626,
+                                    -0.03144693759930822,
+                                    -0.03144693759930619]
+
+    assert rotor2.kappa_mode(1) == [0.018998588483959564,
+                                    0.01899858848397222,
+                                    0.018998588483984717]
 
 #  TODO implement more tests using a simple rotor with 2 elements and one disk
 #  TODO add test for damped case
