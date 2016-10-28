@@ -17,6 +17,8 @@ class Rotor(object):
         List with the disk elements
     bearing_elements: list
         List with the bearing elements
+    w: float, optional
+        Rotor speed. Defaults to 0.
 
     Returns
     -------
