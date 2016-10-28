@@ -66,7 +66,7 @@ class Rotor(object):
         self._calc_system()
 
     def _calc_system(self):
-        self.evalues, self.evectors = self.eigen(self._w)
+        self.evalues, self.evectors = self._eigen(self._w)
         self.wn = (np.absolute(self.evalues)/(2*np.pi))[:self.ndof//2]
         self.wd = (np.imag(self.evalues)/(2*np.pi))[:self.ndof//2]
 
@@ -184,12 +184,29 @@ class Rotor(object):
         #  TODO implement sort that considers the cross of eigenvalues
         return idx
 
-    def eigen(self, w=0, sorted_=True):
-        """
-        This method will return the eigenvalues and eigenvectors of the
-        state space matrix A sorted by the index method.
-
+    def _eigen(self, w=0, sorted_=True):
+        r"""This method will return the eigenvalues and eigenvectors of the
+        state space matrix A, sorted by the index method which considers
+        the imaginary part (wd) of the eigenvalues for sorting.
         To avoid sorting use sorted_=False
+
+        Parameters
+        ----------
+        w: float
+            Rotor speed.
+
+        Returns
+        -------
+        evalues: array
+            An array with the eigenvalues
+        evectors array
+            An array with the eigenvectors
+
+        Examples:
+        >>> rotor = rotor_example()
+        >>> evalues, evectors = rotor._eigen(0)
+        >>> evalues[:2]
+        array([ -6.81898982e-13+215.37072557j,   2.13731810e-12+215.37072557j])
         """
         evalues, evectors = la.eig(self.A(w))
         if sorted_ is False:
@@ -199,6 +216,7 @@ class Rotor(object):
 
         return evalues[idx], evectors[:, idx]
 
+    # TODO separate kappa-create a function that will return lam and U (extract method)
     def kappa(self, node, w, wd=True):
         """
         w is the the index of the natural frequency of interest
@@ -284,7 +302,10 @@ class Rotor(object):
             to the mode/natural frequency of interest.
 
         Examples:
-
+        >>> rotor = rotor_example()
+        >>> # kappa for each node of the first natural frequency
+        >>> rotor.kappa_mode(0)
+        [array(-0.03144693759930626), array(-0.03144693759930822), array(-0.03144693759930619)]
         """
         kappa_mode = [self.kappa(node, w)['kappa'] for node in self.nodes]
         return kappa_mode
@@ -295,6 +316,7 @@ class Rotor(object):
     #  TODO make w a property. Make eigen an attribute.
     #  TODO when w is changed, eigen is calculated and is available to methods.
     #  TODO static methods as auxiliary functions
+
 
 def rotor_example():
     r"""This function returns an instance of a simple rotor with

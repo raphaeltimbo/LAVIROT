@@ -178,7 +178,7 @@ def test_evals_sorted_rotor2(rotor2):
                                       -0.000 -3850.213j, -41.763 -3990.229j,  41.763 -3990.229j,  -0.000-18487.595j,
                                       0.000-31729.443j,   0.000-32081.816j,  -0.000-34446.625j,  -0.000-34689.405j])
 
-    rotor2_evals, rotor2_evects = rotor2.eigen()
+    rotor2_evals, rotor2_evects = rotor2._eigen()
     assert_almost_equal(rotor2_evals, evals_sorted, decimal=3)
     assert_almost_equal(rotor2.evalues, evals_sorted, decimal=3)
     rotor2.w = 10000
@@ -192,7 +192,7 @@ def test_evals_not_sorted_rotor2(rotor2):
                       -0. +3956.225j, -0. -3956.225j,  0. +3956.225j,  0. -3956.225j,
                       -0.  +598.025j, -0.  -598.025j,  0.  +598.025j,  0.  -598.025j,
                       0.  +215.371j,  0.  -215.371j, -0.  +215.371j, -0.  -215.371j])
-    rotor2_evals, rotor2_evects = rotor2.eigen(sorted_=False)
+    rotor2_evals, rotor2_evects = rotor2._eigen(sorted_=False)
     assert_almost_equal(rotor2_evals, evals, decimal=3)
 
 
@@ -221,7 +221,7 @@ def test_evects_sorted_rotor2(rotor2):
                               [  5.264e-01 +1.730e-14j,   2.152e-01 -1.100e-02j,  -2.433e-02 +6.411e-03j,  -1.280e-01 +5.915e-16j],
                               [  2.387e-01 +3.537e-14j,   9.756e-02 -4.989e-03j,   9.458e-02 -2.493e-02j,   4.975e-01 -8.464e-15j],
                               [  2.347e-02 +7.578e-03j,  -2.192e-01 +2.158e-13j,   5.417e-01 +3.773e-15j,  -2.353e-01 -8.511e-03j]])
-    rotor2_evals, rotor2_evects = rotor2.eigen()
+    rotor2_evals, rotor2_evects = rotor2._eigen()
     assert_almost_equal(rotor2_evects[:, 0:4], evects_sorted, decimal=3)
     assert_almost_equal(rotor2.evectors[:, 0:4], evects_sorted, decimal=3)
 
@@ -251,7 +251,7 @@ def test_evects_not_sorted_rotor2(rotor2):
                        [ -1.596e-02 -9.137e-17j,  -1.596e-02 +9.137e-17j,  -1.584e-02 +9.410e-17j,  -1.584e-02 -9.410e-17j],
                        [  5.048e-01 +0.000e+00j,   5.048e-01 -0.000e+00j,   5.011e-01 +0.000e+00j,   5.011e-01 -0.000e+00j],
                        [ -2.296e-01 +4.381e-01j,  -2.296e-01 -4.381e-01j,  -2.361e-01 -4.389e-01j,  -2.361e-01 +4.389e-01j]])
-    rotor2_evals, rotor2_evects = rotor2.eigen(sorted_=False)
+    rotor2_evals, rotor2_evects = rotor2._eigen(sorted_=False)
     assert_almost_equal(rotor2_evects[:, 0:4], evects, decimal=3)
 
 
