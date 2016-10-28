@@ -5,7 +5,7 @@ __all__ = ["ShaftElement", "DiskElement", "BearingElement"]
 
 
 class ShaftElement(object):
-    r"""A beam element.
+    r"""A shaft element.
 
     This class will create a shaft element that may take into
     account shear, rotary inertia an gyroscopic effects.
@@ -134,12 +134,11 @@ class ShaftElement(object):
         self.phi = phi
 
     def M(self):
-        r"""This method will return the mass matrix for an instance of a beam
-        element.
+        r"""Mass matrix for an instance of a shaft element.
 
         Returns
         -------
-        Mass matrix for the beam element.
+        Mass matrix for the shaft element.
 
         Examples
         --------
@@ -193,13 +192,11 @@ class ShaftElement(object):
         return M
 
     def K(self):
-        """
-        This method will return the stiffness matrix for an instance of a beam
-        element.
+        r"""Stiffness matrix for an instance of a shaft element.
 
         Returns
         -------
-        Stiffness matrix for the beam element.
+        Stiffness matrix for the shaft element.
 
         Examples
         --------
@@ -229,13 +226,11 @@ class ShaftElement(object):
         return K
 
     def G(self):
-        """
-        This method will return the gyroscopic matrix for an instance of a beam
-        element.
+        """Gyroscopic matrix for an instance of a shaft element.
 
         Returns
         -------
-        Gyroscopic matrix for the beam element.
+        Gyroscopic matrix for the shaft element.
 
         Examples
         --------
@@ -301,6 +296,12 @@ class DiskElement(object):
 
     Attributes
     ----------
+    m : float
+        Mass of the disk element.
+    Id : float
+        Diametral moment of inertia.
+    Ip : float
+        Polar moment of inertia
 
     References
     ----------
@@ -309,7 +310,9 @@ class DiskElement(object):
 
     Examples
     --------
-
+    >>> disk = DiskElement(0, 7810, 0.07, 0.05, 0.28)
+    >>> disk.Ip
+    0.32956362089137037
     """
 
     #  TODO add __repr__ to the class

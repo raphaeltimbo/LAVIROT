@@ -126,7 +126,22 @@ class Rotor(object):
         return n1, n2
 
     def M(self):
-        """This method returns the rotor mass matrix"""
+        r"""This method will return the mass matrix for
+        an instance of a rotor.
+
+        Returns
+        -------
+        Mass matrix for the rotor.
+
+        Examples
+        --------
+        >>> rotor = rotor_example()
+        >>> rotor.M()[:4, :4]
+        array([[ 1.42050794,  0.        ,  0.        ,  0.04931719],
+               [ 0.        ,  1.42050794, -0.04931719,  0.        ],
+               [ 0.        , -0.04931719,  0.00231392,  0.        ],
+               [ 0.04931719,  0.        ,  0.        ,  0.00231392]])
+        """
         #  Create the matrices
         M0 = np.zeros((self.ndof, self.ndof))
 
@@ -141,7 +156,25 @@ class Rotor(object):
         return M0
 
     def K(self):
-        """This method returns the rotor stiffness matrix"""
+        """
+        This method will return the stiffness matrix for an instance of a beam
+        element.
+
+        Returns
+        -------
+        Stiffness matrix for the beam element.
+
+        Examples
+        --------
+        >>> Timoshenko_Element = ShaftElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        ...                                  rotary_inertia=True,
+        ...                                  shear_effects=True)
+        >>> Timoshenko_Element.K()[:4, :4]/1e6
+        array([[ 45.69644273,   0.        ,   0.        ,   5.71205534],
+               [  0.        ,  45.69644273,  -5.71205534,   0.        ],
+               [  0.        ,  -5.71205534,   0.97294287,   0.        ],
+               [  5.71205534,   0.        ,   0.        ,   0.97294287]])
+        """
         #  Create the matrices
         K0 = np.zeros((self.ndof, self.ndof))
 
