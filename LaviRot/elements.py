@@ -81,9 +81,13 @@ class ShaftElement(object):
     >>> G_s = 81.2e9
     >>> rho = 7810
     >>> Euler_Bernoulli_Element = ShaftElement(n, z1, le, i_d, o_d, E, G_s, rho)
+    >>> Euler_Bernoulli_Element.phi
+    0
     >>> Timoshenko_Element = ShaftElement(n, z1, le, i_d, o_d, E, G_s, rho,
     ...                                   rotary_inertia=True,
     ...                                   shear_effects=True)
+    >>> Timoshenko_Element.phi
+    0.08795566502463055
     """
     #  TODO detail this class attributes inside the docstring
     #  TODO add __repr__ to the class
@@ -257,13 +261,13 @@ class ShaftElement(object):
             g4 = (-1 - 5 * phi + 5 * phi**2) * L**2
 
             G = np.array([[  0,  g1,  g2,   0,   0,  g1,  g2,   0],
-                            [ g1,   0,   0,  g2, -g1,   0,   0,  g2],
-                            [-g2,   0,   0, -g3,  g2,   0,   0, -g4],
-                            [  0, -g2,  g3,   0,   0,  g2,  g4,   0],
-                            [  0,  g1, -g2,   0,   0, -g1, -g2,   0],
-                            [-g1,   0,   0, -g2,  g1,   0,   0, -g2],
-                            [-g2,   0,   0, -g4,  g2,   0,   0, -g3],
-                            [  0, -g2,  g4,   0,   0,  g2,  g3,   0]])
+                          [ g1,   0,   0,  g2, -g1,   0,   0,  g2],
+                          [-g2,   0,   0, -g3,  g2,   0,   0, -g4],
+                          [  0, -g2,  g3,   0,   0,  g2,  g4,   0],
+                          [  0,  g1, -g2,   0,   0, -g1, -g2,   0],
+                          [-g1,   0,   0, -g2,  g1,   0,   0, -g2],
+                          [-g2,   0,   0, -g4,  g2,   0,   0, -g3],
+                          [  0, -g2,  g4,   0,   0,  g2,  g3,   0]])
 
             G = - self.rho * self.Ie * G / (15 * L * (1 + phi)**2)
 
