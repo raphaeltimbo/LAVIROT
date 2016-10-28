@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.linalg as la
+from LaviRot.elements import *
 
 
 class Rotor(object):
@@ -66,8 +67,8 @@ class Rotor(object):
 
     def _calc_system(self):
         self.evalues, self.evectors = self.eigen(self._w)
-        self.wn = np.absolute(self.evalues)/(2*np.pi)
-        self.wd = np.imag(self.evalues)/(2*np.pi)
+        self.wn = (np.absolute(self.evalues)/(2*np.pi))[:self.ndof//2]
+        self.wd = (np.imag(self.evalues)/(2*np.pi))[:self.ndof//2]
 
     @property
     def w(self):
@@ -264,9 +265,79 @@ class Rotor(object):
 
         return k
 
+    def kappa_mode(self, w):
+        r"""This function evaluates kappa for a given the index of
+        the natural frequency of interest.
+        Values of kappa are evaluated for each node of the
+        corresponding frequency mode.
+
+        Parameters
+        ----------
+        w: int
+            Index corresponding to the natural frequency
+            of interest.
+
+        Returns
+        -------
+        kappa_mode: list
+            A list with the value of kappa for each node related
+            to the mode/natural frequency of interest.
+
+        Examples:
+
+        """
+        kappa_mode = [self.kappa(node, w)['kappa'] for node in self.nodes]
+        return kappa_mode
+
 
     def orbit(self):
         pass
     #  TODO make w a property. Make eigen an attribute.
     #  TODO when w is changed, eigen is calculated and is available to methods.
     #  TODO static methods as auxiliary functions
+
+def rotor_example():
+    r"""This function returns an instance of a simple rotor with
+    two shaft elements, one disk and two simple bearings.
+    The purpose of this is to make available a simple model
+    so that doctest can be written using this.
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    An instance of a rotor object.
+
+    Examples:
+    >>> rotor = rotor_example()
+    >>> rotor.wd
+    array([  34.27731557,   34.27731557,   95.17859364,   95.17859364,
+            629.65276153,  629.65276153])
+    """
+
+    #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
+    n = 1
+    z = 0
+    le = 0.25
+    i_d = 0
+    o_d = 0.05
+    E = 211e9
+    G = 81.2e9
+    rho = 7810
+
+    tim0 = ShaftElement(0, 0.0, le, i_d, o_d, E, G, rho,
+                        shear_effects=True,
+                        rotary_inertia=True,
+                        gyroscopic=True)
+    tim1 = ShaftElement(1, 0.25, le, i_d, o_d, E, G, rho,
+                        shear_effects=True,
+                        rotary_inertia=True,
+                        gyroscopic=True)
+
+    shaft_elm = [tim0, tim1]
+    disk0 = DiskElement(1, rho, 0.07, 0.05, 0.28)
+    stf = 1e6
+    bearing0 = BearingElement(0, stf, stf, 0, 0)
+    bearing1 = BearingElement(2, stf, stf, 0, 0)
+    return Rotor(shaft_elm, [disk0], [bearing0, bearing1])
