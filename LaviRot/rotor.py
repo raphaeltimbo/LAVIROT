@@ -170,9 +170,28 @@ class Rotor(object):
 
     @staticmethod
     def _index(eigenvalues):
-        """
-        Function used to generate an index that will sort
-        eigenvalues and eigenvectors.
+        r"""Function used to generate an index that will sort
+        eigenvalues and eigenvectors based on the imaginary (wd)
+        part of the eigenvalues. Positive eigenvalues will be
+        positioned at the first half of the array.
+
+        Parameters
+        ----------
+        eigenvalues: array
+            Array with the eigenvalues.
+
+        Returns
+        -------
+        idx:
+            An array with indices that will sort the
+            eigenvalues and eigenvectors.
+
+        Examples:
+        >>> rotor = rotor_example()
+        >>> evalues, evectors = rotor._eigen(0, sorted_=False)
+        >>> idx = rotor._index(evalues)
+        >>> idx[:6]
+        array([22, 20, 16, 18, 12, 14], dtype=int64)
         """
         # positive in increasing order
         idxp = eigenvalues.imag.argsort()[int(len(eigenvalues)/2):]
