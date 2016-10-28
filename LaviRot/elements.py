@@ -21,34 +21,34 @@ class ShaftElement(object):
     Parameters
     ----------
     n: int
-        Element number (coincident with it's first node)
+        Element number (coincident with it's first node).
     z: float
-        Position of the element first node
+        Position of the element first node.
     L: float
-        Element length
+        Element length.
     i_d: float
-        Inner diameter of the element
+        Inner diameter of the element.
     o_d: float
-        Outer diameter of the element
+        Outer diameter of the element.
     E: float
-        Young's modulus
+        Young's modulus.
     G_s: float
-        Shear modulus
+        Shear modulus.
     rho: float
-        Density
+        Density.
     axial_force: float
-        Axial force
+        Axial force.
     torque: float
-        Torque
+        Torque.
     sheaf_effects: bool
         Determine if shear effects are taken into account.
-        Default is False
+        Default is False.
     rotary_inertia: bool
         Determine if rotary_inertia effects are taken into account.
-        Default is False
+        Default is False.
     gyroscopic: bool
         Determine if gyroscopic effects are taken into account.
-        Default is False
+        Default is False.
 
 
     Attributes
@@ -296,15 +296,15 @@ class DiskElement(object):
     Parameters
     ----------
     n: int
-        Node in which the disk will be inserted
+        Node in which the disk will be inserted.
     rho: float
-        Mass density
+        Mass density.
     width: float
-        The disk width
+        The disk width.
     i_d: float
-        Inner diameter
+        Inner diameter.
     o_d: float
-        Outer diameter
+        Outer diameter.
 
     Attributes
     ----------
@@ -409,13 +409,13 @@ class BearingElement(object):
     Parameters
     ----------
     kxx: float
-        Direct stiffness in the x direction
+        Direct stiffness in the x direction.
     kyy: float
-        Direct stiffness in the y direction
+        Direct stiffness in the y direction.
     cxx: float
-        Direct stiffness in the x direction
+        Direct stiffness in the x direction.
     cyy: float
-        Direct stiffness in the y direction
+        Direct stiffness in the y direction.
 
     Attributes
     ----------

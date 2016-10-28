@@ -18,10 +18,10 @@ class Rotor(object):
         List with the bearing elements
 
     Returns
-    ----------
+    -------
     A rotor object.
 
-    Examples:
+    Examples
 
     """
 
@@ -66,8 +66,8 @@ class Rotor(object):
 
     def _calc_system(self):
         self.evalues, self.evectors = self.eigen(self._w)
-        self.wn = np.absolute(self.evalues)
-        self.wd = np.imag(self.evalues)
+        self.wn = np.absolute(self.evalues)/(2*np.pi)
+        self.wd = np.imag(self.evalues)/(2*np.pi)
 
     @property
     def w(self):

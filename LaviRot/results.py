@@ -1,3 +1,8 @@
+r"""
+This module contains :py:meth:`LaviRot.results` with functions
+to evaluate results and functions to create plots
+"""
+# TODO detail the results docstring
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -102,3 +107,35 @@ def plot_rotor(rotor):
         ax.add_patch(mpatches.Polygon(bearing_points, color=r_pal['bearing']))
 
     plt.show()
+
+
+def kappa_mode(w):
+    r"""This function evaluates kappa for a given the index of
+    the natural frequency of interest.
+    Values of kappa are evaluated for each node of the
+    corresponding frequency mode.
+
+    Parameters
+    ----------
+    w: int
+        Index corresponding to the natural frequency
+        of interest.
+
+    Returns
+    -------
+    Mass matrix for the beam element.
+
+    References
+    ----------
+    .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
+       & AW Lees, published by Cambridge University Press, 2010 pp. 166.
+
+    Examples
+    --------
+    # evaluate kappa for a given mode
+    # (all nodes related to a natural frequency)
+    # kappa_mode will contain values for kappa for each node
+    kappa_mode = np.zeros([len(rotor1.nodes)])
+    for node in rotor1.nodes:
+        kappa_mode[node] += rotor1.kappa(node, w)['kappa']
+    return kappa_mode
