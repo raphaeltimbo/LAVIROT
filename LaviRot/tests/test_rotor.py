@@ -7,8 +7,6 @@ from numpy.testing import assert_almost_equal
 @pytest.fixture
 def rotor1():
     #  Rotor without damping with 2 shaft elements - no disks and no bearings
-    n_ = 1
-    z_ = 0
     le_ = 0.25
     i_d_ = 0
     o_d_ = 0.05
@@ -56,8 +54,6 @@ def test_mass_matrix_rotor1(rotor1):
 @pytest.fixture
 def rotor2():
     #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
-    n_ = 1
-    z_ = 0
     le_ = 0.25
     i_d_ = 0
     o_d_ = 0.05
@@ -253,6 +249,22 @@ def test_evects_not_sorted_rotor2(rotor2):
                        [ -2.296e-01 +4.381e-01j,  -2.296e-01 -4.381e-01j,  -2.361e-01 -4.389e-01j,  -2.361e-01 +4.389e-01j]])
     rotor2_evals, rotor2_evects = rotor2._eigen(sorted_=False)
     assert_almost_equal(rotor2_evects[:, 0:4], evects, decimal=3)
+
+def test_kappa_rotor2(rotor2):
+    assert rotor2.kappa(0, 0) == {'Frequency': 34.27731557222323,
+                                  'Major axes': 0.0024561522193205488,
+                                  'Minor axes': 7.723846557537088e-05,
+                                  'kappa': -0.03144693759930626}
+    rotor2.w = 1000
+    assert rotor2.kappa(0, 0) == {'Frequency': 34.277312886298944,
+                                  'Major axes': 0.0024573136278807648,
+                                  'Minor axes': 1.3488840526669555e-07,
+                                  'kappa': 5.489262898160294e-05}
+
+    assert rotor2.kappa(0, 1) == {'Frequency': 34.277312886329085,
+                                  'Major axes': 0.0024573136278736463,
+                                  'Minor axes': 1.3488789677268868e-07,
+                                  'kappa': 5.489242205090824e-05}
 
 
 #  TODO implement more tests using a simple rotor with 2 elements and one disk
