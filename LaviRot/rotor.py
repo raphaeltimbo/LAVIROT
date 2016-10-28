@@ -24,6 +24,17 @@ class Rotor(object):
     -------
     A rotor object.
 
+    Attributes
+    ----------
+    evalues : array
+        Rotor's eigenvalues.
+    evectors : array
+        Rotor's eigenvectors.
+    wn : array
+        Rotor's natural frequencies in Hz.
+    wd : array
+        Rotor's damped natural frequencies in Hz.
+
     Examples
     --------
     >>> #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
@@ -126,8 +137,7 @@ class Rotor(object):
         return n1, n2
 
     def M(self):
-        r"""This method will return the mass matrix for
-        an instance of a rotor.
+        r"""Mass matrix for an instance of a rotor.
 
         Returns
         -------
@@ -156,22 +166,18 @@ class Rotor(object):
         return M0
 
     def K(self):
-        """
-        This method will return the stiffness matrix for an instance of a beam
-        element.
+        """Stiffness matrix for an instance of a rotor.
 
         Returns
         -------
-        Stiffness matrix for the beam element.
+        Stiffness matrix for the rotor.
 
         Examples
         --------
-        >>> Timoshenko_Element = ShaftElement(1, 0, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
-        ...                                  rotary_inertia=True,
-        ...                                  shear_effects=True)
-        >>> Timoshenko_Element.K()[:4, :4]/1e6
-        array([[ 45.69644273,   0.        ,   0.        ,   5.71205534],
-               [  0.        ,  45.69644273,  -5.71205534,   0.        ],
+        >>> rotor = rotor_example()
+        >>> rotor.K()[:4, :4]/1e6
+        array([[ 46.69644273,   0.        ,   0.        ,   5.71205534],
+               [  0.        ,  46.69644273,  -5.71205534,   0.        ],
                [  0.        ,  -5.71205534,   0.97294287,   0.        ],
                [  5.71205534,   0.        ,   0.        ,   0.97294287]])
         """
@@ -192,7 +198,21 @@ class Rotor(object):
         return K0
 
     def C(self):
-        """This method returns the rotor stiffness matrix"""
+        """Damping matrix for an instance of a rotor.
+
+        Returns
+        -------
+        Damping matrix for the rotor.
+
+        Examples
+        --------
+        >>> rotor = rotor_example()
+        >>> rotor.C()[:4, :4]
+        array([[ 0.,  0.,  0.,  0.],
+               [ 0.,  0.,  0.,  0.],
+               [ 0.,  0.,  0.,  0.],
+               [ 0.,  0.,  0.,  0.]])
+        """
         #  Create the matrices
         C0 = np.zeros((self.ndof, self.ndof))
 
@@ -203,7 +223,21 @@ class Rotor(object):
         return C0
 
     def G(self):
-        """This method returns the rotor stiffness matrix"""
+        """Gyroscopic matrix for an instance of a rotor.
+
+        Returns
+        -------
+        Gyroscopic matrix for the rotor.
+
+        Examples
+        --------
+        >>> rotor = rotor_example()
+        >>> rotor.G()[:4, :4]
+        array([[ 0.        , -0.01943344, -0.00022681,  0.        ],
+               [-0.01943344,  0.        ,  0.        , -0.00022681],
+               [ 0.00022681,  0.        ,  0.        ,  0.0001524 ],
+               [ 0.        ,  0.00022681, -0.0001524 ,  0.        ]])
+        """
         #  Create the matrices
         G0 = np.zeros((self.ndof, self.ndof))
 
@@ -218,7 +252,21 @@ class Rotor(object):
         return G0
 
     def A(self, w=0):
-        """This method creates a speed dependent space state matrix"""
+        """State space matrix for an instance of a rotor.
+
+        Returns
+        -------
+        State space matrix for the rotor.
+
+        Examples
+        --------
+        >>> rotor = rotor_example()
+        >>> rotor.A()[12:16, :2]
+        array([[  2.06299048e+08,  -2.12362140e-05],
+               [  2.11635997e-05,   2.06299048e+08],
+               [  5.82002252e-04,   6.97351178e+09],
+               [ -6.97351178e+09,   6.03511467e-04]])
+        """
         Z = np.zeros((self.ndof, self.ndof))
         I = np.eye(self.ndof)
         Minv = la.pinv(self.M())
