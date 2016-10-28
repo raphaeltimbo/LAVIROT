@@ -23,7 +23,32 @@ class Rotor(object):
     A rotor object.
 
     Examples
-
+    >>> #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
+    >>> n = 1
+    >>> z = 0
+    >>> le = 0.25
+    >>> i_d = 0
+    >>> o_d = 0.05
+    >>> E = 211e9
+    >>> G = 81.2e9
+    >>> rho = 7810
+    >>> tim0 = ShaftElement(0, 0.0, le, i_d, o_d, E, G, rho,
+    ...                    shear_effects=True,
+    ...                    rotary_inertia=True,
+    ...                    gyroscopic=True)
+    >>> tim1 = ShaftElement(1, 0.25, le, i_d, o_d, E, G, rho,
+    ...                    shear_effects=True,
+    ...                    rotary_inertia=True,
+    ...                    gyroscopic=True)
+    >>> shaft_elm = [tim0, tim1]
+    >>> disk0 = DiskElement(1, rho, 0.07, 0.05, 0.28)
+    >>> stf = 1e6
+    >>> bearing0 = BearingElement(0, stf, stf, 0, 0)
+    >>> bearing1 = BearingElement(2, stf, stf, 0, 0)
+    >>> rotor = Rotor(shaft_elm, [disk0], [bearing0, bearing1])
+    >>> rotor.wd
+    array([  34.27731557,   34.27731557,   95.17859364,   95.17859364,
+            629.65276153,  629.65276153])
     """
 
     def __init__(self, shaft_elements, disk_elements, bearing_elements, w=0):
@@ -81,8 +106,7 @@ class Rotor(object):
 
     @staticmethod
     def _dofs(element):
-        """This function will return the first and last dof
-        for a given element"""
+        """The first and last dof for a given element"""
         if type(element).__name__ == 'ShaftElement':
             node = element.n
             n1 = 4 * node
@@ -382,3 +406,4 @@ def rotor_example():
     bearing0 = BearingElement(0, stf, stf, 0, 0)
     bearing1 = BearingElement(2, stf, stf, 0, 0)
     return Rotor(shaft_elm, [disk0], [bearing0, bearing1])
+
