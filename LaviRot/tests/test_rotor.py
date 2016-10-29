@@ -1,6 +1,7 @@
 import pytest
 from LaviRot.elements import *
 from LaviRot.rotor import *
+from LaviRot.results import MAC_modes
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_allclose
 
@@ -221,8 +222,11 @@ def test_evects_sorted_rotor2(rotor2):
                               [ -1.758e-02 +7.871e-04j,  -2.311e-01 +5.659e-14j,   4.960e-01 +8.246e-15j,  -4.762e-01 -2.626e-15j]])
 
     rotor2_evals, rotor2_evects = rotor2._eigen()
-    assert_allclose(rotor2_evects[:, :4], evects_sorted, rtol=1e-3)
-    assert_allclose(rotor2.evectors[:, :4], evects_sorted, rtol=1e-3)
+    mac1 = MAC_modes(evects_sorted, rotor2_evects)
+    mac2 = MAC_modes(evects_sorted, rotor2.evectors)
+    print(mac1)
+    assert_allclose(mac1.diagonal(), np.ones_like(mac1.diagonal()))
+    assert_allclose(mac1.diagonal(), np.ones_like(mac1.diagonal()))
 
 
 def test_evects_not_sorted_rotor2(rotor2):

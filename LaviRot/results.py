@@ -3,6 +3,7 @@ This module contains :py:meth:`LaviRot.results` with functions
 to evaluate results and functions to create plots
 """
 # TODO detail the results docstring
+import numpy as np
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -109,3 +110,17 @@ def plot_rotor(rotor):
     plt.show()
 
 
+def MAC(u, v):
+    H = lambda a: a.T.conj()
+    return np.absolute((H(u) @ v)**2 / ((H(u) @ u)*(H(v) @ v)))
+
+
+def MAC_modes(U, V, n=None):
+    # n is the number of modes to be evaluated
+    if n is None:
+        n = U.shape[1]
+    macs = np.zeros((n, n))
+    for u in enumerate(U.T[:n]):
+        for v in enumerate(V.T[:n]):
+            macs[u[0], v[0]] = MAC(u[1], v[1])
+    return macs

@@ -475,8 +475,6 @@ def rotor_example():
     """
 
     #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
-    n = 1
-    z = 0
     le = 0.25
     i_d = 0
     o_d = 0.05
@@ -499,4 +497,7 @@ def rotor_example():
     bearing0 = BearingElement(0, stf, stf, 0, 0)
     bearing1 = BearingElement(2, stf, stf, 0, 0)
     return Rotor(shaft_elm, [disk0], [bearing0, bearing1])
+
+
+
 
