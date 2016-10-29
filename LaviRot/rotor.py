@@ -264,10 +264,10 @@ class Rotor(object):
         --------
         >>> rotor = rotor_example()
         >>> rotor.A()[12:16, :2]
-        array([[  2.06299048e+08,  -2.12362140e-05],
-               [  2.11635997e-05,   2.06299048e+08],
-               [  5.82002252e-04,   6.97351178e+09],
-               [ -6.97351178e+09,   6.03511467e-04]])
+        array([[  2.06299048e+08,  -2.12365284e-05],
+               [  2.12477773e-05,   2.06299048e+08],
+               [  5.84272565e-04,   6.97351178e+09],
+               [ -6.97351178e+09,   6.02132447e-04]])
         """
         Z = np.zeros((self.ndof, self.ndof))
         I = np.eye(self.ndof)
@@ -302,7 +302,7 @@ class Rotor(object):
         >>> evalues, evectors = rotor._eigen(0, sorted_=False)
         >>> idx = rotor._index(evalues)
         >>> idx[:6]
-        array([22, 20, 16, 18, 12, 14], dtype=int64)
+        array([20, 22, 16, 18, 12, 14], dtype=int64)
         """
         # avoid float point errors when sorting
         eigenvalues = np.around(eigenvalues, decimals=2)
@@ -340,7 +340,7 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> evalues, evectors = rotor._eigen(0)
         >>> evalues[:2]
-        array([ -6.81898982e-13+215.37072557j,   2.13731810e-12+215.37072557j])
+        array([ -6.39932551e-13+215.37072557j,  -4.32764935e-13+215.37072557j])
         """
         evalues, evectors = la.eig(self.A(w))
         if sorted_ is False:
@@ -440,7 +440,7 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
         >>> rotor.kappa_mode(0)
-        [array(-0.03144693759930626), array(-0.03144693759930822), array(-0.03144693759930619)]
+        [array(-0.0032715342590611774), array(-0.003271534259070017), array(-0.003271534259059628)]
         """
         kappa_mode = [self.kappa(node, w)['kappa'] for node in self.nodes]
         return kappa_mode
