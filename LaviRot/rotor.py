@@ -2,6 +2,8 @@ import numpy as np
 import scipy.linalg as la
 from LaviRot.elements import *
 
+__all__ = ['Rotor', 'rotor_example']
+
 
 class Rotor(object):
     """A rotor object.
@@ -302,14 +304,19 @@ class Rotor(object):
         >>> idx[:6]
         array([22, 20, 16, 18, 12, 14], dtype=int64)
         """
-        # positive in increasing order
-        idxp = eigenvalues.imag.argsort()[int(len(eigenvalues)/2):]
-        # negative in decreasing order
-        idxn = eigenvalues.imag.argsort()[int(len(eigenvalues)/2) - 1::-1]
+        # avoid float point errors when sorting
+        eigenvalues = np.around(eigenvalues, decimals=2)
+        a = np.imag(eigenvalues)  # First column
+        b = np.absolute(eigenvalues)  # Second column
+        ind = np.lexsort((b, a))  # Sort by imag, then by absolute
+        # Positive eigenvalues first
+        positive = [i for i in ind[len(a) // 2:]]
+        negative = [i for i in ind[:len(a) // 2]]
 
-        idx = np.hstack([idxp, idxn])
+        idx = np.array([positive, negative]).flatten()
 
-        #  TODO implement sort that considers the cross of eigenvalues
+        return idx
+
         return idx
 
     def _eigen(self, w=0, sorted_=True):

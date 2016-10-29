@@ -1,7 +1,7 @@
 import pytest
 from LaviRot.elements import *
-from LaviRot.rotor import *
-from numpy.testing import assert_almost_equal
+import numpy as np
+from numpy.testing import assert_almost_equal, assert_allclose
 
 
 n_ = 1
@@ -50,7 +50,7 @@ def test_mass_matrix_eb(eb):
                        [ 0.     ,  0.49291, -0.02967,  0.     ,  0.     ,  1.42395,  0.0502 ,  0.     ],
                        [ 0.     ,  0.02967, -0.00171,  0.     ,  0.     ,  0.0502 ,  0.00228,  0.     ],
                        [-0.02967,  0.     ,  0.     , -0.00171, -0.0502 ,  0.     ,  0.     ,  0.00228]])
-    assert_almost_equal(eb.M(), M0e_eb, decimal=5)
+    assert_allclose(eb.M(), M0e_eb, rtol=1e-3)
 
 def test_stiffness_matrix_eb(eb):
     K0e_eb = np.array([[ 4.97157,  0.     ,  0.     ,  0.62145, -4.97157,  0.     ,  0.     ,  0.62145],
