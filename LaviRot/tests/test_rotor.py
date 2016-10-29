@@ -224,6 +224,7 @@ def test_evects_sorted_rotor2(rotor2):
     rotor2_evals, rotor2_evects = rotor2._eigen()
     mac1 = MAC_modes(evects_sorted, rotor2_evects)
     mac2 = MAC_modes(evects_sorted, rotor2.evectors)
+    print(rotor2.w)
     print(mac1)
     assert_allclose(mac1.diagonal(), np.ones_like(mac1.diagonal()))
     assert_allclose(mac2.diagonal(), np.ones_like(mac1.diagonal()))
