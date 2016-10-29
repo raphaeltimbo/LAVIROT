@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.linalg as la
+import scipy.sparse.linalg as las
 from LaviRot.elements import *
 
 __all__ = ['Rotor', 'rotor_example']
@@ -342,7 +343,7 @@ class Rotor(object):
         >>> evalues[:2]
         array([ -6.39932551e-13+215.37072557j,  -4.32764935e-13+215.37072557j])
         """
-        evalues, evectors = la.eig(self.A(w))
+        evalues, evectors = las.eigs(self.A(w), 12, sigma=0, which='LM')
         if sorted_ is False:
             return evalues, evectors
 
