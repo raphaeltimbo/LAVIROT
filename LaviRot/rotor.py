@@ -317,8 +317,6 @@ class Rotor(object):
 
         return idx
 
-        return idx
-
     def _eigen(self, w=0, sorted_=True):
         r"""This method will return the eigenvalues and eigenvectors of the
         state space matrix A, sorted by the index method which considers
