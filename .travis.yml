@@ -1,7 +1,5 @@
 language: python
-os:
-    - linux
-    - windows
+
 python:
   - "3.5"
 # command to install dependencies
