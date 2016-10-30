@@ -85,10 +85,11 @@ class Rotor(object):
         self.ndof = 4 * len(shaft_elements) + 4
 
         #  nodes axial position
-        nodes_pos = [s.z for s in self.shaft_elements]
-        # append position for last node
-        nodes_pos.append(self.shaft_elements[-1].z
-                         + self.shaft_elements[-1].L)
+        nodes_pos = [0]
+        length = 0
+        for sh in shaft_elements:
+            length += sh.L
+            nodes_pos.append(length)
         self.nodes_pos = nodes_pos
         self.nodes = [i for i in range(len(self.nodes_pos))]
 

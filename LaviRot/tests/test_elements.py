@@ -5,7 +5,6 @@ from numpy.testing import assert_almost_equal, assert_allclose
 
 
 n_ = 1
-z_ = 0
 le_ = 0.25
 i_d_ = 0
 o_d_ = 0.05
@@ -17,19 +16,17 @@ rho_ = 7810
 def eb():
     #  Euler-Bernoulli element
     n_ = 1
-    z_ = 0
     le_ = 0.25
     i_d_ = 0
     o_d_ = 0.05
     E_ = 211e9
     G_ = 81.2e9
     rho_ = 7810
-    return ShaftElement(n_, z_, le_, i_d_, o_d_, E_, G_, rho_)
+    return ShaftElement(n_, le_, i_d_, o_d_, E_, G_, rho_)
 
 
 def test_parameters_eb(eb):
     assert eb.phi == 0
-    assert eb.z == 0
     assert eb.L == 0.25
     assert eb.i_d == 0
     assert eb.o_d == 0.05
@@ -74,7 +71,7 @@ def tim():
     E_ = 211e9
     G_ = 81.2e9
     rho_ = 7810
-    return ShaftElement(n_, z_, le_, i_d_, o_d_, E_, G_, rho_,
+    return ShaftElement(n_, le_, i_d_, o_d_, E_, G_, rho_,
                         rotary_inertia=True,
                         shear_effects=True)
 
