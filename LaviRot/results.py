@@ -52,13 +52,13 @@ def plot_rotor(rotor):
     for node, position in enumerate(rotor.nodes_pos):
         ax.plot(position, 0,
                 zorder=2, ls='', marker='D', color=r_pal['node'], markersize=10, alpha=0.6)
-        ax.text(position - 0.004, -0.008,
+        ax.text(position - 0.02, -0.008,
                 '%.0f' % node)
 
     # plot shaft elements
     for sh_elm in rotor.shaft_elements:
-        position_u = [sh_elm.z, sh_elm.i_d]  # upper
-        position_l = [sh_elm.z, -sh_elm.o_d + sh_elm.i_d]  # lower
+        position_u = [rotor.nodes_pos[sh_elm.n], sh_elm.i_d]  # upper
+        position_l = [rotor.nodes_pos[sh_elm.n], -sh_elm.o_d + sh_elm.i_d]  # lower
         width = sh_elm.L
         height = sh_elm.o_d - sh_elm.i_d
 

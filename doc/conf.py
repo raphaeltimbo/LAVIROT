@@ -319,6 +319,9 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Lavirotdoc'
 
+# pngmath_use_preview = True
+pngmath_dvipng_args = ['-gamma', '1.5', '-D', '96', '-bg', 'Transparent']
+
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {

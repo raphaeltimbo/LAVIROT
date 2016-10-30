@@ -354,14 +354,42 @@ class Rotor(object):
 
     # TODO separate kappa-create a function that will return lam and U (extract method)
     def kappa(self, node, w, wd=True):
-        """
+        r"""Calculates kappa for a given node and natural frequency.
+
         w is the the index of the natural frequency of interest
+
+        .. math:: [x_1, y_1, \alpha_1, \beta_1, x_2, y_2, \alpha_2, \beta_2]^T
+
+        Parameters
+        ----------
+        node: int
+            Node for which kappa will be calculated.
+        w: int
+            Index corresponding to the natural frequency
+            of interest.
+
+        Returns
+        -------
+        kappa: dict
+            A dictionary with values for the natural frequency,
+            major axis, minor axis and kappa.
+
+        Notes
+        -----
         This function calculates the matrix
-         :math:
-         T = ...
-         and the matrix :math: H = T.T^T for a given node.
-         The eigenvalues of H correspond to the minor and
-         major axis of the orbit.
+
+        and the matrix H = T.T^T for a given node.
+        The eigenvalues of H correspond to the minor and
+        major axis of the orbit.
+
+        Examples
+        --------
+        >>> rotor = rotor_example()
+        >>> # kappa for each node of the first natural frequency
+        >>> rotor.kappa_mode(0)
+        [array(-0.0032715342590611774), array(-0.003271534259070017), array(-0.003271534259059628)]
+
+
         """
         if wd:
             nat_freq = self.wd[w]
