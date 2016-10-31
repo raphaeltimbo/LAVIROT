@@ -5,8 +5,12 @@ to evaluate results and functions to create plots
 # TODO detail the results docstring
 import numpy as np
 import matplotlib.patches as mpatches
+from matplotlib.collections import LineCollection
+from matplotlib.colors import ListedColormap
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import os
+import json
 
 
 def plot_rotor(rotor):
@@ -125,3 +129,81 @@ def MAC_modes(U, V, n=None):
         for v in enumerate(V.T[:n]):
             macs[u[0], v[0]] = MAC(u[1], v[1])
     return macs
+
+
+def whirl(kappa_mode):
+    """Evaluates the whirl of a mode"""
+    if all(kappa >= -1e-3 for kappa in kappa_mode):
+        whirldir = 'Forward'
+    elif all(kappa <= 1e-3 for kappa in kappa_mode):
+        whirldir = 'Backward'
+    else:
+        whirldir = 'Mixed'
+    return whirldir
+
+
+def whirl_to_cmap(whirl):
+    if whirl == 'Forward':
+        return 0
+    elif whirl == 'Backward':
+        return 1
+    else:
+        return 0.5
+
+
+def campbell(rotor, speed_range, freqs=6, mult=[1, 2]):
+    #mpl.rcParams.update(mpl.rcParamsDefault)
+    fn = os.path.join(os.path.dirname(__file__), r'styles\matplotlibrc')
+    #print(fn)
+    #s = json.load(open(fn))
+    mpl.rcParams.update(mpl.rc_params_from_file(fn))
+    #plt.style.use('seaborn-whitegrid')
+    #plt.style.use('seaborn-dark-palette')
+    #plt.style.use('seaborn-colorblind')
+    whirl_w = []  # will contain the whirl for each w and each wd
+    z = []  # will contain values for each whirl (0, 0.5, 1)
+    speed_range *= 2*np.pi  # input in hertz to rad/s
+    for w0, w1 in (zip(speed_range[:-1], speed_range[1:])):
+        # define shaft speed
+        # check rotor state to avoid recalculating eigenvalues
+        if not rotor.w == w0:
+            rotor.w = w0
+
+        # define x as the current speed and y as each wd
+        x_w0 = np.full_like(range(freqs), w0)
+        y_wd0 = rotor.wd[:freqs]
+        # generate points for the first speed
+        points0 = np.array([x_w0, y_wd0]).T.reshape(-1, 1, 2)
+        # go to the next speed
+        rotor.w = w1
+        x_w1 = np.full_like(range(freqs), w1)
+        y_wd1 = rotor.wd[:freqs]
+        points1 = np.array([x_w1, y_wd1]).T.reshape(-1, 1, 2)
+
+        new_segment = np.concatenate([points0, points1], axis=1)
+
+        if w0 == speed_range[0]:
+            segments = new_segment
+        else:
+            segments = np.concatenate([segments, new_segment])
+
+        whirl_w = [whirl(rotor.kappa_mode(wn)) for wn in range(freqs)]
+        z.append([whirl_to_cmap(i) for i in whirl_w])
+    z = np.array(z).flatten()
+
+    cmap = ListedColormap(['b', 'k', 'r'])
+    fig2, ax2 = plt.subplots()
+    lines_2 = LineCollection(segments, array=z, cmap=cmap)
+    ax2.add_collection(lines_2)
+    # plot speed in hertz
+    ax2.plot(speed_range, speed_range/(2*np.pi))
+    ax2.plot(speed_range, 2*speed_range/(2*np.pi))
+    # scale x to hz
+    ticks_x = mpl.ticker.FuncFormatter(lambda speed_range,
+                                              pos: '{0:g}'.format(speed_range//(2*np.pi)))
+    ax2.xaxis.set_major_formatter(ticks_x)
+
+    ax2.set_xlim(0, 470)
+    ax2.set_ylim(0, 150)
+
+    plt.show()
