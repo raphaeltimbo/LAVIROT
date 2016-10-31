@@ -47,12 +47,13 @@ def plot_rotor(rotor):
     ax.plot([-.2 * shaft_end, 1.2 * shaft_end], [0, 0], 'k-.')
     max_diameter = max([disk.o_d for disk in rotor.disk_elements])
     ax.set_ylim(-1.2 * max_diameter, 1.2 * max_diameter)
+    ax.axis('equal')
 
     #  plot nodes
     for node, position in enumerate(rotor.nodes_pos):
         ax.plot(position, 0,
                 zorder=2, ls='', marker='D', color=r_pal['node'], markersize=10, alpha=0.6)
-        ax.text(position - 0.02, -0.008,
+        ax.text(position - 0.02, -0.02,
                 '%.0f' % node)
 
     # plot shaft elements
