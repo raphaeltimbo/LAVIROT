@@ -21,6 +21,7 @@ c_pal = {'red': '#C93C3C',
 
 fn = os.path.join(os.path.dirname(__file__), r'styles\matplotlibrc')
 
+
 def plot_rotor(rotor):
     """ Plots a rotor object.
 
@@ -65,8 +66,10 @@ def plot_rotor(rotor):
     for node, position in enumerate(rotor.nodes_pos):
         ax.plot(position, 0,
                 zorder=2, ls='', marker='D', color=r_pal['node'], markersize=10, alpha=0.6)
-        ax.text(position - 0.02, -0.02,
-                '%.0f' % node)
+        ax.text(position, -0.01,
+                '%.0f' % node,
+                horizontalalignment='center',
+                verticalalignment='center')
 
     # plot shaft elements
     for sh_elm in rotor.shaft_elements:
@@ -111,7 +114,7 @@ def plot_rotor(rotor):
         #  TODO this will need to be modified for tapppered elements
         #  check if the bearing is in the last node
         ypos = -rotor.nodes_o_d[bearing.n]
-        h = -0.5 * ypos  # height
+        h = -0.75 * ypos  # height
 
         #  node (x pos), outer diam. (y pos)
         bearing_points = [[zpos, ypos],  # upper

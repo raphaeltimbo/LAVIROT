@@ -49,11 +49,11 @@ class Rotor(object):
     >>> E = 211e9
     >>> G = 81.2e9
     >>> rho = 7810
-    >>> tim0 = ShaftElement(0, 0.0, le, i_d, o_d, E, G, rho,
+    >>> tim0 = ShaftElement(0, le, i_d, o_d, E, G, rho,
     ...                    shear_effects=True,
     ...                    rotary_inertia=True,
     ...                    gyroscopic=True)
-    >>> tim1 = ShaftElement(1, 0.25, le, i_d, o_d, E, G, rho,
+    >>> tim1 = ShaftElement(1, le, i_d, o_d, E, G, rho,
     ...                    shear_effects=True,
     ...                    rotary_inertia=True,
     ...                    gyroscopic=True)
@@ -63,9 +63,8 @@ class Rotor(object):
     >>> bearing0 = BearingElement(0, stf, stf, 0, 0)
     >>> bearing1 = BearingElement(2, stf, stf, 0, 0)
     >>> rotor = Rotor(shaft_elm, [disk0], [bearing0, bearing1])
-    >>> rotor.wd
-    array([  34.27731557,   34.27731557,   95.17859364,   95.17859364,
-            629.65276153,  629.65276153])
+    >>> rotor.wd[0]
+    34.277315572213979
     """
 
     def __init__(self, shaft_elements, disk_elements, bearing_elements, w=0):
@@ -304,7 +303,7 @@ class Rotor(object):
         >>> evalues, evectors = rotor._eigen(0, sorted_=False)
         >>> idx = rotor._index(evalues)
         >>> idx[:6]
-        array([20, 22, 16, 18, 12, 14], dtype=int64)
+        array([ 1,  5,  3,  7,  9, 11], dtype=int64)
         """
         # avoid float point errors when sorting
         eigenvalues = np.around(eigenvalues, decimals=2)
@@ -341,8 +340,8 @@ class Rotor(object):
         --------
         >>> rotor = rotor_example()
         >>> evalues, evectors = rotor._eigen(0)
-        >>> evalues[:2]
-        array([ -6.39932551e-13+215.37072557j,  -4.32764935e-13+215.37072557j])
+        >>> evalues[0].imag
+        215.37072557260217
         """
         evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM')
         if sorted_ is False:
@@ -387,7 +386,7 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
         >>> rotor.kappa_mode(0)
-        [array(-0.0032715342590611774), array(-0.003271534259070017), array(-0.003271534259059628)]
+        [array(0.0002477135677876219), array(0.00024771356791147364), array(0.00024771356792931365)]
 
 
         """
@@ -470,7 +469,7 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
         >>> rotor.kappa_mode(0)
-        [array(-0.0032715342590611774), array(-0.003271534259070017), array(-0.003271534259059628)]
+        [array(0.0007921675417423512), array(0.000792167541753317), array(0.0007921675417411938)]
         """
         kappa_mode = [self.kappa(node, w)['kappa'] for node in self.nodes]
         return kappa_mode
@@ -500,8 +499,8 @@ def rotor_example():
     --------
     >>> rotor = rotor_example()
     >>> rotor.wd
-    array([  34.27731557,   34.27731557,   95.17859364,   95.17859364,
-            629.65276153,  629.65276153])
+    array([  34.27731557,   34.27731557,   95.17859365,   95.17859365,
+            629.6527611 ,  629.6527616 ])
     """
 
     #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
@@ -512,11 +511,11 @@ def rotor_example():
     G = 81.2e9
     rho = 7810
 
-    tim0 = ShaftElement(0, 0.0, le, i_d, o_d, E, G, rho,
+    tim0 = ShaftElement(0, le, i_d, o_d, E, G, rho,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
-    tim1 = ShaftElement(1, 0.25, le, i_d, o_d, E, G, rho,
+    tim1 = ShaftElement(1, le, i_d, o_d, E, G, rho,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
