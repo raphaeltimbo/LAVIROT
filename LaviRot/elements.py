@@ -388,7 +388,7 @@ class DiskElement(object):
 
 
 class BearingElement(object):
-    #  TODO detail this class atributes inside the docstring
+    #  TODO detail this class attributes inside the docstring
     """A bearing element.
 
     This class will create a bearing element.

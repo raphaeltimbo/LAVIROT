@@ -351,6 +351,23 @@ class Rotor(object):
 
         return evalues[idx], evectors[:, idx]
 
+    def H(self, node, w):
+        # get vector of interest based on freqs
+        vector = self.evectors[4 * node:4 * node + 2, w]
+        # get translation sdofs for specified node for each mode
+        u = vector[0]
+        v = vector[1]
+        ru = np.absolute(u)
+        rv = np.absolute(v)
+
+        nu = np.angle(u)
+        nv = np.angle(v)
+        T = np.array([[ru * np.cos(nu), -ru * np.sin(nu)],
+                      [rv * np.cos(nv), -rv * np.sin(nv)]])
+        H = T @ T.T
+
+        return H, nu, nv
+
     # TODO separate kappa-create a function that will return lam and U (extract method)
     def kappa(self, node, w, wd=True):
         r"""Calculates kappa for a given node and natural frequency.
@@ -366,6 +383,9 @@ class Rotor(object):
         w: int
             Index corresponding to the natural frequency
             of interest.
+        wd: bool
+            If True, damping natural frequencies are used.
+            Default is true.
 
         Returns
         -------
@@ -395,25 +415,7 @@ class Rotor(object):
         else:
             nat_freq = self.wn[w]
 
-        # get mode of interest based on freqs
-        mode = self.evectors[4*node:4*node+2, w]
-        # get translation sdofs for specified node for each mode
-        u = mode[0]
-        v = mode[1]
-        ru = np.absolute(u)
-        rv = np.absolute(v)
-        if ru*rv < 1e-16:
-            k = ({'Frequency': nat_freq,
-                  'Minor axes': 0,
-                  'Major axes': 0,
-                  'kappa': 0})
-            return k
-
-        nu = np.angle(u)
-        nv = np.angle(v)
-        T = np.array([[ru * np.cos(nu), -ru * np.sin(nu)],
-                      [rv * np.cos(nv), -rv * np.sin(nv)]])
-        H = T @ T.T
+        H, nu, nv, = self.H(node, w)
 
         lam = la.eig(H)[0]
 
@@ -447,12 +449,12 @@ class Rotor(object):
         return k
 
     def kappa_mode(self, w):
-        r"""This function evaluates kappa for a given the index of
+        r"""This function evaluates kappa given the index of
         the natural frequency of interest.
         Values of kappa are evaluated for each node of the
         corresponding frequency mode.
 
-        Parameters
+        Parametersbbb
         ----------
         w: int
             Index corresponding to the natural frequency

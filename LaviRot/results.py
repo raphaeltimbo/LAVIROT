@@ -3,13 +3,14 @@ This module contains :py:meth:`LaviRot.results` with functions
 to evaluate results and functions to create plots
 """
 # TODO detail the results docstring
-import numpy as np
+import os
+
+import matplotlib as mpl
 import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import os
 
 c_pal = {'red': '#C93C3C',
          'blue': '#0760BA',
@@ -169,6 +170,7 @@ def whirl_to_cmap(whirl):
 def campbell(rotor, speed_hz, freqs=6, mult=[1, 2]):
     #  TODO mult will be the harmonics for interest e.g., 1x, 2x etc.
     mpl.rcParams.update(mpl.rc_params_from_file(fn))
+    rotor_state_speed = rotor.w
 
     z = []  # will contain values for each whirl (0, 0.5, 1)
 
@@ -243,6 +245,9 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1, 2]):
 
     ax.legend(handles=[forward_label, backwardlabel, mixedlabel],
               loc=2)
+
+    # restore rotor speed
+    rotor.w = rotor_state_speed
 
     plt.show()
     return fig
