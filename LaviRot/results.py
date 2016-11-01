@@ -128,11 +128,13 @@ def plot_rotor(rotor):
 
 
 def MAC(u, v):
+    """MAC for two vectors"""
     H = lambda a: a.T.conj()
     return np.absolute((H(u) @ v)**2 / ((H(u) @ u)*(H(v) @ v)))
 
 
 def MAC_modes(U, V, n=None):
+    """MAC for multiple vectors"""
     # n is the number of modes to be evaluated
     if n is None:
         n = U.shape[1]
@@ -155,6 +157,7 @@ def whirl(kappa_mode):
 
 
 def whirl_to_cmap(whirl):
+    """Maps the whirl to a value"""
     if whirl == 'Forward':
         return 0
     elif whirl == 'Backward':
@@ -163,14 +166,17 @@ def whirl_to_cmap(whirl):
         return 0.5
 
 
-def campbell(rotor, speed_range, freqs=6, mult=[1, 2]):
+def campbell(rotor, speed_hz, freqs=6, mult=[1, 2]):
+    #  TODO mult will be the harmonics for interest e.g., 1x, 2x etc.
     mpl.rcParams.update(mpl.rc_params_from_file(fn))
 
-    whirl_w = []  # will contain the whirl for each w and each wd
     z = []  # will contain values for each whirl (0, 0.5, 1)
-    speed_range *= 2*np.pi  # input in hertz to rad/s
 
-    for w0, w1 in (zip(speed_range[:-1], speed_range[1:])):
+    # input to rotor.w must be in rad/s
+    # so we change from  hertz to rad/s
+    speed_rad = speed_hz*2*np.pi
+
+    for w0, w1 in (zip(speed_rad[:-1], speed_rad[1:])):
         # define shaft speed
         # check rotor state to avoid recalculating eigenvalues
         if not rotor.w == w0:
@@ -191,7 +197,7 @@ def campbell(rotor, speed_range, freqs=6, mult=[1, 2]):
 
         new_segment = np.concatenate([points0, points1], axis=1)
 
-        if w0 == speed_range[0]:
+        if w0 == speed_rad[0]:
             segments = new_segment
         else:
             segments = np.concatenate([segments, new_segment])
@@ -210,20 +216,16 @@ def campbell(rotor, speed_range, freqs=6, mult=[1, 2]):
     ax.add_collection(lines_2)
 
     # plot speed in hertz
-    ax.plot(speed_range, speed_range/(2*np.pi),
+    ax.plot(speed_hz, speed_hz,
              color=c_pal['green2'],
              linestyle='dashed')
-    ax.plot(speed_range, 2*speed_range/(2*np.pi),
+    ax.plot(speed_hz, 2*speed_hz,
              color=c_pal['green2'],
              linestyle='dashed')
-    # scale x to hz
-    ticks_x = mpl.ticker.FuncFormatter(lambda speed_range,
-                                              pos: '{0:g}'.format(speed_range//(2*np.pi)))
-    ax.xaxis.set_major_formatter(ticks_x)
 
     # axis limits
-    ax.set_xlim(0, 503)
-    ax.set_ylim(0, 150)
+    ax.set_xlim(0, max(speed_hz))
+    ax.set_ylim(0, max(2*speed_hz))
 
     # legend and title
     ax.set_xlabel(r'Rotor speed ($Hz$)')
