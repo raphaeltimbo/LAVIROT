@@ -183,7 +183,7 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1, 2]):
             rotor.w = w0
 
         # define x as the current speed and y as each wd
-        x_w0 = np.full_like(range(freqs), w0)
+        x_w0 = np.full_like(range(freqs), w0/(2*np.pi))  # rad -> hz
         y_wd0 = rotor.wd[:freqs]
 
         # generate points for the first speed
@@ -191,7 +191,7 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1, 2]):
 
         # go to the next speed
         rotor.w = w1
-        x_w1 = np.full_like(range(freqs), w1)
+        x_w1 = np.full_like(range(freqs), w1/(2*np.pi))  # rad -> hz
         y_wd1 = rotor.wd[:freqs]
         points1 = np.array([x_w1, y_wd1]).T.reshape(-1, 1, 2)
 
