@@ -10,8 +10,16 @@ from matplotlib.colors import ListedColormap
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import os
-import json
 
+c_pal = {'red': '#C93C3C',
+         'blue': '#0760BA',
+         'green': '#2ECC71',
+         'dark blue': '#07325E',
+         'purple': '#A349C6',
+         'grey': '#2D2D2D',
+         'green2': '#08A4AF'}
+
+fn = os.path.join(os.path.dirname(__file__), r'styles\matplotlibrc')
 
 def plot_rotor(rotor):
     """ Plots a rotor object.
@@ -31,8 +39,8 @@ def plot_rotor(rotor):
     Examples:
 
     """
-    mpl.rcParams.update(mpl.rcParamsDefault)
-    plt.style.use('ggplot')
+    mpl.rcParams.update(mpl.rc_params_from_file(fn))
+    plt.rcParams['axes.facecolor'] = '#E5E5E5'
     plt.rcParams['figure.figsize'] = (10, 6)
     plt.rcParams['xtick.labelsize'] = 0
     plt.rcParams['ytick.labelsize'] = 0
@@ -113,6 +121,7 @@ def plot_rotor(rotor):
         ax.add_patch(mpatches.Polygon(bearing_points, color=r_pal['bearing']))
 
     plt.show()
+    return fig
 
 
 def MAC(u, v):
@@ -152,17 +161,12 @@ def whirl_to_cmap(whirl):
 
 
 def campbell(rotor, speed_range, freqs=6, mult=[1, 2]):
-    #mpl.rcParams.update(mpl.rcParamsDefault)
-    fn = os.path.join(os.path.dirname(__file__), r'styles\matplotlibrc')
-    #print(fn)
-    #s = json.load(open(fn))
     mpl.rcParams.update(mpl.rc_params_from_file(fn))
-    #plt.style.use('seaborn-whitegrid')
-    #plt.style.use('seaborn-dark-palette')
-    #plt.style.use('seaborn-colorblind')
+
     whirl_w = []  # will contain the whirl for each w and each wd
     z = []  # will contain values for each whirl (0, 0.5, 1)
     speed_range *= 2*np.pi  # input in hertz to rad/s
+
     for w0, w1 in (zip(speed_range[:-1], speed_range[1:])):
         # define shaft speed
         # check rotor state to avoid recalculating eigenvalues
@@ -172,8 +176,10 @@ def campbell(rotor, speed_range, freqs=6, mult=[1, 2]):
         # define x as the current speed and y as each wd
         x_w0 = np.full_like(range(freqs), w0)
         y_wd0 = rotor.wd[:freqs]
+
         # generate points for the first speed
         points0 = np.array([x_w0, y_wd0]).T.reshape(-1, 1, 2)
+
         # go to the next speed
         rotor.w = w1
         x_w1 = np.full_like(range(freqs), w1)
@@ -189,21 +195,49 @@ def campbell(rotor, speed_range, freqs=6, mult=[1, 2]):
 
         whirl_w = [whirl(rotor.kappa_mode(wn)) for wn in range(freqs)]
         z.append([whirl_to_cmap(i) for i in whirl_w])
+
     z = np.array(z).flatten()
 
-    cmap = ListedColormap(['b', 'k', 'r'])
-    fig2, ax2 = plt.subplots()
+    cmap = ListedColormap([c_pal['blue'],
+                           c_pal['grey'],
+                           c_pal['red']])
+
+    fig, ax = plt.subplots()
     lines_2 = LineCollection(segments, array=z, cmap=cmap)
-    ax2.add_collection(lines_2)
+    ax.add_collection(lines_2)
+
     # plot speed in hertz
-    ax2.plot(speed_range, speed_range/(2*np.pi))
-    ax2.plot(speed_range, 2*speed_range/(2*np.pi))
+    ax.plot(speed_range, speed_range/(2*np.pi),
+             color=c_pal['green2'],
+             linestyle='dashed')
+    ax.plot(speed_range, 2*speed_range/(2*np.pi),
+             color=c_pal['green2'],
+             linestyle='dashed')
     # scale x to hz
     ticks_x = mpl.ticker.FuncFormatter(lambda speed_range,
                                               pos: '{0:g}'.format(speed_range//(2*np.pi)))
-    ax2.xaxis.set_major_formatter(ticks_x)
+    ax.xaxis.set_major_formatter(ticks_x)
 
-    ax2.set_xlim(0, 470)
-    ax2.set_ylim(0, 150)
+    # axis limits
+    ax.set_xlim(0, 503)
+    ax.set_ylim(0, 150)
+
+    # legend and title
+    ax.set_xlabel(r'Rotor speed ($Hz$)')
+    ax.set_ylabel(r'Damped natural frequencies ($Hz$)')
+
+    forward_label = mpl.lines.Line2D([], [],
+                                     color=c_pal['blue'],
+                                     label='Forward')
+    backwardlabel = mpl.lines.Line2D([], [],
+                                     color=c_pal['red'],
+                                     label='Backward')
+    mixedlabel = mpl.lines.Line2D([], [],
+                                  color=c_pal['grey'],
+                                  label='Mixed')
+
+    ax.legend(handles=[forward_label, backwardlabel, mixedlabel],
+              loc=2)
 
     plt.show()
+    return fig
