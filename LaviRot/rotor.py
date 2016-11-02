@@ -307,9 +307,9 @@ class Rotor(object):
         array([ 1,  5,  3,  7,  9, 11], dtype=int64)
         """
         # avoid float point errors when sorting
-        eigenvalues = np.around(eigenvalues, decimals=2)
-        a = np.imag(eigenvalues)  # First column
-        b = np.absolute(eigenvalues)  # Second column
+        evals_truncated = np.around(eigenvalues, decimals=10)
+        a = np.imag(evals_truncated)  # First column
+        b = np.absolute(evals_truncated)  # Second column
         ind = np.lexsort((b, a))  # Sort by imag, then by absolute
         # Positive eigenvalues first
         positive = [i for i in ind[len(a) // 2:]]
@@ -352,10 +352,9 @@ class Rotor(object):
 
         return evalues[idx], evectors[:, idx]
 
-    def H(self, node, w):
+    def H(self, node, w, return_T=False):
         # get vector of interest based on freqs
         vector = self.evectors[4 * node:4 * node + 2, w]
-        print(vector)
         # get translation sdofs for specified node for each mode
         u = vector[0]
         v = vector[1]
@@ -368,7 +367,14 @@ class Rotor(object):
                       [rv * np.cos(nv), -rv * np.sin(nv)]])
         H = T @ T.T
 
-        return H, nu, nv
+        if return_T:
+            Tdic = {'ru': ru,
+                    'rv': rv,
+                    'nu': nu,
+                    'nv': nv}
+            return H, Tdic
+
+        return H
 
     # TODO separate kappa-create a function that will return lam and U (extract method)
     def kappa(self, node, w, wd=True):
@@ -417,7 +423,9 @@ class Rotor(object):
         else:
             nat_freq = self.wn[w]
 
-        H, nu, nv, = self.H(node, w)
+        H, Tvals = self.H(node, w, return_T=True)
+        nu = Tvals['nu']
+        nv = Tvals['nv']
 
         lam = la.eig(H)[0]
 

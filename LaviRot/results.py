@@ -135,7 +135,7 @@ def MAC(u, v):
     return np.absolute((H(u) @ v)**2 / ((H(u) @ u)*(H(v) @ v)))
 
 
-def MAC_modes(U, V, n=None):
+def MAC_modes(U, V, n=None, plot=True):
     """MAC for multiple vectors"""
     # n is the number of modes to be evaluated
     if n is None:
@@ -144,6 +144,9 @@ def MAC_modes(U, V, n=None):
     for u in enumerate(U.T[:n]):
         for v in enumerate(V.T[:n]):
             macs[u[0], v[0]] = MAC(u[1], v[1])
+
+    if not plot:
+        return macs
 
     xpos, ypos = np.meshgrid(range(n), range(n))
     xpos, ypos = 0.5 + xpos.flatten(), 0.5 + ypos.flatten()
