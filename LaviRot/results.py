@@ -52,7 +52,8 @@ def plot_rotor(rotor):
     r_pal = {'shaft': '#525252',
              'node': '#6caed6',
              'disk': '#bc625b',
-             'bearing': '#355d7a'}
+             'bearing': '#355d7a',
+             'seal': '#77ACA2' }
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -101,7 +102,7 @@ def plot_rotor(rotor):
                          [zpos - hw, ypos + 0.9 * D],
                          [zpos - hw, ypos + 0.1 * D],
                          [zpos, ypos]]
-        disk_points_l = [[zpos, -ypos],  # upper
+        disk_points_l = [[zpos, -ypos],  # lower
                          [zpos + hw, -(ypos + 0.1 * D)],
                          [zpos + hw, -(ypos + 0.9 * D)],
                          [zpos - hw, -(ypos + 0.9 * D)],
@@ -111,19 +112,45 @@ def plot_rotor(rotor):
         ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=r_pal['disk']))
 
     # plot bearings
-    for bearing in rotor.bearing_elements:
-        zpos = rotor.nodes_pos[bearing.n]
-        #  TODO this will need to be modified for tapppered elements
-        #  check if the bearing is in the last node
-        ypos = -rotor.nodes_o_d[bearing.n]
-        h = -0.75 * ypos  # height
+    for bearing in rotor.bearing_seal_elements:
+        # name is used here because classes are not import to this module
+        if type(bearing).__name__ == 'BearingElement':
+            zpos = rotor.nodes_pos[bearing.n]
+            #  TODO this will need to be modified for tapppered elements
+            #  check if the bearing is in the last node
+            ypos = -rotor.nodes_o_d[bearing.n]
+            h = -0.75 * ypos  # height
 
-        #  node (x pos), outer diam. (y pos)
-        bearing_points = [[zpos, ypos],  # upper
-                          [zpos + h / 2, ypos - h],
-                          [zpos - h / 2, ypos - h],
-                          [zpos, ypos]]
-        ax.add_patch(mpatches.Polygon(bearing_points, color=r_pal['bearing']))
+            #  node (x pos), outer diam. (y pos)
+            bearing_points = [[zpos, ypos],  # upper
+                              [zpos + h / 2, ypos - h],
+                              [zpos - h / 2, ypos - h],
+                              [zpos, ypos]]
+            ax.add_patch(mpatches.Polygon(bearing_points, color=r_pal['bearing']))
+
+        elif type(bearing).__name__ == 'SealElement':
+            zpos = rotor.nodes_pos[bearing.n]
+            #  check if the bearing is in the last node
+            ypos = rotor.nodes_o_d[bearing.n]
+            hw = 0.05
+            # TODO adapt hw according to bal drum diameter
+
+            #  node (x pos), outer diam. (y pos)
+            seal_points_u = [[zpos, ypos*1.1],  # upper
+                             [zpos + hw, ypos*1.1],
+                             [zpos + hw, ypos*1.3],
+                             [zpos - hw, ypos*1.3],
+                             [zpos - hw, ypos*1.1],
+                             [zpos, ypos*1.1]]
+            seal_points_l = [[zpos, -ypos*1.1],  # lower
+                             [zpos + hw, -(ypos*1.1)],
+                             [zpos + hw, -(ypos*1.3)],
+                             [zpos - hw, -(ypos*1.3)],
+                             [zpos - hw, -(ypos*1.1)],
+                             [zpos, -ypos*1.1]]
+            ax.add_patch(mpatches.Polygon(seal_points_u, facecolor=r_pal['seal']))
+            ax.add_patch(mpatches.Polygon(seal_points_l, facecolor=r_pal['seal']))
+
 
     plt.show()
     return fig
@@ -197,7 +224,7 @@ def whirl_to_cmap(whirl):
         return 0.5
 
 
-def campbell(rotor, speed_hz, freqs=6, mult=[1, 2]):
+def campbell(rotor, speed_hz, freqs=6, mult=[1]):
     #  TODO mult will be the harmonics for interest e.g., 1x, 2x etc.
     mpl.rcParams.update(mpl.rc_params_from_file(fn))
     rotor_state_speed = rotor.w
@@ -247,17 +274,15 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1, 2]):
     lines_2 = LineCollection(segments, array=z, cmap=cmap)
     ax.add_collection(lines_2)
 
-    # plot speed in hertz
-    ax.plot(speed_hz, speed_hz,
-             color=c_pal['green2'],
-             linestyle='dashed')
-    ax.plot(speed_hz, 2*speed_hz,
-             color=c_pal['green2'],
-             linestyle='dashed')
+    # plot harmonics in hertz
+    for m in mult:
+        ax.plot(speed_hz, m*speed_hz,
+                 color=c_pal['green2'],
+                 linestyle='dashed')
 
     # axis limits
     ax.set_xlim(0, max(speed_hz))
-    ax.set_ylim(0, max(2*speed_hz))
+    ax.set_ylim(0, max(max(mult)*speed_hz))
 
     # legend and title
     ax.set_xlabel(r'Rotor speed ($Hz$)')
@@ -281,3 +306,6 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1, 2]):
 
     plt.show()
     return fig
+
+# TODO critical speed map
+

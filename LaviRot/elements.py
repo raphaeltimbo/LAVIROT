@@ -1,7 +1,7 @@
 import numpy as np
 
 
-__all__ = ["ShaftElement", "DiskElement", "BearingElement"]
+__all__ = ["ShaftElement", "DiskElement", "BearingElement", "SealElement"]
 
 
 class ShaftElement(object):
@@ -422,6 +422,9 @@ class BearingElement(object):
         self.cxx = cxx
         self.cyy = cyy
 
+    def __repr__(self):
+        return '%s' % self.__class__.__name__
+
     def K(self):
         kxx = self.kxx
         kyy = self.kyy
@@ -439,3 +442,6 @@ class BearingElement(object):
 
         return C
 
+
+class SealElement(BearingElement):
+    pass

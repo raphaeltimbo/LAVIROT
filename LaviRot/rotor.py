@@ -68,11 +68,11 @@ class Rotor(object):
     34.2773...
     """
 
-    def __init__(self, shaft_elements, disk_elements, bearing_elements, w=0):
+    def __init__(self, shaft_elements, disk_elements, bearing_seal_elements, w=0):
         #  TODO consider speed as a rotor property. Setter should call __init__ again
         self._w = w
         self.shaft_elements = shaft_elements
-        self.bearing_elements = bearing_elements
+        self.bearing_seal_elements = bearing_seal_elements
         self.disk_elements = disk_elements
         # Values for evalues and evectors will be calculated by self._calc_system
         self.evalues = None
@@ -125,15 +125,15 @@ class Rotor(object):
     @staticmethod
     def _dofs(element):
         """The first and last dof for a given element"""
-        if type(element).__name__ == 'ShaftElement':
+        if type(element) == ShaftElement:
             node = element.n
             n1 = 4 * node
             n2 = n1 + 8
-        if type(element).__name__ == 'DiskElement':
+        if type(element) == DiskElement:
             node = element.n
             n1 = 4 * node
             n2 = n1 + 4
-        if type(element).__name__ == 'BearingElement':
+        if isinstance(element, BearingElement):
             node = element.n
             n1 = 4 * node
             n2 = n1 + 2
@@ -192,7 +192,7 @@ class Rotor(object):
             n1, n2 = self._dofs(elm)
             K0[n1:n2, n1:n2] += elm.K()
 
-        for elm in self.bearing_elements:
+        for elm in self.bearing_seal_elements:
             n1, n2 = self._dofs(elm)
             K0[n1:n2, n1:n2] += elm.K()
         #  Skew-symmetric speed dependent contribution to element stiffness matrix
@@ -220,7 +220,7 @@ class Rotor(object):
         #  Create the matrices
         C0 = np.zeros((self.ndof, self.ndof))
 
-        for elm in self.bearing_elements:
+        for elm in self.bearing_seal_elements:
             n1, n2 = self._dofs(elm)
             C0[n1:n2, n1:n2] += elm.C()
 
@@ -304,7 +304,7 @@ class Rotor(object):
         >>> evalues, evectors = rotor._eigen(0, sorted_=False)
         >>> idx = rotor._index(evalues)
         >>> idx[:6]
-        array([ 1,  5,  3,  7,  9, 11], dtype=int64)
+        array([ 1,  5,  3,  7, 11,  9], dtype=int64)
         """
         # avoid float point errors when sorting
         evals_truncated = np.around(eigenvalues, decimals=10)
@@ -512,7 +512,7 @@ def rotor_example():
     >>> rotor = rotor_example()
     >>> rotor.wd
     array([  34.27731557,   34.27731557,   95.17859364,   95.17859364,
-            629.6527618 ,  629.65276152])
+            629.65276152,  629.6527618 ])
     """
 
     #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
