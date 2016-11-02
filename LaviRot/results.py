@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap
+from mpl_toolkits.mplot3d import Axes3D
 
 c_pal = {'red': '#C93C3C',
          'blue': '#0760BA',
@@ -143,6 +144,32 @@ def MAC_modes(U, V, n=None):
     for u in enumerate(U.T[:n]):
         for v in enumerate(V.T[:n]):
             macs[u[0], v[0]] = MAC(u[1], v[1])
+
+    xpos, ypos = np.meshgrid(range(n), range(n))
+    xpos, ypos = 0.5 + xpos.flatten(), 0.5 + ypos.flatten()
+    zpos = np.zeros_like(xpos)
+    dx = 0.75 * np.ones_like(xpos)
+    dy = 0.75 * np.ones_like(xpos)
+    dz = macs.T.flatten()
+
+    fig = plt.figure(figsize=(12, 8))
+    #fig.suptitle('MAC - %s vs %s' % (U.name, V.name), fontsize=12)
+    ax = fig.add_subplot(111, projection='3d')
+    ax.bar3d(xpos, ypos, zpos, dx, dy, dz,
+             color=plt.cm.viridis(dz), alpha=0.7)
+    ax.set_xticks(range(1, n + 1))
+    ax.set_yticks(range(1, n + 1))
+    #ax.set_xlabel('%s  modes' % U.name)
+    #ax.set_ylabel('%s  modes' % V.name)
+
+    sm = plt.cm.ScalarMappable(cmap=plt.cm.viridis,
+                               norm=plt.Normalize(vmin=0, vmax=1))
+    # fake up the array of the scalar mappable
+    sm._A = []
+    cbar = fig.colorbar(sm, shrink=0.5, aspect=10)
+    cbar.set_label('MAC')
+    plt.show()
+
     return macs
 
 

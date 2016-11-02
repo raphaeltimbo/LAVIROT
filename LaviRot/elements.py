@@ -438,3 +438,4 @@ class BearingElement(object):
                       [  0, cyy]])
 
         return C
+

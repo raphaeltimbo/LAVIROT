@@ -3,6 +3,7 @@ import scipy.linalg as la
 import scipy.sparse.linalg as las
 from LaviRot.elements import *
 
+
 __all__ = ['Rotor', 'rotor_example']
 
 
@@ -63,8 +64,8 @@ class Rotor(object):
     >>> bearing0 = BearingElement(0, stf, stf, 0, 0)
     >>> bearing1 = BearingElement(2, stf, stf, 0, 0)
     >>> rotor = Rotor(shaft_elm, [disk0], [bearing0, bearing1])
-    >>> rotor.wd[0]
-    34.277315572213979
+    >>> rotor.wd[0] # doctest: +ELLIPSIS
+    34.2773...
     """
 
     def __init__(self, shaft_elements, disk_elements, bearing_elements, w=0):
@@ -265,17 +266,17 @@ class Rotor(object):
         --------
         >>> rotor = rotor_example()
         >>> rotor.A()[12:16, :2]
-        array([[  2.06299048e+08,  -2.12365284e-05],
-               [  2.12477773e-05,   2.06299048e+08],
-               [  5.84272565e-04,   6.97351178e+09],
-               [ -6.97351178e+09,   6.02132447e-04]])
+        array([[  2.06299048e+08,  -0.00000000e+00],
+               [ -0.00000000e+00,   2.06299048e+08],
+               [  0.00000000e+00,   6.97351178e+09],
+               [ -6.97351178e+09,  -0.00000000e+00]])
         """
         Z = np.zeros((self.ndof, self.ndof))
         I = np.eye(self.ndof)
-        Minv = la.pinv(self.M())
         #  TODO implement K(w) and C(w) for shaft, bearings etc.
-        A = np.vstack([np.hstack([Z, I]),
-                       np.hstack([-Minv @ self.K(), -Minv @ (self.C() + self.G()*w)])])
+        A = np.vstack(
+            [np.hstack([Z, I]),
+             np.hstack([la.solve(-self.M(), self.K()), la.solve(-self.M(), (self.C() + self.G()*w))])])
 
         return A
 
@@ -341,7 +342,7 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> evalues, evectors = rotor._eigen(0)
         >>> evalues[0].imag
-        215.37072557260217
+        215.37072557293124
         """
         evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM')
         if sorted_ is False:
@@ -354,6 +355,7 @@ class Rotor(object):
     def H(self, node, w):
         # get vector of interest based on freqs
         vector = self.evectors[4 * node:4 * node + 2, w]
+        print(vector)
         # get translation sdofs for specified node for each mode
         u = vector[0]
         v = vector[1]
@@ -406,7 +408,7 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
         >>> rotor.kappa_mode(0)
-        [array(0.0002477135677876219), array(0.00024771356791147364), array(0.00024771356792931365)]
+        [array(0.00024771356807127144), array(0.00024771356803424013), array(0.00024771356792966965)]
 
 
         """
@@ -471,7 +473,7 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
         >>> rotor.kappa_mode(0)
-        [array(0.0007921675417423512), array(0.000792167541753317), array(0.0007921675417411938)]
+        [array(0.0007921675419146242), array(0.0007921675419032787), array(0.0007921675419138006)]
         """
         kappa_mode = [self.kappa(node, w)['kappa'] for node in self.nodes]
         return kappa_mode
@@ -501,8 +503,8 @@ def rotor_example():
     --------
     >>> rotor = rotor_example()
     >>> rotor.wd
-    array([  34.27731557,   34.27731557,   95.17859365,   95.17859365,
-            629.6527611 ,  629.6527616 ])
+    array([  34.27731557,   34.27731557,   95.17859364,   95.17859364,
+            629.6527618 ,  629.65276152])
     """
 
     #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
@@ -528,7 +530,4 @@ def rotor_example():
     bearing0 = BearingElement(0, stf, stf, 0, 0)
     bearing1 = BearingElement(2, stf, stf, 0, 0)
     return Rotor(shaft_elm, [disk0], [bearing0, bearing1])
-
-
-
 
