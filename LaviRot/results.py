@@ -53,7 +53,7 @@ def plot_rotor(rotor):
              'node': '#6caed6',
              'disk': '#bc625b',
              'bearing': '#355d7a',
-             'seal': '#77ACA2' }
+             'seal': '#77ACA2'}
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -69,8 +69,9 @@ def plot_rotor(rotor):
     for node, position in enumerate(rotor.nodes_pos):
         ax.plot(position, 0,
                 zorder=2, ls='', marker='D', color=r_pal['node'], markersize=10, alpha=0.6)
-        ax.text(position, -0.01,
+        ax.text(position, 0,
                 '%.0f' % node,
+                size='smaller',
                 horizontalalignment='center',
                 verticalalignment='center')
 

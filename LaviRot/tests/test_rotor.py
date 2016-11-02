@@ -180,7 +180,7 @@ def test_evals_sorted_rotor2(rotor2):
     assert_allclose(rotor2_evals, evals_sorted, rtol=1e-3)
     assert_allclose(rotor2.evalues, evals_sorted, rtol=1e-3)
     rotor2.w = 10000
-    assert_allclose(rotor2.evalues, evals_sorted_w_10000, rtol=1e-3, atol=1e-3)
+    assert_allclose(rotor2.evalues, evals_sorted_w_10000, rtol=1e-1)
 
 
 def test_evals_not_sorted_rotor2(rotor2):
