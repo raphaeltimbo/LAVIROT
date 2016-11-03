@@ -1,0 +1,1275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="183a799a-d137-4fda-ac4d-949e6ea72dcd" name="Default" comment="" />
+    <ignored path="LAVIROT.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path=".idea/dataSources.local.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="LAVIROT" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/style/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#38#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="303">
+              <caret line="108" column="0" selection-start-line="108" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Makefile" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/docs/Makefile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="382">
+              <caret line="204" column="18" selection-start-line="204" selection-start-column="18" selection-end-line="204" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/docs/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="elements" />
+      </map>
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/plots.py" />
+        <option value="$PROJECT_DIR$/__init__.py" />
+        <option value="$PROJECT_DIR$/rotor.py" />
+        <option value="$PROJECT_DIR$/doc/tutorial/intro.rst" />
+        <option value="$PROJECT_DIR$/tests/test_rotor.py" />
+        <option value="$PROJECT_DIR$/tests/test_elements.py" />
+        <option value="$PROJECT_DIR$/doc/modules/elements.rst" />
+        <option value="$PROJECT_DIR$/doc/modules/index.rst" />
+        <option value="$PROJECT_DIR$/elements.py" />
+        <option value="$PROJECT_DIR$/doc/tutorial.rst" />
+        <option value="$PROJECT_DIR$/doc/examples/index.rst" />
+        <option value="$PROJECT_DIR$/doc/Makefile" />
+        <option value="$PROJECT_DIR$/doc/.gitignore" />
+        <option value="$PROJECT_DIR$/doc/api.rst" />
+        <option value="$PROJECT_DIR$/doc/reference/elements.rst" />
+        <option value="$PROJECT_DIR$/doc/tutorial/index.rst" />
+        <option value="$PROJECT_DIR$/doc/api/elements.ShaftElements.rst" />
+        <option value="$PROJECT_DIR$/doc/api/elements.DiskElements.rst" />
+        <option value="$PROJECT_DIR$/doc/api/elements.BearingElements.rst" />
+        <option value="$PROJECT_DIR$/doc/api/elements.rst" />
+        <option value="$PROJECT_DIR$/doc/index.rst" />
+        <option value="$PROJECT_DIR$/doc/api/elements.DiskElement.rst" />
+        <option value="$PROJECT_DIR$/doc/api/elements.BearingElement.rst" />
+        <option value="$PROJECT_DIR$/doc/api/elements.ShaftElement.rst" />
+        <option value="$PROJECT_DIR$/doc/api/rotor.rst" />
+        <option value="$PROJECT_DIR$/doc/api/plots.rst" />
+        <option value="$PROJECT_DIR$/LaviRot/plots.py" />
+        <option value="$PROJECT_DIR$/doc/api/index.rst" />
+        <option value="$PROJECT_DIR$/doc/api/results.rst" />
+        <option value="$PROJECT_DIR$/doc/_static/style.css" />
+        <option value="$PROJECT_DIR$/LaviRot/__init__.py" />
+        <option value="$PROJECT_DIR$/LaviRot/.travis.yml" />
+        <option value="$PROJECT_DIR$/LaviRot/requirements.txt" />
+        <option value="$PROJECT_DIR$/setup.cfg" />
+        <option value="$PROJECT_DIR$/setup.py" />
+        <option value="$PROJECT_DIR$/.travis.yml" />
+        <option value="$PROJECT_DIR$/LaviRot/tests/test_elements.py" />
+        <option value="$PROJECT_DIR$/doc/conf.py" />
+        <option value="$PROJECT_DIR$/LaviRot/styles/bmh_matplotlibrc.json" />
+        <option value="$PROJECT_DIR$/LaviRot/styles/matplotlibrc2" />
+        <option value="$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/mpl-data/stylelib/ggplot.mplstyle" />
+        <option value="$PROJECT_DIR$/LaviRot/styles/matplotlibrc" />
+        <option value="$PROJECT_DIR$/assa.py" />
+        <option value="$PROJECT_DIR$/LaviRot/rotor.py" />
+        <option value="$PROJECT_DIR$/LaviRot/elements.py" />
+        <option value="$PROJECT_DIR$/LaviRot/results.py" />
+        <option value="$PROJECT_DIR$/LaviRot/tests/test_rotor.py" />
+        <option value="$PROJECT_DIR$/appveyor.yml" />
+        <option value="$PROJECT_DIR$/README.rst" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/docs/Makefile" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" />
+  <component name="JsBuildToolPackageJson" detection-done="true" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-1927" />
+    <option name="width" value="974" />
+    <option name="height" value="1047" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>ReST</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>RestRoleInspection</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scratches" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LaviRot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LaviRot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LaviRot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LaviRot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LaviRot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="docs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/LaviRot" />
+    <property name="prop_add_unversioned_files" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="109" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="108" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="109" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="108" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="35" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="38" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="61" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="300" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\TRABALHO\MATERIAL\PYTHON\LaviRot" />
+      <recent name="G:\TRABALHO\MATERIAL\PYTHON\LAVIROT" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="G:\TRABALHO\MATERIAL\PYTHON\LaviRot\doc\api" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python tests.doctest_rotor">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Tox" factoryName="Tox">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <method />
+    </configuration>
+    <configuration default="true" type="docs" factoryName="Docutils task">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="docutils_input_file" value="" />
+      <option name="docutils_output_file" value="" />
+      <option name="docutils_params" value="" />
+      <option name="docutils_task" value="" />
+      <option name="docutils_open_in_browser" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="docs" factoryName="Sphinx task">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="docutils_input_file" value="" />
+      <option name="docutils_output_file" value="" />
+      <option name="docutils_params" value="" />
+      <option name="docutils_task" value="" />
+      <option name="docutils_open_in_browser" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Attests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Doctests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Nosetests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="PARAMS" value="" />
+      <option name="USE_PARAM" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Unittests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="PUREUNITTEST" value="true" />
+      <option name="PARAMS" value="" />
+      <option name="USE_PARAM" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="py.test">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="testToRun" value="" />
+      <option name="keywords" value="" />
+      <option name="params" value="" />
+      <option name="USE_PARAM" value="false" />
+      <option name="USE_KEYWORD" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="test_lavirot" type="tests" factoryName="py.test">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="testToRun" value="G:\TRABALHO\MATERIAL\PYTHON\LaviRot\LaviRot\tests" />
+      <option name="keywords" value="" />
+      <option name="params" value="" />
+      <option name="USE_PARAM" value="false" />
+      <option name="USE_KEYWORD" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="doctest_elements" type="tests" factoryName="Doctests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/LaviRot/elements.py" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="doctest_rotor" type="tests" factoryName="Doctests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="C:\Users\raphael\Anaconda3\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/LaviRot" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/LaviRot/rotor.py" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="test_lavirot_t" type="tests" factoryName="py.test">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="testToRun" value="G:\TRABALHO\MATERIAL\PYTHON\LaviRot\LaviRot\tests" />
+      <option name="keywords" value="" />
+      <option name="params" value="" />
+      <option name="USE_PARAM" value="false" />
+      <option name="USE_KEYWORD" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="doctest_elements_t" type="tests" factoryName="Doctests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="C:\Users\up49\AppData\Local\Continuum\Anaconda3\python.exe" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="LAVIROT" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/elements.py" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
+    <list size="5">
+      <item index="0" class="java.lang.String" itemvalue="Python tests.test_lavirot" />
+      <item index="1" class="java.lang.String" itemvalue="Python tests.doctest_elements" />
+      <item index="2" class="java.lang.String" itemvalue="Python tests.doctest_rotor" />
+      <item index="3" class="java.lang.String" itemvalue="Python tests.test_lavirot_t" />
+      <item index="4" class="java.lang.String" itemvalue="Python tests.doctest_elements_t" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="183a799a-d137-4fda-ac4d-949e6ea72dcd" name="Default" comment="" />
+      <created>1475799002813</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1475799002813</updated>
+    </task>
+    <task id="LOCAL-00042" summary="moved travis.">
+      <created>1477677765845</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1477677765845</updated>
+    </task>
+    <task id="LOCAL-00043" summary="test kappa_mode">
+      <created>1477679112421</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1477679112421</updated>
+    </task>
+    <task id="LOCAL-00044" summary="travis requirements.txt.">
+      <created>1477680460805</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1477680460805</updated>
+    </task>
+    <task id="LOCAL-00045" summary="travis requirements.txt.">
+      <created>1477680639670</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1477680639670</updated>
+    </task>
+    <task id="LOCAL-00046" summary="tests">
+      <created>1477681004712</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1477681004712</updated>
+    </task>
+    <task id="LOCAL-00047" summary="tests">
+      <created>1477681192620</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1477681192620</updated>
+    </task>
+    <task id="LOCAL-00048" summary="tests">
+      <created>1477681328960</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1477681328960</updated>
+    </task>
+    <task id="LOCAL-00049" summary="tests">
+      <created>1477681570279</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1477681570279</updated>
+    </task>
+    <task id="LOCAL-00050" summary="tests">
+      <created>1477682196825</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1477682196826</updated>
+    </task>
+    <task id="LOCAL-00051" summary="tests">
+      <created>1477682650901</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1477682650901</updated>
+    </task>
+    <task id="LOCAL-00052" summary="tests">
+      <created>1477683501869</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1477683501869</updated>
+    </task>
+    <task id="LOCAL-00053" summary="tests">
+      <created>1477699764985</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1477699764985</updated>
+    </task>
+    <task id="LOCAL-00054" summary="tests">
+      <created>1477703331684</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1477703331684</updated>
+    </task>
+    <task id="LOCAL-00055" summary="tests">
+      <created>1477704259558</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1477704259558</updated>
+    </task>
+    <task id="LOCAL-00056" summary="tests">
+      <created>1477704653669</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1477704653669</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Implemented MAC to test the eigenvectors.">
+      <created>1477746906173</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1477746906173</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Implemented MAC to test the eigenvectors.">
+      <created>1477747401827</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1477747401827</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Implemented MAC to test the eigenvectors.">
+      <created>1477748316187</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1477748316187</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Implemented MAC to test the eigenvectors.">
+      <created>1477748700277</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1477748700277</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Check tests on windows and linux.">
+      <created>1477751547789</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1477751547790</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Trying appveyor for windows testing.">
+      <created>1477753144627</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1477753144627</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Trying appveyor for windows testing.">
+      <created>1477756209964</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1477756209965</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Trying appveyor for windows testing.">
+      <created>1477756691935</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1477756691935</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Trying appveyor for windows testing.">
+      <created>1477757427018</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1477757427018</updated>
+    </task>
+    <task id="LOCAL-00066" summary="Trying appveyor for windows testing.">
+      <created>1477758124521</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1477758124521</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Trying appveyor for windows testing.">
+      <created>1477758428454</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1477758428454</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Trying appveyor for windows testing.">
+      <created>1477759169497</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1477759169497</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Eigenvalues are now calculated using scipy.sparse.linalg.eigs (ARPACK).&#10;Tests need to be adapted.">
+      <created>1477771547264</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1477771547264</updated>
+    </task>
+    <task id="LOCAL-00070" summary="Changing tests for arpack.">
+      <created>1477850620254</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1477850620254</updated>
+    </task>
+    <task id="LOCAL-00071" summary="Changing tests for arpack.">
+      <created>1477852315223</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1477852315223</updated>
+    </task>
+    <task id="LOCAL-00072" summary="Changed arguments for shaft elements. Removed position.">
+      <created>1477859344799</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1477859344799</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Corrected plot rotor.">
+      <created>1477870570400</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1477870570400</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Adjusted rotor plot.">
+      <created>1477911886592</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1477911886592</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Added campbell plot.">
+      <created>1477922583709</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1477922583709</updated>
+    </task>
+    <task id="LOCAL-00076" summary="Matplotlib styles.">
+      <created>1477922689286</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1477922689286</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Added matplotlib rc. &#10;Campbell diagram is working.">
+      <created>1477959256865</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1477959256865</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Fixed doctests.&#10;Nodes numbering is now centered.">
+      <created>1478009781189</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1478009781189</updated>
+    </task>
+    <task id="LOCAL-00079" summary="figuras added to gitignore.">
+      <created>1478010244004</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1478010244004</updated>
+    </task>
+    <task id="LOCAL-00080" summary="Corrected the campbell diagram. Added speed_rad and speed_hz to simplify things and correct speed_range that was being mutated.">
+      <created>1478023992798</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1478023992798</updated>
+    </task>
+    <task id="LOCAL-00081" summary="Corrected the campbell diagram.">
+      <created>1478024759579</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1478024759579</updated>
+    </task>
+    <task id="LOCAL-00082" summary="H is now a separated method.">
+      <created>1478037017035</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1478037017035</updated>
+    </task>
+    <task id="LOCAL-00083" summary="Using la.solve instead of pinv to assembly the A matrix.">
+      <created>1478047640100</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1478047640100</updated>
+    </task>
+    <task id="LOCAL-00084" summary="Tests for eigenvectors have been implemented using mac values.">
+      <created>1478099663886</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1478099663886</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Implemented SealElements">
+      <created>1478116654993</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1478116654993</updated>
+    </task>
+    <task id="LOCAL-00086" summary="Test modified.">
+      <created>1478123831215</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1478123831215</updated>
+    </task>
+    <task id="LOCAL-00087" summary="Removed plt.show so that fig can be returned and manipulated (chance ax.title etc.)">
+      <created>1478133016718</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1478133016718</updated>
+    </task>
+    <task id="LOCAL-00088" summary="Removed plt.show so that fig can be returned and manipulated (chance ax.title etc.)">
+      <created>1478199767948</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1478199767948</updated>
+    </task>
+    <task id="LOCAL-00089" summary="Appveyor tests only x64.">
+      <created>1478200372007</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1478200372007</updated>
+    </task>
+    <task id="LOCAL-00090" summary="Appveyor tests only x64.">
+      <created>1478205111783</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1478205111783</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
+    <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="doctest_elements - 2016.11.03 at 16h 55m 21s.xml">
+      <configuration name="doctest_elements" configurationId="tests" />
+    </history-entry>
+    <history-entry file="doctest_rotor - 2016.11.02 at 14h 52m 41s.xml">
+      <configuration name="doctest_rotor" configurationId="tests" />
+    </history-entry>
+    <history-entry file="doctest_rotor - 2016.11.02 at 14h 53m 53s.xml">
+      <configuration name="doctest_rotor" configurationId="tests" />
+    </history-entry>
+    <history-entry file="doctest_rotor - 2016.11.02 at 16h 37m 17s.xml">
+      <configuration name="doctest_rotor" configurationId="tests" />
+    </history-entry>
+    <history-entry file="doctest_rotor - 2016.11.03 at 16h 55m 25s.xml">
+      <configuration name="doctest_rotor" configurationId="tests" />
+    </history-entry>
+    <history-entry file="test_lavirot - 2016.11.02 at 14h 47m 05s.xml">
+      <configuration name="test_lavirot" configurationId="tests" />
+    </history-entry>
+    <history-entry file="test_lavirot - 2016.11.02 at 14h 52m 34s.xml">
+      <configuration name="test_lavirot" configurationId="tests" />
+    </history-entry>
+    <history-entry file="test_lavirot - 2016.11.02 at 16h 37m 23s.xml">
+      <configuration name="test_lavirot" configurationId="tests" />
+    </history-entry>
+    <history-entry file="test_lavirot - 2016.11.02 at 16h 37m 57s.xml">
+      <configuration name="test_lavirot" configurationId="tests" />
+    </history-entry>
+    <history-entry file="test_lavirot - 2016.11.03 at 16h 55m 18s.xml">
+      <configuration name="test_lavirot" configurationId="tests" />
+    </history-entry>
+  </component>
+  <component name="TodoView" selected-index="4">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-1927" y="0" width="974" height="1047" extended-state="0" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15064102" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32822758" sideWeight="0.4871795" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4310722" sideWeight="0.2724359" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33150986" sideWeight="0.49252138" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.4957265" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24893162" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.4957265" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4310722" sideWeight="0.7275641" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39934355" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32822758" sideWeight="0.4871795" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4310722" sideWeight="0.2724359" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33150986" sideWeight="0.49252138" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.4957265" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4310722" sideWeight="0.7275641" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.4957265" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24252136" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24893162" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39934355" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="test kappa_mode" />
+    <MESSAGE value="travis requirements.txt." />
+    <MESSAGE value="tests" />
+    <MESSAGE value="Implemented MAC to test the eigenvectors." />
+    <MESSAGE value="Check tests on windows and linux." />
+    <MESSAGE value="Trying appveyor for windows testing." />
+    <MESSAGE value="Eigenvalues are now calculated using scipy.sparse.linalg.eigs (ARPACK).&#10;Tests need to be adapted." />
+    <MESSAGE value="Changing tests for arpack." />
+    <MESSAGE value="Changed arguments for shaft elements. Removed position." />
+    <MESSAGE value="Corrected plot rotor." />
+    <MESSAGE value="Adjusted rotor plot." />
+    <MESSAGE value="Added campbell plot." />
+    <MESSAGE value="Matplotlib styles." />
+    <MESSAGE value="Added matplotlib rc. &#10;Campbell diagram is working." />
+    <MESSAGE value="Fixed doctests.&#10;Nodes numbering is now centered." />
+    <MESSAGE value="figuras added to gitignore." />
+    <MESSAGE value="Corrected the campbell diagram. Added speed_rad and speed_hz to simplify things and correct speed_range that was being mutated." />
+    <MESSAGE value="Corrected the campbell diagram." />
+    <MESSAGE value="H is now a separated method." />
+    <MESSAGE value="Using la.solve instead of pinv to assembly the A matrix." />
+    <MESSAGE value="Tests for eigenvectors have been implemented using mac values." />
+    <MESSAGE value="Implemented SealElements" />
+    <MESSAGE value="Test modified." />
+    <MESSAGE value="Removed plt.show so that fig can be returned and manipulated (chance ax.title etc.)" />
+    <MESSAGE value="Appveyor tests only x64." />
+    <option name="LAST_COMMIT_MESSAGE" value="Appveyor tests only x64." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="5" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/style/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/style/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.rst" />
+    <entry file="file://$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/style/core.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="197" column="29" selection-start-line="197" selection-start-column="29" selection-end-line="197" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Probabilistic-Programming-and-Bayesian-Methods-for-Hackers-master/styles/matplotlibrc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="358" column="0" selection-start-line="358" selection-start-column="0" selection-end-line="358" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Probabilistic-Programming-and-Bayesian-Methods-for-Hackers-master/styles/bmh_matplotlibrc.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/style/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/sphinxext/plot_generator.py" />
+    <entry file="file://$USER_HOME$/Anaconda3/pkgs/numpy-1.11.0-py35_0/Lib/site-packages/numpy/doc/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/tutorial/index.rst" />
+    <entry file="file://$PROJECT_DIR$/docs/examples/index.rst" />
+    <entry file="file://$PROJECT_DIR$/LaviRot/tests/.cache/v/cache/lastfailed" />
+    <entry file="file://$USER_HOME$/.PyCharm2016.2/system/python_stubs/1873061620/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="789" column="4" selection-start-line="789" selection-start-column="4" selection-end-line="789" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/api/results.rst" />
+    <entry file="file://$PROJECT_DIR$/docs/index.rst" />
+    <entry file="file://$PROJECT_DIR$/docs/api/rotor.rst" />
+    <entry file="file://$PROJECT_DIR$/docs/api/elements.DiskElement.rst" />
+    <entry file="file://$PROJECT_DIR$/docs/api/elements.BearingElement.rst" />
+    <entry file="file://$PROJECT_DIR$/docs/_static/style.css" />
+    <entry file="file://$PROJECT_DIR$/docs/api/index.rst" />
+    <entry file="file://$PROJECT_DIR$/docs/api/elements.ShaftElement.rst" />
+    <entry file="file://$PROJECT_DIR$/docs/api/elements.rst" />
+    <entry file="file://$PROJECT_DIR$/.eggs/README.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appveyor/install.ps1" />
+    <entry file="file://$PROJECT_DIR$/setup.py" />
+    <entry file="file://$PROJECT_DIR$/setup.cfg" />
+    <entry file="file://$PROJECT_DIR$/requirements.txt" />
+    <entry file="file://$PROJECT_DIR$/appveyor/run_with_env.cmd" />
+    <entry file="file://$PROJECT_DIR$/.travis.yml" />
+    <entry file="file://$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/style/core.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="197" column="29" selection-start-line="197" selection-start-column="29" selection-end-line="197" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="767" column="0" selection-start-line="767" selection-start-column="0" selection-end-line="767" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/mpl-data/matplotlibrc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="469" column="21" selection-start-line="469" selection-start-column="21" selection-end-line="469" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/mpl-data/stylelib/ggplot.mplstyle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="36" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Probabilistic-Programming-and-Bayesian-Methods-for-Hackers-master/styles/bmh_matplotlibrc.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LaviRot/styles/matplotlibrc" />
+    <entry file="file://$PROJECT_DIR$/LaviRot/__init__.py" />
+    <entry file="file://$PROJECT_DIR$/LaviRot/elements.py" />
+    <entry file="file://$PROJECT_DIR$/../Probabilistic-Programming-and-Bayesian-Methods-for-Hackers-master/styles/matplotlibrc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="358" column="0" selection-start-line="358" selection-start-column="0" selection-end-line="358" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/make.bat" />
+    <entry file="file://$PROJECT_DIR$/LaviRot/tests/test_elements.py" />
+    <entry file="file://$PROJECT_DIR$/docs/conf.py" />
+    <entry file="file://$PROJECT_DIR$/LaviRot/rotor.py" />
+    <entry file="file://$PROJECT_DIR$/LaviRot/results.py" />
+    <entry file="file://$PROJECT_DIR$/LaviRot/tests/test_rotor.py" />
+    <entry file="file://$PROJECT_DIR$/appveyor.yml" />
+    <entry file="file://$PROJECT_DIR$/README.rst" />
+    <entry file="file://$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/style/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="108" column="0" selection-start-line="108" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/Makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="204" column="18" selection-start-line="204" selection-start-column="18" selection-end-line="204" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
