@@ -3,7 +3,7 @@
 Sphinx directive to support embedded IPython code.
 
 This directive allows pasting of entire interactive IPython sessions, prompts
-and all, and their code will actually get re-executed at doc build time, with
+and all, and their code will actually get re-executed at docs build time, with
 all prompts renumbered sequentially. It also allows you to input code as a pure
 python input by giving the argument python to the directive. The output looks
 like an interactive ipython section.
@@ -796,7 +796,7 @@ class IPythonDirective(Directive):
             # Store IPython directive to enable better error messages
             self.shell.directive = self
 
-        # reset the execution count if we haven't processed this doc
+        # reset the execution count if we haven't processed this docs
         #NOTE: this may be borked if there are multiple seen_doc tmp files
         #check time stamp?
         if not self.state.document.current_source in self.seen_docs:
