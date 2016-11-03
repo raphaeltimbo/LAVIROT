@@ -152,8 +152,6 @@ def plot_rotor(rotor):
             ax.add_patch(mpatches.Polygon(seal_points_u, facecolor=r_pal['seal']))
             ax.add_patch(mpatches.Polygon(seal_points_l, facecolor=r_pal['seal']))
 
-
-    plt.show()
     return fig
 
 
@@ -199,7 +197,6 @@ def MAC_modes(U, V, n=None, plot=True):
     sm._A = []
     cbar = fig.colorbar(sm, shrink=0.5, aspect=10)
     cbar.set_label('MAC')
-    plt.show()
 
     return macs
 
@@ -305,7 +302,6 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1]):
     # restore rotor speed
     rotor.w = rotor_state_speed
 
-    plt.show()
     return fig
 
 # TODO critical speed map
