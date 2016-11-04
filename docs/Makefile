@@ -19,9 +19,6 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-# Custom
-GH_PAGES_SOURCES = docs LaviRot Makefile
-
 .PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest coverage gettext
 
 help:
@@ -52,10 +49,14 @@ help:
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
 
 clean:
-	rm -rf $(BUILDDIR)/*
+	-rm -rf $(BUILDDIR)/*
+	-rm -rf examples/*
+	-rm -rf example_thumbs/*
+	-rm -rf tutorial/*_files/
+	-rm -rf tutorial/*.rst
+	-rm -rf generated/*
 
 notebooks:
-
 	make -C tutorial notebooks
 
 html:
@@ -197,14 +198,3 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
-
-gh-pages:
-	git checkout gh-pages
-	rm -rf build _sources _static
-	git checkout master $(GH_PAGES_SOURCES)
-	git reset HEAD
-    make -f docs/Makefile html
-    mv -fv build/html/* ./
-	rm -rf $(GH_PAGES_SOURCES) build
-	git add -A
-	git ci -m "Generated gh-pages for `git log master -1 --pretty=short --abbrev-commit`" && git push origin gh-pages ; git checkout master
