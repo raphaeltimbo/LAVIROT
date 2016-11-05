@@ -106,3 +106,5 @@ imgs/
 
 /.eggs/
 /figuras/
+/docs/examples/.ipynb_checkpoints/
+/docs/examples/

@@ -57,7 +57,7 @@ clean:
 	-rm -rf generated/*
 
 notebooks:
-	make -C tutorial notebooks
+	make -C gallery notebooks
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

@@ -13,7 +13,7 @@ Contents:
 
     api/index
     tutorial/index
-    examples/index
+    gallery/index
 
 Indices and tables
 ==================
