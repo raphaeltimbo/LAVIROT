@@ -1,5 +1,7 @@
-Shaft Elements
-==============
+.. _ShaftElement:
+
+Shaft Element
+=============
 
 
 .. py:currentmodule:: LaviRot.elements

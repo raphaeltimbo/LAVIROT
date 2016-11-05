@@ -3,6 +3,14 @@ Results
 
 .. py:currentmodule:: LaviRot.results
 
+.. _plot_rotor:
+
 Rotor plot
 ----------
 .. autofunction:: plot_rotor
+
+.. _campbell:
+
+Campbell
+--------
+.. autofunction:: campbell

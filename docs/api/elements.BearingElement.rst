@@ -1,5 +1,7 @@
-Bearing Elements
-================
+.. _BearingElement:
+
+Bearing Element
+===============
 
 
 .. py:currentmodule:: LaviRot.elements
