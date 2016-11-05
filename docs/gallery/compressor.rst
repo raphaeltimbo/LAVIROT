@@ -7,7 +7,7 @@ Compressor
     from LaviRot import *
     %matplotlib inline
 
-$ x + :raw-latex:`\alpha`$
+x + \alpha
 
 .. code:: ipython3
 
@@ -99,7 +99,7 @@ $ x + :raw-latex:`\alpha`$
 
 
 
-.. image:: compressor_files%5Ccompressor_10_0.png
+.. image:: compressor_files/compressor_10_0.png
 
 
 
@@ -114,7 +114,7 @@ $ x + :raw-latex:`\alpha`$
 
 
 
-.. image:: compressor_files%5Ccompressor_12_0.png
+.. image:: compressor_files/compressor_12_0.png
 
 
 
