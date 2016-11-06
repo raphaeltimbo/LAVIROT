@@ -1,7 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="183a799a-d137-4fda-ac4d-949e6ea72dcd" name="Default" comment="" />
+    <list default="true" id="183a799a-d137-4fda-ac4d-949e6ea72dcd" name="Default" comment="Appveyor tests only x64.">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/doctrees/examples/compressor.doctree" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/doctrees/gallery/compressor.doctree" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/doctrees/gallery/index.doctree" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/doctrees/tutorial/Basics.doctree" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/doctrees/tutorial/compressor.doctree" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/doctrees/zreferences.doctree" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/_images/compressor_10_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/_images/compressor_12_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/_images/compressor_19_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/_images/compressor_23_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/_images/math/e38ec43ef1492281cd0fcce94b6e8c860483c7a0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/gallery/compressor_files/compressor_10_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/gallery/compressor_files/compressor_12_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/gallery/compressor_files/compressor_19_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/gallery/compressor_files/compressor_23_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/_sources/examples/compressor.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/_sources/gallery/compressor.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/_sources/gallery/index.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/_sources/tutorial/Basics.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/_sources/tutorial/compressor.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/_sources/zreferences.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/examples/compressor.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/gallery/compressor.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/gallery/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/tutorial/Basics.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/tutorial/compressor.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/_build/html/zreferences.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/gallery/.ipynb_checkpoints/compressor-checkpoint.ipynb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/docs/tutorial/.ipynb_checkpoints/Basics-checkpoint.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/objects.inv" afterPath="$PROJECT_DIR$/objects.inv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.buildinfo" afterPath="$PROJECT_DIR$/.buildinfo" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_modules/LaviRot/elements.html" afterPath="$PROJECT_DIR$/_modules/LaviRot/elements.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_modules/LaviRot/results.html" afterPath="$PROJECT_DIR$/_modules/LaviRot/results.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_modules/LaviRot/rotor.html" afterPath="$PROJECT_DIR$/_modules/LaviRot/rotor.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_modules/index.html" afterPath="$PROJECT_DIR$/_modules/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/basic.css" afterPath="$PROJECT_DIR$/_static/basic.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-2.3.2/css/bootstrap-responsive.css" afterPath="$PROJECT_DIR$/_static/bootstrap-2.3.2/css/bootstrap-responsive.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-2.3.2/css/bootstrap-responsive.min.css" afterPath="$PROJECT_DIR$/_static/bootstrap-2.3.2/css/bootstrap-responsive.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-2.3.2/css/bootstrap.css" afterPath="$PROJECT_DIR$/_static/bootstrap-2.3.2/css/bootstrap.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-2.3.2/css/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootstrap-2.3.2/css/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-2.3.2/js/bootstrap.js" afterPath="$PROJECT_DIR$/_static/bootstrap-2.3.2/js/bootstrap.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-2.3.2/js/bootstrap.min.js" afterPath="$PROJECT_DIR$/_static/bootstrap-2.3.2/js/bootstrap.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-3.3.6/css/bootstrap-theme.css" afterPath="$PROJECT_DIR$/_static/bootstrap-3.3.6/css/bootstrap-theme.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" afterPath="$PROJECT_DIR$/_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-3.3.6/css/bootstrap.css" afterPath="$PROJECT_DIR$/_static/bootstrap-3.3.6/css/bootstrap.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-3.3.6/css/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootstrap-3.3.6/css/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-3.3.6/fonts/glyphicons-halflings-regular.svg" afterPath="$PROJECT_DIR$/_static/bootstrap-3.3.6/fonts/glyphicons-halflings-regular.svg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-3.3.6/js/bootstrap.js" afterPath="$PROJECT_DIR$/_static/bootstrap-3.3.6/js/bootstrap.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-3.3.6/js/bootstrap.min.js" afterPath="$PROJECT_DIR$/_static/bootstrap-3.3.6/js/bootstrap.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-3.3.6/js/npm.js" afterPath="$PROJECT_DIR$/_static/bootstrap-3.3.6/js/npm.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-sphinx.css" afterPath="$PROJECT_DIR$/_static/bootstrap-sphinx.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootstrap-sphinx.js" afterPath="$PROJECT_DIR$/_static/bootstrap-sphinx.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/amelia/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/amelia/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/cerulean/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/cerulean/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/cosmo/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/cosmo/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/cyborg/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/cyborg/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/flatly/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/flatly/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/journal/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/journal/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/readable/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/readable/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/simplex/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/simplex/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/slate/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/slate/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/spacelab/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/spacelab/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/spruce/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/spruce/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/superhero/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/superhero/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-2.3.2/united/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-2.3.2/united/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/cerulean/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/cerulean/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/cosmo/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/cosmo/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/custom/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/custom/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/cyborg/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/cyborg/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/darkly/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/darkly/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/flatly/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/flatly/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/fonts/glyphicons-halflings-regular.svg" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/fonts/glyphicons-halflings-regular.svg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/journal/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/journal/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/lumen/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/lumen/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/paper/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/paper/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/readable/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/readable/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/sandstone/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/sandstone/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/simplex/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/simplex/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/slate/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/slate/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/spacelab/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/spacelab/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/superhero/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/superhero/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/united/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/united/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/bootswatch-3.3.6/yeti/bootstrap.min.css" afterPath="$PROJECT_DIR$/_static/bootswatch-3.3.6/yeti/bootstrap.min.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/doctools.js" afterPath="$PROJECT_DIR$/_static/doctools.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/jquery-1.11.1.js" afterPath="$PROJECT_DIR$/_static/jquery-1.11.1.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/jquery.js" afterPath="$PROJECT_DIR$/_static/jquery.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/js/jquery-1.11.0.min.js" afterPath="$PROJECT_DIR$/_static/js/jquery-1.11.0.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/js/jquery-fix.js" afterPath="$PROJECT_DIR$/_static/js/jquery-fix.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/searchtools.js" afterPath="$PROJECT_DIR$/_static/searchtools.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/underscore-1.3.1.js" afterPath="$PROJECT_DIR$/_static/underscore-1.3.1.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/underscore.js" afterPath="$PROJECT_DIR$/_static/underscore.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_static/websupport.js" afterPath="$PROJECT_DIR$/_static/websupport.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/elements.BearingElement.html" afterPath="$PROJECT_DIR$/api/elements.BearingElement.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/elements.DiskElement.html" afterPath="$PROJECT_DIR$/api/elements.DiskElement.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/elements.ShaftElement.html" afterPath="$PROJECT_DIR$/api/elements.ShaftElement.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/elements.html" afterPath="$PROJECT_DIR$/api/elements.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/index.html" afterPath="$PROJECT_DIR$/api/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/results.html" afterPath="$PROJECT_DIR$/api/results.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/rotor.html" afterPath="$PROJECT_DIR$/api/rotor.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/compressor.html" afterPath="$PROJECT_DIR$/examples/compressor.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/index.html" afterPath="$PROJECT_DIR$/examples/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gallery/compressor.html" afterPath="$PROJECT_DIR$/gallery/compressor.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gallery/index.html" afterPath="$PROJECT_DIR$/gallery/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/genindex.html" afterPath="$PROJECT_DIR$/genindex.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/search.html" afterPath="$PROJECT_DIR$/search.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/searchindex.js" afterPath="$PROJECT_DIR$/searchindex.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tutorial/Basics.html" afterPath="$PROJECT_DIR$/tutorial/Basics.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tutorial/compressor.html" afterPath="$PROJECT_DIR$/tutorial/compressor.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tutorial/index.html" afterPath="$PROJECT_DIR$/tutorial/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/zreferences.html" afterPath="$PROJECT_DIR$/zreferences.html" />
+    </list>
     <ignored path="LAVIROT.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -21,7 +134,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="true">
         <entry file="file://$USER_HOME$/Anaconda3/pkgs/matplotlib-1.5.1-np111py35_0/Lib/site-packages/matplotlib/style/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="51">
@@ -29,36 +142,6 @@
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="108" column="0" selection-start-line="108" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Makefile" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/docs/Makefile">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="382">
-              <caret line="204" column="18" selection-start-line="204" selection-start-column="18" selection-end-line="204" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docs/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -144,9 +227,10 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1927" />
-    <option name="width" value="974" />
-    <option name="height" value="1047" />
+    <option name="x" value="-1928" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -192,7 +276,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -221,13 +305,31 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="docs" />
+              <option name="myItemId" value="_images" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LaviRot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LaviRot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="_images" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="math" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -254,12 +356,13 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="G:\TRABALHO\MATERIAL\PYTHON\LaviRot" />
+      <recent name="G:\TRABALHO\MATERIAL\PYTHON\LaviRot\doc\api" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="G:\TRABALHO\MATERIAL\PYTHON\LaviRot" />
       <recent name="G:\TRABALHO\MATERIAL\PYTHON\LAVIROT" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="G:\TRABALHO\MATERIAL\PYTHON\LaviRot\doc\api" />
     </key>
   </component>
   <component name="RunManager" selected="Python tests.doctest_rotor">
@@ -959,19 +1062,19 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1927" y="0" width="974" height="1047" extended-state="0" />
+    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15064102" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15015806" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32822758" sideWeight="0.4871795" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4310722" sideWeight="0.2724359" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33150986" sideWeight="0.49252138" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33044422" sideWeight="0.49252138" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.4957265" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24893162" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32932165" sideWeight="0.4957265" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1232,30 +1335,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="108" column="0" selection-start-line="108" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/Makefile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="204" column="18" selection-start-line="204" selection-start-column="18" selection-end-line="204" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/docs/.gitignore" />
+    <entry file="file://$PROJECT_DIR$/docs/Makefile" />
   </component>
   <component name="masterDetails">
     <states>

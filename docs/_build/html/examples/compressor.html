@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Basics &mdash; LaviRot 0.1b documentation</title>
+    <title>Compressor &mdash; Lavirot 1.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1b',
+        VERSION:     '1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,10 +30,9 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="LaviRot 0.1b documentation" href="../index.html" />
-    <link rel="up" title="Tutorial" href="index.html" />
-    <link rel="next" title="API" href="../api/index.html" />
-    <link rel="prev" title="Tutorial" href="index.html" />
+    <link rel="top" title="Lavirot 1.0 documentation" href="../index.html" />
+    <link rel="up" title="Examples" href="index.html" />
+    <link rel="prev" title="Examples" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -53,15 +52,15 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           LaviRot</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1b</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
             
                 <li><a href="../api/index.html">API</a></li>
-                <li><a href="index.html">Tutorial</a></li>
-                <li><a href="../gallery/index.html">Examples</a></li>
+                <li><a href="../tutorial/index.html">Tutorial</a></li>
+                <li><a href="index.html">Examples</a></li>
             
             
               <li class="dropdown globaltoc-container">
@@ -73,21 +72,19 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">Basics</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/elements.html">Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/rotor.html">Rotor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/results.html">Results</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../gallery/index.html">Examples Gallery</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../gallery/compressor.html">Compressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../zreferences.html">References</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Compressor</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -97,11 +94,7 @@
               
                 
   <li>
-    <a href="index.html" title="Previous Chapter: Tutorial"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Tutorial</span>
-    </a>
-  </li>
-  <li>
-    <a href="../api/index.html" title="Next Chapter: API"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">API &raquo;</span>
+    <a href="index.html" title="Previous Chapter: Examples"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Examples</span>
     </a>
   </li>
               
@@ -111,7 +104,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/tutorial/Basics.txt"
+  <a href="../_sources/examples/compressor.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -135,11 +128,17 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="basics">
-<h1>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h1>
-<p>LaviRot is a package for rotordynamic analysis written in Python.
-It was originally developed in Matlab®
-<a class="reference internal" href="../zreferences.html#ritto" id="id1">[RS07]</a></p>
+  <div class="section" id="compressor">
+<h1>Compressor<a class="headerlink" href="#compressor" title="Permalink to this headline">¶</a></h1>
+<p>$ x + :raw-latex:<a href="#id1"><span class="problematic" id="id2">`</span></a>alpha`$</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.058</span><span class="p">,</span> <span class="mf">0.058</span><span class="p">,</span> <span class="mf">0.052</span><span class="p">,</span> <span class="mf">0.092</span><span class="p">,</span> <span class="mf">0.092</span><span class="p">,</span> <span class="mf">0.092</span><span class="p">,</span> <span class="mf">0.092</span><span class="p">,</span> <span class="mf">0.082</span><span class="p">,</span> <span class="mf">0.082</span><span class="p">,</span> <span class="mf">0.082</span><span class="p">,</span> <span class="mf">0.082</span><span class="p">,</span> <span class="mf">0.082</span><span class="p">,</span> <span class="mf">0.068</span><span class="p">,</span> <span class="mf">0.086</span><span class="p">,</span> <span class="mf">0.086</span><span class="p">,</span> <span class="mf">0.086</span><span class="p">,</span> <span class="mf">0.086</span><span class="p">,</span> <span class="mf">0.086</span><span class="p">,</span> <span class="mf">0.086</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">]</span>
+</pre></div>
+</div>
+<img alt="examples\compressor_files%5Ccompressor_10_0.png" src="examples\compressor_files%5Ccompressor_10_0.png" />
+<img alt="examples\compressor_files%5Ccompressor_12_0.png" src="examples\compressor_files%5Ccompressor_12_0.png" />
 </div>
 
 
@@ -154,7 +153,7 @@ It was originally developed in Matlab®
       
     </p>
     <p>
-        &copy; Copyright 2016, Lavi.<br/>
+        &copy; Copyright 2016, LAVI.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
     </p>
   </div>
