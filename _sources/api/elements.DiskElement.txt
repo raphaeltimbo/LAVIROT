@@ -1,5 +1,7 @@
-Disk Elements
-=============
+.. _DiskElement:
+
+Disk Element
+============
 
 
 .. py:currentmodule:: LaviRot.elements

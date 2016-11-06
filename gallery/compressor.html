@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Compressor &mdash; LaviRot 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="LaviRot 1.0 documentation" href="../index.html" />
+    <link rel="up" title="Examples Gallery" href="index.html" />
+    <link rel="next" title="References" href="../zreferences.html" />
+    <link rel="prev" title="Examples Gallery" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          LaviRot</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../api/index.html">API</a></li>
+                <li><a href="../tutorial/index.html">Tutorial</a></li>
+                <li><a href="index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/elements.html">Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/rotor.html">Rotor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/results.html">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/Basics.html">Basics</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples Gallery</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Compressor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../zreferences.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="index.html" title="Previous Chapter: Examples Gallery"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Examples Gallery</span>
+    </a>
+  </li>
+  <li>
+    <a href="../zreferences.html" title="Next Chapter: References"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">References &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/gallery/compressor.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="compressor">
+<h1>Compressor<a class="headerlink" href="#compressor" title="Permalink to this headline">¶</a></h1>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span>from LaviRot import *
+%matplotlib inline
+</pre></div>
+</div>
+<p>For this example we will consider a compressor with shaft and impellers
+made from AISI 4340, which has the following properties.</p>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span><span class="n">E</span> <span class="o">=</span> <span class="mf">211e9</span>
+<span class="n">Gs</span> <span class="o">=</span> <span class="mf">81.2e9</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="mi">7810</span>
+</pre></div>
+</div>
+<p>Shaft&#8217;s inner and outer diameter will be:</p>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span><span class="n">si_d</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">so_d</span> <span class="o">=</span> <span class="mf">0.127</span>
+</pre></div>
+</div>
+<p>Now we define the length for each element, starting at the first element
+on the left (the element that will have the thrust collar).</p>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.07</span><span class="p">,</span> <span class="c1"># thrust collar</span>
+    <span class="mf">0.058</span><span class="p">,</span>
+    <span class="mf">0.058</span><span class="p">,</span> <span class="c1"># 0 probe</span>
+    <span class="mf">0.052</span><span class="p">,</span> <span class="c1"># 0 bearing</span>
+    <span class="mf">0.092</span><span class="p">,</span>
+    <span class="mf">0.092</span><span class="p">,</span>
+    <span class="mf">0.092</span><span class="p">,</span>
+    <span class="mf">0.092</span><span class="p">,</span> <span class="c1"># 0 impeller</span>
+    <span class="mf">0.082</span><span class="p">,</span> <span class="c1"># 1 impeller</span>
+    <span class="mf">0.082</span><span class="p">,</span> <span class="c1"># 2 impeller</span>
+    <span class="mf">0.082</span><span class="p">,</span> <span class="c1"># 3 impeller</span>
+    <span class="mf">0.082</span><span class="p">,</span> <span class="c1"># 4 impeller</span>
+    <span class="mf">0.082</span><span class="p">,</span> <span class="c1"># 5 impeller</span>
+    <span class="mf">0.068</span><span class="p">,</span> <span class="c1"># honeycomb # change diameter</span>
+    <span class="mf">0.086</span><span class="p">,</span>
+    <span class="mf">0.086</span><span class="p">,</span>
+    <span class="mf">0.086</span><span class="p">,</span>
+    <span class="mf">0.086</span><span class="p">,</span> <span class="c1"># 1 bearing</span>
+    <span class="mf">0.086</span><span class="p">,</span>
+    <span class="mf">0.086</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The next line defines a list with the number of each element (from 0 to
+len(L)).</p>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span><span class="n">nelem</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">))]</span>
+</pre></div>
+</div>
+<p>Now we create a list with all the shaft elements using the <a class="reference internal" href="../api/elements.ShaftElement.html#shaftelement"><span>Shaft Element</span></a> class. In this case we are going to consider Timoshenko beam elements (with shear and rotary inertia effects).</p>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span><span class="n">shaft_elem</span> <span class="o">=</span> <span class="p">[</span><span class="n">ShaftElement</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">si_d</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">Gs</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span>
+                           <span class="n">shear_effects</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                           <span class="n">rotary_inertia</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                           <span class="n">gyroscopic</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nelem</span><span class="p">,</span> <span class="n">L</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>The disks are created using the <a class="reference internal" href="../api/elements.DiskElement.html#diskelement"><span>Disk Element</span></a> class.</p>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span><span class="n">colar</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.035</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.245</span><span class="p">)</span>
+<span class="n">disk0</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
+<span class="n">disk1</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
+<span class="n">disk2</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
+<span class="n">disk3</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
+<span class="n">disk4</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
+<span class="n">disk5</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For the bearings we use the <a class="reference internal" href="../api/elements.BearingElement.html#bearingelement"><span>Bearing Element</span></a> class. We will consider a constant stifness for the bearings.</p>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span><span class="n">stfx</span> <span class="o">=</span> <span class="mf">1e8</span>
+<span class="n">stfy</span> <span class="o">=</span> <span class="mf">1e8</span>
+<span class="n">bearing0</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">stfx</span><span class="p">,</span> <span class="n">stfy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">bearing1</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="n">stfx</span><span class="p">,</span> <span class="n">stfy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we assemble the compressor rotor using the :ref:<code class="docutils literal"><span class="pre">Rotor</span></code> class.</p>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span><span class="n">compressor</span> <span class="o">=</span> <span class="n">Rotor</span><span class="p">(</span><span class="n">shaft_elem</span><span class="p">,</span>
+                   <span class="p">[</span><span class="n">colar</span><span class="p">,</span> <span class="n">disk0</span><span class="p">,</span> <span class="n">disk1</span><span class="p">,</span> <span class="n">disk2</span><span class="p">,</span> <span class="n">disk3</span><span class="p">,</span> <span class="n">disk4</span><span class="p">,</span> <span class="n">disk5</span><span class="p">],</span>
+                   <span class="p">[</span><span class="n">bearing0</span><span class="p">,</span> <span class="n">bearing1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>We can now use the function <a class="reference internal" href="../api/results.html#plot-rotor"><span>Rotor plot</span></a>.</p>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span><span class="n">plot_rotor</span><span class="p">(</span><span class="n">compressor</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/compressor_19_0.png" src="../_images/compressor_19_0.png" />
+<p>Now we are going to check the natural frequencies using the Campbell
+diagram. First we need to define the speed range that we want to
+analyze.</p>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span><span class="n">speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can call the <a class="reference internal" href="../api/results.html#campbell"><span>Campbell</span></a> function with mult=[1, 2] to plot 1x and 2x the speed.</p>
+<div class="code ipython3 highlight-python"><div class="highlight"><pre><span></span><span class="n">campbell</span><span class="p">(</span><span class="n">compressor</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<img alt="../_images/compressor_23_0.png" src="../_images/compressor_23_0.png" />
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Lavi.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
