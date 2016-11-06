@@ -56,8 +56,12 @@ clean:
 	-rm -rf tutorial/*.rst
 	-rm -rf generated/*
 
-notebooks:
+notebooks_tutorial:
+	make -C tutorial notebooks
+
+notebooks_gallery:
 	make -C gallery notebooks
+
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

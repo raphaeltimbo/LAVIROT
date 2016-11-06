@@ -106,5 +106,6 @@ imgs/
 
 /.eggs/
 /figuras/
-/docs/examples/.ipynb_checkpoints/
 /docs/examples/
+/docs/gallery/.ipynb_checkpoints/
+/docs/tutorial/.ipynb_checkpoints/

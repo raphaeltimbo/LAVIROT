@@ -1,5 +1,5 @@
 # LaviRot
-LAVIROT em python
+LaviRot is a Python library for rotordynamics analysis.
 
 .. image:: https://travis-ci.org/raphaeltimbo/LaviRot.svg?branch=master
    :target: https://travis-ci.org/raphaeltimbo/LaviRot

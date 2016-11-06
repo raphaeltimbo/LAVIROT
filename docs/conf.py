@@ -45,6 +45,7 @@ extensions = [
     'plot_directive',
     'ipython_directive',
     'ipython_console_highlighting',
+    'sphinxcontrib.bibtex'
 ]
 
 autosummary_generate = True
