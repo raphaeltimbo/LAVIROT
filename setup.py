@@ -2,9 +2,9 @@
 from setuptools import setup
 
 setup(name='LaviRot',
-      version='1.0',
+      version='0.1b',
       description='LaviRot',
-      author='GLavi',
+      author='Lavi',
       author_email='raphaelts@gmail.com',
       packages=['LaviRot'],
       setup_requires=['pytest-runner'],
