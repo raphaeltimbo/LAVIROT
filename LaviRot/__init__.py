@@ -1,4 +1,4 @@
-"""LaviRot aaa
+"""LaviRot
 
     .. [1] 'Desenvolvimento de uma interface gráﬁca para simulação
        de máquinas rotativas, com foco na inﬂuência de selos labirintos
@@ -11,4 +11,4 @@ from .results import *
 
 # TODO add setup.py
 
-__version__ = '1.0'
+__version__ = '0.1b'
