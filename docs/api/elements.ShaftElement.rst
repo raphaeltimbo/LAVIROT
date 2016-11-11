@@ -3,7 +3,6 @@
 Shaft Element
 =============
 
-
 .. py:currentmodule:: LaviRot.elements
 
 .. autoclass:: ShaftElement

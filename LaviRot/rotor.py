@@ -8,7 +8,7 @@ __all__ = ['Rotor', 'rotor_example']
 
 
 class Rotor(object):
-    """A rotor object.
+    r"""A rotor object.
 
     This class will create a rotor with the shaft,
     disk and bearing elements provided.

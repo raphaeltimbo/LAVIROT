@@ -86,7 +86,7 @@ For the bearings we use the :ref:`BearingElement` class. We will consider a cons
     bearing0 = BearingElement(4, stfx, stfy, 0, 0)
     bearing1 = BearingElement(-3, stfx, stfy, 0, 0)
 
-Now we assemble the compressor rotor using the :ref:``Rotor`` class.
+Now we assemble the compressor rotor using the :ref:`Rotor` class.
 
 .. code:: ipython3
 
