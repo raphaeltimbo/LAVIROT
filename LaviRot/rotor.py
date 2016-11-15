@@ -303,8 +303,8 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> evalues, evectors = rotor._eigen(0, sorted_=False)
         >>> idx = rotor._index(evalues)
-        >>> idx[:6]
-        array([ 1,  5,  3,  7, 11,  9], dtype=int64)
+        >>> idx[:6] # doctest: +ELLIPSIS
+        array([ 1,  5,  3,  7, 11,  9]...
         """
         # avoid float point errors when sorting
         evals_truncated = np.around(eigenvalues, decimals=10)
@@ -413,8 +413,8 @@ class Rotor(object):
         --------
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
-        >>> rotor.kappa_mode(0)
-        [array(0.00024771356807127144), array(0.00024771356803424013), array(0.00024771356792966965)]
+        >>> rotor.kappa_mode(0) # doctest: +ELLIPSIS
+        [array(0.0002477...), array(0.0002477...), array(0.0002477...)]
 
 
         """
@@ -480,8 +480,8 @@ class Rotor(object):
         --------
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
-        >>> rotor.kappa_mode(0)
-        [array(0.0007921675419146242), array(0.0007921675419032787), array(0.0007921675419138006)]
+        >>> rotor.kappa_mode(0) # doctest: +ELLIPSIS
+        [array(0.000792...), array(0.000792...), array(0.000792...)]
         """
         kappa_mode = [self.kappa(node, w)['kappa'] for node in self.nodes]
         return kappa_mode
