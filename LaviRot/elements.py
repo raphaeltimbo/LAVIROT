@@ -392,53 +392,98 @@ class BearingElement(object):
     """A bearing element.
 
     This class will create a bearing element.
+    Parameters can be a constant value or speed dependent.
+    For speed dependent parameters, each argument should be passed
+    as an array and the correspondent speed values should also be
+    passed as an array.
+    Values for each parameter will be interpolated for the speed.
 
     Parameters
     ----------
-    kxx: float
+    kxx: float, array
         Direct stiffness in the x direction.
-    kyy: float
+    cxx: float, array
+        Direct damping in the x direction.
+    kyy: float, array, optional
         Direct stiffness in the y direction.
-    cxx: float
-        Direct stiffness in the x direction.
-    cyy: float
-        Direct stiffness in the y direction.
+        (defaults to kxx)
+    cyy: float, array, optional
+        Direct damping in the y direction.
+        (defaults to cxx)
+    kxy: float, array, optional
+        Cross coupled stiffness in the x direction.
+        (defaults to 0)
+    cxy: float, array, optional
+        Cross coupled damping in the x direction.
+        (defaults to 0)
+    kyx: float, array, optional
+        Cross coupled stiffness in the y direction.
+        (defaults to 0)
+    cyx: float, array, optional
+        Cross coupled damping in the y direction.
+        (defaults to 0)
+    w: array, optional
+        Array with the speeds.
+
 
     Examples
     --------
 
     """
 
-    #  TODO add __repr__ to the class
     #  TODO implement for more complex cases (kxy, kthetatheta etc.)
     #  TODO consider kxx, kxy, kyx, kyy, cxx, cxy, cyx, cyy, mxx, myy, myx, myy (to import from XLTRC)
     #  TODO add speed as an argument
     #  TODO arguments should be lists related to speed
     #  TODO evaluate the use of pandas tables to display
-    def __init__(self, n, kxx, kyy, cxx, cyy):
+    def __init__(self, n,
+                 kxx, cxx,
+                 kyy=None, kxy=0, kyx=0,
+                 cyy=None, cxy=0, cyx=0,
+                 w=None):
+
+        if kyy is None: kyy = kxx
+        if cyy is None: cyy = cxx
+
+        args = {'kxx': kxx, 'cxx': cxx,
+                'kyy': kyy, 'kxy': kxy, 'kyx': kyx,
+                'cyy': cyy, 'cxy': cxy, 'cyx': cyx}
+
         self.n = n
-        self.kxx = kxx
-        self.kyy = kyy
-        self.cxx = cxx
-        self.cyy = cyy
+
+        # set values for speed so that interpolation can be created
+        if w is None:
+            w = np.linspace(0, 10000, 4)
+
+        for arg, val in args.items():
+            if isinstance(val, (int, float)):
+                # set values for each val so that interpolation can be created
+                val = [val for i in range(4)]
+            interp_func = interpolate.UnivariateSpline(w, val)
+            setattr(self, arg, interp_func)
 
     def __repr__(self):
         return '%s' % self.__class__.__name__
 
-    def K(self):
-        kxx = self.kxx
-        kyy = self.kyy
+    def K(self, w):
+        kxx = self.kxx(w)
+        kyy = self.kyy(w)
+        kxy = self.kxy(w)
+        kyx = self.kyx(w)
 
-        K = np.array([[kxx,   0],
-                      [  0, kyy]])
+        K = np.array([[kxx, kxy],
+                      [kyx, kyy]])
 
         return K
 
-    def C(self):
-        cxx = self.cxx
-        cyy = self.cyy
-        C = np.array([[cxx,   0],
-                      [  0, cyy]])
+    def C(self, w):
+        cxx = self.cxx(w)
+        cyy = self.cyy(w)
+        cxy = self.cxy(w)
+        cyx = self.cyx(w)
+
+        C = np.array([[cxx, cxy],
+                      [cyx, cyy]])
 
         return C
 
