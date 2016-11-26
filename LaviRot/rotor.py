@@ -169,7 +169,7 @@ class Rotor(object):
 
         return M0
 
-    def K(self):
+    def K(self, w):
         """Stiffness matrix for an instance of a rotor.
 
         Returns
@@ -194,14 +194,14 @@ class Rotor(object):
 
         for elm in self.bearing_seal_elements:
             n1, n2 = self._dofs(elm)
-            K0[n1:n2, n1:n2] += elm.K()
+            K0[n1:n2, n1:n2] += elm.K(w)
         #  Skew-symmetric speed dependent contribution to element stiffness matrix
         #  from the internal damping.
         #  TODO add the contribution for K1 matrix
 
         return K0
 
-    def C(self):
+    def C(self, w):
         """Damping matrix for an instance of a rotor.
 
         Returns
@@ -222,7 +222,7 @@ class Rotor(object):
 
         for elm in self.bearing_seal_elements:
             n1, n2 = self._dofs(elm)
-            C0[n1:n2, n1:n2] += elm.C()
+            C0[n1:n2, n1:n2] += elm.C(w)
 
         return C0
 
@@ -255,7 +255,7 @@ class Rotor(object):
 
         return G0
 
-    def A(self, w=0):
+    def A(self, w=None):
         """State space matrix for an instance of a rotor.
 
         Returns
@@ -271,12 +271,15 @@ class Rotor(object):
                [  0.00000000e+00,   6.97351178e+09],
                [ -6.97351178e+09,  -0.00000000e+00]])
         """
+        if w is None:
+            w = self.w
+
         Z = np.zeros((self.ndof, self.ndof))
         I = np.eye(self.ndof)
         #  TODO implement K(w) and C(w) for shaft, bearings etc.
         A = np.vstack(
             [np.hstack([Z, I]),
-             np.hstack([la.solve(-self.M(), self.K()), la.solve(-self.M(), (self.C() + self.G()*w))])])
+             np.hstack([la.solve(-self.M(), self.K(w)), la.solve(-self.M(), (self.C(w) + self.G()*w))])])
 
         return A
 
@@ -319,7 +322,7 @@ class Rotor(object):
 
         return idx
 
-    def _eigen(self, w=0, sorted_=True):
+    def _eigen(self, w=None, sorted_=True):
         r"""This method will return the eigenvalues and eigenvectors of the
         state space matrix A, sorted by the index method which considers
         the imaginary part (wd) of the eigenvalues for sorting.
@@ -344,6 +347,9 @@ class Rotor(object):
         >>> evalues[0].imag
         215.37072557293124
         """
+        if w is None:
+            w = self.w
+
         evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM')
         if sorted_ is False:
             return evalues, evectors

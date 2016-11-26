@@ -140,5 +140,5 @@ def test_gyroscopic_matrix_disk(disk):
     assert_almost_equal(disk.G(), Gd1, decimal=5)
 
 
-
+# TODO add tests for bearing elements
 

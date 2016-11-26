@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.interpolate as interpolate
 
 
 __all__ = ["ShaftElement", "DiskElement", "BearingElement", "SealElement"]

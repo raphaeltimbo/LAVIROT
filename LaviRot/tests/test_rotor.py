@@ -75,8 +75,8 @@ def rotor2():
     shaft_elm = [tim0, tim1]
     disk0 = DiskElement(1, rho_, 0.07, 0.05, 0.28)
     stf = 1e6
-    bearing0 = BearingElement(0, stf, stf, 0, 0)
-    bearing1 = BearingElement(2, stf, stf, 0, 0)
+    bearing0 = BearingElement(0, kxx=stf, cxx=0)
+    bearing1 = BearingElement(2, kxx=stf, cxx=0)
 
     return Rotor(shaft_elm, [disk0], [bearing0, bearing1])
 
@@ -217,8 +217,8 @@ def rotor3():
 
     stfx = 1e6
     stfy = 0.8e6
-    bearing0 = BearingElement(0, stfx, stfy, 0, 0)
-    bearing1 = BearingElement(6, stfx, stfy, 0, 0)
+    bearing0 = BearingElement(0, kxx=stfx, kyy=stfy, cxx=0)
+    bearing1 = BearingElement(6, kxx=stfx, kyy=stfy, cxx=0)
 
     return Rotor(shaft_elem, [disk0, disk1], [bearing0, bearing1])
 
