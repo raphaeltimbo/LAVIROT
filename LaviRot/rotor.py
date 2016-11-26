@@ -61,8 +61,8 @@ class Rotor(object):
     >>> shaft_elm = [tim0, tim1]
     >>> disk0 = DiskElement(1, rho, 0.07, 0.05, 0.28)
     >>> stf = 1e6
-    >>> bearing0 = BearingElement(0, stf, stf, 0, 0)
-    >>> bearing1 = BearingElement(2, stf, stf, 0, 0)
+    >>> bearing0 = BearingElement(0, kxx=stf, cxx=0)
+    >>> bearing1 = BearingElement(2, kxx=stf, cxx=0)
     >>> rotor = Rotor(shaft_elm, [disk0], [bearing0, bearing1])
     >>> rotor.wd[0] # doctest: +ELLIPSIS
     34.2773...
@@ -169,7 +169,7 @@ class Rotor(object):
 
         return M0
 
-    def K(self, w):
+    def K(self, w=None):
         """Stiffness matrix for an instance of a rotor.
 
         Returns
@@ -185,6 +185,8 @@ class Rotor(object):
                [  0.        ,  -5.71205534,   0.97294287,   0.        ],
                [  5.71205534,   0.        ,   0.        ,   0.97294287]])
         """
+        if w is None:
+            w = self.w
         #  Create the matrices
         K0 = np.zeros((self.ndof, self.ndof))
 
@@ -201,7 +203,7 @@ class Rotor(object):
 
         return K0
 
-    def C(self, w):
+    def C(self, w=None):
         """Damping matrix for an instance of a rotor.
 
         Returns
@@ -217,6 +219,8 @@ class Rotor(object):
                [ 0.,  0.,  0.,  0.],
                [ 0.,  0.,  0.,  0.]])
         """
+        if w is None:
+            w = self.w
         #  Create the matrices
         C0 = np.zeros((self.ndof, self.ndof))
 
@@ -541,7 +545,7 @@ def rotor_example():
     shaft_elm = [tim0, tim1]
     disk0 = DiskElement(1, rho, 0.07, 0.05, 0.28)
     stf = 1e6
-    bearing0 = BearingElement(0, stf, stf, 0, 0)
-    bearing1 = BearingElement(2, stf, stf, 0, 0)
+    bearing0 = BearingElement(0, kxx=stf, kyy=stf, cxx=0, cyy=0)
+    bearing1 = BearingElement(2, kxx=stf, kyy=stf, cxx=0, cyy=0)
     return Rotor(shaft_elm, [disk0], [bearing0, bearing1])
 
