@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>LaviRot.elements &mdash; LaviRot 0.1b documentation</title>
+    <title>LaviRot.elements &#8212; LaviRot 0.1b documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -72,7 +72,8 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/index.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorial/Basics.html">Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/Basics.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/Basics.html#basics">Basics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a><ul>
@@ -122,7 +123,8 @@
     <div class="col-md-12 content">
       
   <h1>Source code for LaviRot.elements</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.interpolate</span> <span class="k">as</span> <span class="nn">interpolate</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ShaftElement&quot;</span><span class="p">,</span> <span class="s2">&quot;DiskElement&quot;</span><span class="p">,</span> <span class="s2">&quot;BearingElement&quot;</span><span class="p">,</span> <span class="s2">&quot;SealElement&quot;</span><span class="p">]</span>
@@ -214,9 +216,9 @@
     <span class="c1">#  TODO add __repr__ to the class</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">G_s</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span>
                  <span class="n">axial_force</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">torque</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                 <span class="n">shear_effects</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                 <span class="n">rotary_inertia</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-                 <span class="n">gyroscopic</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+                 <span class="n">shear_effects</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">gyroscopic</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">shear_effects</span> <span class="o">=</span> <span class="n">shear_effects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rotary_inertia</span> <span class="o">=</span> <span class="n">rotary_inertia</span>
@@ -309,8 +311,8 @@
             <span class="n">Ms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ie</span> <span class="o">*</span> <span class="n">Ms</span><span class="o">/</span><span class="p">(</span><span class="mi">30</span><span class="o">*</span><span class="n">L</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">phi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
             <span class="n">M</span> <span class="o">=</span> <span class="n">M</span> <span class="o">+</span> <span class="n">Ms</span>
 
-        <span class="k">return</span> <span class="n">M</span>
-</div>
+        <span class="k">return</span> <span class="n">M</span></div>
+
 <div class="viewcode-block" id="ShaftElement.K"><a class="viewcode-back" href="../../api/elements.ShaftElement.html#LaviRot.elements.ShaftElement.K">[docs]</a>    <span class="k">def</span> <span class="nf">K</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">r&quot;&quot;&quot;Stiffness matrix for an instance of a shaft element.</span>
 
@@ -343,8 +345,8 @@
 
         <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ie</span> <span class="o">*</span> <span class="n">K</span><span class="o">/</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">phi</span><span class="p">)</span><span class="o">*</span><span class="n">L</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">K</span>
-</div>
+        <span class="k">return</span> <span class="n">K</span></div>
+
 <div class="viewcode-block" id="ShaftElement.G"><a class="viewcode-back" href="../../api/elements.ShaftElement.html#LaviRot.elements.ShaftElement.G">[docs]</a>    <span class="k">def</span> <span class="nf">G</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gyroscopic matrix for an instance of a shaft element.</span>
 
@@ -386,7 +388,7 @@
 
             <span class="n">G</span> <span class="o">=</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ie</span> <span class="o">*</span> <span class="n">G</span> <span class="o">/</span> <span class="p">(</span><span class="mi">15</span> <span class="o">*</span> <span class="n">L</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">phi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">G</span>
+        <span class="k">return</span> <span class="n">G</span></div></div>
 
         <span class="c1">#  TODO stiffness Matrix due to an axial load</span>
         <span class="c1">#  TODO stiffness Matrix due to an axial torque</span>
@@ -394,7 +396,7 @@
         <span class="c1">#  TODO skew-symmetric speed dependent contribution to element stiffness matrix from the internal damping</span>
         <span class="c1">#  TODO add tappered element. Modify shaft element to accept i_d and o_d as a list with to entries.</span>
 
-</div></div>
+
 <div class="viewcode-block" id="DiskElement"><a class="viewcode-back" href="../../api/elements.DiskElement.html#LaviRot.elements.DiskElement">[docs]</a><span class="k">class</span> <span class="nc">DiskElement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="c1">#  TODO detail this class attributes inside the docstring</span>
     <span class="sd">&quot;&quot;&quot;A disk element.</span>
@@ -476,8 +478,8 @@
                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span>  <span class="mi">0</span><span class="p">],</span>
                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">Id</span><span class="p">]])</span>
 
-        <span class="k">return</span> <span class="n">M</span>
-</div>
+        <span class="k">return</span> <span class="n">M</span></div>
+
 <div class="viewcode-block" id="DiskElement.G"><a class="viewcode-back" href="../../api/elements.DiskElement.html#LaviRot.elements.DiskElement.G">[docs]</a>    <span class="k">def</span> <span class="nf">G</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This method will return the gyroscopic matrix for an instance of a disk</span>
@@ -508,65 +510,110 @@
                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span> <span class="n">Ip</span><span class="p">],</span>
                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">Ip</span><span class="p">,</span>  <span class="mi">0</span><span class="p">]])</span>
 
-        <span class="k">return</span> <span class="n">G</span>
+        <span class="k">return</span> <span class="n">G</span></div></div>
 
-</div></div>
+
 <div class="viewcode-block" id="BearingElement"><a class="viewcode-back" href="../../api/elements.BearingElement.html#LaviRot.elements.BearingElement">[docs]</a><span class="k">class</span> <span class="nc">BearingElement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="c1">#  TODO detail this class attributes inside the docstring</span>
     <span class="sd">&quot;&quot;&quot;A bearing element.</span>
 
 <span class="sd">    This class will create a bearing element.</span>
+<span class="sd">    Parameters can be a constant value or speed dependent.</span>
+<span class="sd">    For speed dependent parameters, each argument should be passed</span>
+<span class="sd">    as an array and the correspondent speed values should also be</span>
+<span class="sd">    passed as an array.</span>
+<span class="sd">    Values for each parameter will be interpolated for the speed.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    kxx: float</span>
+<span class="sd">    kxx: float, array</span>
 <span class="sd">        Direct stiffness in the x direction.</span>
-<span class="sd">    kyy: float</span>
+<span class="sd">    cxx: float, array</span>
+<span class="sd">        Direct damping in the x direction.</span>
+<span class="sd">    kyy: float, array, optional</span>
 <span class="sd">        Direct stiffness in the y direction.</span>
-<span class="sd">    cxx: float</span>
-<span class="sd">        Direct stiffness in the x direction.</span>
-<span class="sd">    cyy: float</span>
-<span class="sd">        Direct stiffness in the y direction.</span>
+<span class="sd">        (defaults to kxx)</span>
+<span class="sd">    cyy: float, array, optional</span>
+<span class="sd">        Direct damping in the y direction.</span>
+<span class="sd">        (defaults to cxx)</span>
+<span class="sd">    kxy: float, array, optional</span>
+<span class="sd">        Cross coupled stiffness in the x direction.</span>
+<span class="sd">        (defaults to 0)</span>
+<span class="sd">    cxy: float, array, optional</span>
+<span class="sd">        Cross coupled damping in the x direction.</span>
+<span class="sd">        (defaults to 0)</span>
+<span class="sd">    kyx: float, array, optional</span>
+<span class="sd">        Cross coupled stiffness in the y direction.</span>
+<span class="sd">        (defaults to 0)</span>
+<span class="sd">    cyx: float, array, optional</span>
+<span class="sd">        Cross coupled damping in the y direction.</span>
+<span class="sd">        (defaults to 0)</span>
+<span class="sd">    w: array, optional</span>
+<span class="sd">        Array with the speeds.</span>
+
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1">#  TODO add __repr__ to the class</span>
     <span class="c1">#  TODO implement for more complex cases (kxy, kthetatheta etc.)</span>
     <span class="c1">#  TODO consider kxx, kxy, kyx, kyy, cxx, cxy, cyx, cyy, mxx, myy, myx, myy (to import from XLTRC)</span>
     <span class="c1">#  TODO add speed as an argument</span>
     <span class="c1">#  TODO arguments should be lists related to speed</span>
     <span class="c1">#  TODO evaluate the use of pandas tables to display</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">kxx</span><span class="p">,</span> <span class="n">kyy</span><span class="p">,</span> <span class="n">cxx</span><span class="p">,</span> <span class="n">cyy</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span>
+                 <span class="n">kxx</span><span class="p">,</span> <span class="n">cxx</span><span class="p">,</span>
+                 <span class="n">kyy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kxy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kyx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">cyy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cxy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cyx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">w</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">kyy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">kyy</span> <span class="o">=</span> <span class="n">kxx</span>
+        <span class="k">if</span> <span class="n">cyy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">cyy</span> <span class="o">=</span> <span class="n">cxx</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;kxx&#39;</span><span class="p">:</span> <span class="n">kxx</span><span class="p">,</span> <span class="s1">&#39;cxx&#39;</span><span class="p">:</span> <span class="n">cxx</span><span class="p">,</span>
+                <span class="s1">&#39;kyy&#39;</span><span class="p">:</span> <span class="n">kyy</span><span class="p">,</span> <span class="s1">&#39;kxy&#39;</span><span class="p">:</span> <span class="n">kxy</span><span class="p">,</span> <span class="s1">&#39;kyx&#39;</span><span class="p">:</span> <span class="n">kyx</span><span class="p">,</span>
+                <span class="s1">&#39;cyy&#39;</span><span class="p">:</span> <span class="n">cyy</span><span class="p">,</span> <span class="s1">&#39;cxy&#39;</span><span class="p">:</span> <span class="n">cxy</span><span class="p">,</span> <span class="s1">&#39;cyx&#39;</span><span class="p">:</span> <span class="n">cyx</span><span class="p">}</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kxx</span> <span class="o">=</span> <span class="n">kxx</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">kyy</span> <span class="o">=</span> <span class="n">kyy</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cxx</span> <span class="o">=</span> <span class="n">cxx</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cyy</span> <span class="o">=</span> <span class="n">cyy</span>
+
+        <span class="c1"># set values for speed so that interpolation can be created</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+                <span class="c1"># set values for each val so that interpolation can be created</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+            <span class="n">interp_func</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">UnivariateSpline</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">interp_func</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
 
-    <span class="k">def</span> <span class="nf">K</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">kxx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kxx</span>
-        <span class="n">kyy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kyy</span>
+    <span class="k">def</span> <span class="nf">K</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="n">kxx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kxx</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">kyy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kyy</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">kxy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kxy</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">kyx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kyx</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
 
-        <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">kxx</span><span class="p">,</span>   <span class="mi">0</span><span class="p">],</span>
-                      <span class="p">[</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">kyy</span><span class="p">]])</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">kxx</span><span class="p">,</span> <span class="n">kxy</span><span class="p">],</span>
+                      <span class="p">[</span><span class="n">kyx</span><span class="p">,</span> <span class="n">kyy</span><span class="p">]])</span>
 
         <span class="k">return</span> <span class="n">K</span>
 
-    <span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">cxx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cxx</span>
-        <span class="n">cyy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cyy</span>
-        <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">cxx</span><span class="p">,</span>   <span class="mi">0</span><span class="p">],</span>
-                      <span class="p">[</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">cyy</span><span class="p">]])</span>
+    <span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="n">cxx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cxx</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">cyy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cyy</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">cxy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cxy</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">cyx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cyx</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">C</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">cxx</span><span class="p">,</span> <span class="n">cxy</span><span class="p">],</span>
+                      <span class="p">[</span><span class="n">cyx</span><span class="p">,</span> <span class="n">cyy</span><span class="p">]])</span>
 
-</div>
+        <span class="k">return</span> <span class="n">C</span></div>
+
+
 <span class="k">class</span> <span class="nc">SealElement</span><span class="p">(</span><span class="n">BearingElement</span><span class="p">):</span>
     <span class="k">pass</span>
 </pre></div>
@@ -583,7 +630,7 @@
     </p>
     <p>
         &copy; Copyright 2016, Lavi.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.<br/>
     </p>
   </div>
 </footer>

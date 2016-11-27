@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Rotor &mdash; LaviRot 0.1b documentation</title>
+    <title>Rotor &#8212; LaviRot 0.1b documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -74,12 +74,13 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial/Basics.html">Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/Basics.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/Basics.html#basics">Basics</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="elements.html">Elements</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Rotor</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Rotor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="results.html">Results</a></li>
 </ul>
 </li>
@@ -171,28 +172,28 @@ disk and bearing elements provided.</p>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1">#  Rotor without damping with 2 shaft elements 1 disk and 2 bearings</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1">#  Rotor without damping with 2 shaft elements 1 disk and 2 bearings</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">le</span> <span class="o">=</span> <span class="mf">0.25</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">i_d</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">o_d</span> <span class="o">=</span> <span class="mf">0.05</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">E</span> <span class="o">=</span> <span class="mf">211e9</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">E</span> <span class="o">=</span> <span class="mi">211</span><span class="n">e9</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="mf">81.2e9</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rho</span> <span class="o">=</span> <span class="mi">7810</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tim0</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">le</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span>
-<span class="gp">... </span>                   <span class="n">shear_effects</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-<span class="gp">... </span>                   <span class="n">rotary_inertia</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-<span class="gp">... </span>                   <span class="n">gyroscopic</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">... </span>                   <span class="n">shear_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">gyroscopic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tim1</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">le</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span>
-<span class="gp">... </span>                   <span class="n">shear_effects</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-<span class="gp">... </span>                   <span class="n">rotary_inertia</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-<span class="gp">... </span>                   <span class="n">gyroscopic</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">... </span>                   <span class="n">shear_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">gyroscopic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shaft_elm</span> <span class="o">=</span> <span class="p">[</span><span class="n">tim0</span><span class="p">,</span> <span class="n">tim1</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">disk0</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">stf</span> <span class="o">=</span> <span class="mf">1e6</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bearing0</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">stf</span><span class="p">,</span> <span class="n">stf</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bearing1</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">stf</span><span class="p">,</span> <span class="n">stf</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stf</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bearing0</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">kxx</span><span class="o">=</span><span class="n">stf</span><span class="p">,</span> <span class="n">cxx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bearing1</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">kxx</span><span class="o">=</span><span class="n">stf</span><span class="p">,</span> <span class="n">cxx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">Rotor</span><span class="p">(</span><span class="n">shaft_elm</span><span class="p">,</span> <span class="p">[</span><span class="n">disk0</span><span class="p">],</span> <span class="p">[</span><span class="n">bearing0</span><span class="p">,</span> <span class="n">bearing1</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">wd</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
 <span class="go">34.2773...</span>
@@ -221,31 +222,54 @@ disk and bearing elements provided.</p>
 </table>
 <p class="rubric">Methods</p>
 <dl class="method">
-<dt id="LaviRot.rotor.Rotor.A">
-<code class="descname">A</code><span class="sig-paren">(</span><em>w=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.A"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.A" title="Permalink to this definition">¶</a></dt>
-<dd><p>State space matrix for an instance of a rotor.</p>
+<dt id="LaviRot.rotor.Rotor.M">
+<code class="descname">M</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.M"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.M" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mass matrix for an instance of a rotor.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">State space matrix for the rotor.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mass matrix for the rotor.</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">A</span><span class="p">()[</span><span class="mi">12</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">array([[  2.06299048e+08,  -0.00000000e+00],</span>
-<span class="go">       [ -0.00000000e+00,   2.06299048e+08],</span>
-<span class="go">       [  0.00000000e+00,   6.97351178e+09],</span>
-<span class="go">       [ -6.97351178e+09,  -0.00000000e+00]])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">M</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="go">array([[ 1.42050794,  0.        ,  0.        ,  0.04931719],</span>
+<span class="go">       [ 0.        ,  1.42050794, -0.04931719,  0.        ],</span>
+<span class="go">       [ 0.        , -0.04931719,  0.00231392,  0.        ],</span>
+<span class="go">       [ 0.04931719,  0.        ,  0.        ,  0.00231392]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.rotor.Rotor.K">
+<code class="descname">K</code><span class="sig-paren">(</span><em>w=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.K"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.K" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stiffness matrix for an instance of a rotor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Stiffness matrix for the rotor.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">K</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span>
+<span class="go">array([[ 46.69644273,   0.        ,   0.        ,   5.71205534],</span>
+<span class="go">       [  0.        ,  46.69644273,  -5.71205534,   0.        ],</span>
+<span class="go">       [  0.        ,  -5.71205534,   0.97294287,   0.        ],</span>
+<span class="go">       [  5.71205534,   0.        ,   0.        ,   0.97294287]])</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="method">
 <dt id="LaviRot.rotor.Rotor.C">
-<code class="descname">C</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.C"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.C" title="Permalink to this definition">¶</a></dt>
+<code class="descname">C</code><span class="sig-paren">(</span><em>w=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.C"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.C" title="Permalink to this definition">¶</a></dt>
 <dd><p>Damping matrix for an instance of a rotor.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -256,7 +280,7 @@ disk and bearing elements provided.</p>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">C</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
 <span class="go">array([[ 0.,  0.,  0.,  0.],</span>
 <span class="go">       [ 0.,  0.,  0.,  0.],</span>
@@ -279,7 +303,7 @@ disk and bearing elements provided.</p>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">G</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
 <span class="go">array([[ 0.        , -0.01943344, -0.00022681,  0.        ],</span>
 <span class="go">       [-0.01943344,  0.        ,  0.        , -0.00022681],</span>
@@ -290,47 +314,24 @@ disk and bearing elements provided.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="LaviRot.rotor.Rotor.K">
-<code class="descname">K</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.K"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.K" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stiffness matrix for an instance of a rotor.</p>
+<dt id="LaviRot.rotor.Rotor.A">
+<code class="descname">A</code><span class="sig-paren">(</span><em>w=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.A"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.A" title="Permalink to this definition">¶</a></dt>
+<dd><p>State space matrix for an instance of a rotor.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Stiffness matrix for the rotor.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">State space matrix for the rotor.</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">K</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">/</span><span class="mf">1e6</span>
-<span class="go">array([[ 46.69644273,   0.        ,   0.        ,   5.71205534],</span>
-<span class="go">       [  0.        ,  46.69644273,  -5.71205534,   0.        ],</span>
-<span class="go">       [  0.        ,  -5.71205534,   0.97294287,   0.        ],</span>
-<span class="go">       [  5.71205534,   0.        ,   0.        ,   0.97294287]])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="LaviRot.rotor.Rotor.M">
-<code class="descname">M</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.M"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.M" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mass matrix for an instance of a rotor.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mass matrix for the rotor.</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">M</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
-<span class="go">array([[ 1.42050794,  0.        ,  0.        ,  0.04931719],</span>
-<span class="go">       [ 0.        ,  1.42050794, -0.04931719,  0.        ],</span>
-<span class="go">       [ 0.        , -0.04931719,  0.00231392,  0.        ],</span>
-<span class="go">       [ 0.04931719,  0.        ,  0.        ,  0.00231392]])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">A</span><span class="p">()[</span><span class="mi">12</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+<span class="go">array([[  2.06299048e+08,  -0.00000000e+00],</span>
+<span class="go">       [ -0.00000000e+00,   2.06299048e+08],</span>
+<span class="go">       [  0.00000000e+00,   6.97351178e+09],</span>
+<span class="go">       [ -6.97351178e+09,  -0.00000000e+00]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -341,7 +342,7 @@ disk and bearing elements provided.</p>
 <dd><p>Calculates kappa for a given node and natural frequency.</p>
 <p>w is the the index of the natural frequency of interest</p>
 <div class="math">
-<p><img src="../_images/math/a62466b37318b064e664dac6b7e5e0c8ab0929a8.png" alt="[x_1, y_1, \alpha_1, \beta_1, x_2, y_2, \alpha_2, \beta_2]^T"/></p>
+<p><img src="../_images/math/6edfbaecd3189bda0c4b391eabedb661b07080f0.png" alt="[x_1, y_1, \alpha_1, \beta_1, x_2, y_2, \alpha_2, \beta_2]^T"/></p>
 </div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -377,10 +378,10 @@ major axis, minor axis and kappa.</p>
 The eigenvalues of H correspond to the minor and
 major axis of the orbit.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># kappa for each node of the first natural frequency</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa_mode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="go">[array(0.00024771356807127144), array(0.00024771356803424013), array(0.00024771356792966965)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa_mode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> 
+<span class="go">[array(0.0002477...), array(0.0002477...), array(0.0002477...)]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -411,10 +412,10 @@ to the mode/natural frequency of interest.</p>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># kappa for each node of the first natural frequency</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa_mode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="go">[array(0.0007921675419146242), array(0.0007921675419032787), array(0.0007921675419138006)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa_mode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> 
+<span class="go">[array(0.000792...), array(0.000792...), array(0.000792...)]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -436,7 +437,7 @@ to the mode/natural frequency of interest.</p>
     </p>
     <p>
         &copy; Copyright 2016, Lavi.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.<br/>
     </p>
   </div>
 </footer>

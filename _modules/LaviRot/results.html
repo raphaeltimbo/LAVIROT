@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>LaviRot.results &mdash; LaviRot 0.1b documentation</title>
+    <title>LaviRot.results &#8212; LaviRot 0.1b documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -72,7 +72,8 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/index.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorial/Basics.html">Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/Basics.html">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/Basics.html#basics">Basics</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a><ul>
@@ -122,314 +123,315 @@
     <div class="col-md-12 content">
       
   <h1>Source code for LaviRot.results</h1><div class="highlight"><pre>
-<span></span>r&quot;&quot;&quot;
-This module contains :py:meth:`LaviRot.results` with functions
-to evaluate results and functions to create plots
-&quot;&quot;&quot;
-# TODO detail the results docstring
-import os
+<span></span><span class="sd">r&quot;&quot;&quot;</span>
+<span class="sd">This module contains :py:meth:`LaviRot.results` with functions</span>
+<span class="sd">to evaluate results and functions to create plots</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># TODO detail the results docstring</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
-import matplotlib as mpl
-import matplotlib.patches as mpatches
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.collections import LineCollection
-from matplotlib.colors import ListedColormap
-from mpl_toolkits.mplot3d import Axes3D
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="k">import</span> <span class="n">LineCollection</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="k">import</span> <span class="n">ListedColormap</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">Axes3D</span>
 
-c_pal = {&#39;red&#39;: &#39;#C93C3C&#39;,
-         &#39;blue&#39;: &#39;#0760BA&#39;,
-         &#39;green&#39;: &#39;#2ECC71&#39;,
-         &#39;dark blue&#39;: &#39;#07325E&#39;,
-         &#39;purple&#39;: &#39;#A349C6&#39;,
-         &#39;grey&#39;: &#39;#2D2D2D&#39;,
-         &#39;green2&#39;: &#39;#08A4AF&#39;}
+<span class="n">c_pal</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;red&#39;</span><span class="p">:</span> <span class="s1">&#39;#C93C3C&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;blue&#39;</span><span class="p">:</span> <span class="s1">&#39;#0760BA&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;green&#39;</span><span class="p">:</span> <span class="s1">&#39;#2ECC71&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;dark blue&#39;</span><span class="p">:</span> <span class="s1">&#39;#07325E&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;purple&#39;</span><span class="p">:</span> <span class="s1">&#39;#A349C6&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;grey&#39;</span><span class="p">:</span> <span class="s1">&#39;#2D2D2D&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;green2&#39;</span><span class="p">:</span> <span class="s1">&#39;#08A4AF&#39;</span><span class="p">}</span>
 
-fn = os.path.join(os.path.dirname(__file__), r&#39;styles\matplotlibrc&#39;)
-
-
-<div class="viewcode-block" id="plot_rotor"><a class="viewcode-back" href="../../api/results.html#LaviRot.results.plot_rotor">[docs]</a>def plot_rotor(rotor):
-    &quot;&quot;&quot; Plots a rotor object.
-
-    This function will take a rotor object and plot its shaft,
-    disks and bearing elements
-
-    Parameters
-    ----------
-    rotor: rotor object
-        A rotor object
-
-    Returns
-    -------
-    Plots the rotor object.
-
-    Examples:
-
-    &quot;&quot;&quot;
-    mpl.rcParams.update(mpl.rc_params_from_file(fn))
-    plt.rcParams[&#39;axes.facecolor&#39;] = &#39;#E5E5E5&#39;
-    plt.rcParams[&#39;figure.figsize&#39;] = (10, 6)
-    plt.rcParams[&#39;xtick.labelsize&#39;] = 0
-    plt.rcParams[&#39;ytick.labelsize&#39;] = 0
-
-    #  define a color palette for the rotor
-    r_pal = {&#39;shaft&#39;: &#39;#525252&#39;,
-             &#39;node&#39;: &#39;#6caed6&#39;,
-             &#39;disk&#39;: &#39;#bc625b&#39;,
-             &#39;bearing&#39;: &#39;#355d7a&#39;,
-             &#39;seal&#39;: &#39;#77ACA2&#39;}
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-
-    #  plot shaft centerline
-    shaft_end = rotor.nodes_pos[-1]
-    ax.plot([-.2 * shaft_end, 1.2 * shaft_end], [0, 0], &#39;k-.&#39;)
-    max_diameter = max([disk.o_d for disk in rotor.disk_elements])
-    ax.set_ylim(-1.2 * max_diameter, 1.2 * max_diameter)
-    ax.axis(&#39;equal&#39;)
-
-    #  plot nodes
-    for node, position in enumerate(rotor.nodes_pos):
-        ax.plot(position, 0,
-                zorder=2, ls=&#39;&#39;, marker=&#39;D&#39;, color=r_pal[&#39;node&#39;], markersize=10, alpha=0.6)
-        ax.text(position, 0,
-                &#39;%.0f&#39; % node,
-                size=&#39;smaller&#39;,
-                horizontalalignment=&#39;center&#39;,
-                verticalalignment=&#39;center&#39;)
-
-    # plot shaft elements
-    for sh_elm in rotor.shaft_elements:
-        position_u = [rotor.nodes_pos[sh_elm.n], sh_elm.i_d]  # upper
-        position_l = [rotor.nodes_pos[sh_elm.n], -sh_elm.o_d + sh_elm.i_d]  # lower
-        width = sh_elm.L
-        height = sh_elm.o_d - sh_elm.i_d
-
-        #  plot the upper half of the shaft
-        ax.add_patch(mpatches.Rectangle(position_u, width, height,
-                                        facecolor=r_pal[&#39;shaft&#39;], alpha=0.8))
-        #  plot the lower half of the shaft
-        ax.add_patch(mpatches.Rectangle(position_l, width, height,
-                                        facecolor=r_pal[&#39;shaft&#39;], alpha=0.8))
-
-    # plot disk elements
-    for disk in rotor.disk_elements:
-        zpos = rotor.nodes_pos[disk.n]
-        ypos = rotor.shaft_elements[disk.n].o_d
-        D = disk.o_d
-        hw = disk.width / 2  # half width
-
-        #  node (x pos), outer diam. (y pos)
-        disk_points_u = [[zpos, ypos],  # upper
-                         [zpos + hw, ypos + 0.1 * D],
-                         [zpos + hw, ypos + 0.9 * D],
-                         [zpos - hw, ypos + 0.9 * D],
-                         [zpos - hw, ypos + 0.1 * D],
-                         [zpos, ypos]]
-        disk_points_l = [[zpos, -ypos],  # lower
-                         [zpos + hw, -(ypos + 0.1 * D)],
-                         [zpos + hw, -(ypos + 0.9 * D)],
-                         [zpos - hw, -(ypos + 0.9 * D)],
-                         [zpos - hw, -(ypos + 0.1 * D)],
-                         [zpos, -ypos]]
-        ax.add_patch(mpatches.Polygon(disk_points_u, facecolor=r_pal[&#39;disk&#39;]))
-        ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=r_pal[&#39;disk&#39;]))
-
-    # plot bearings
-    for bearing in rotor.bearing_seal_elements:
-        # name is used here because classes are not import to this module
-        if type(bearing).__name__ == &#39;BearingElement&#39;:
-            zpos = rotor.nodes_pos[bearing.n]
-            #  TODO this will need to be modified for tapppered elements
-            #  check if the bearing is in the last node
-            ypos = -rotor.nodes_o_d[bearing.n]
-            h = -0.75 * ypos  # height
-
-            #  node (x pos), outer diam. (y pos)
-            bearing_points = [[zpos, ypos],  # upper
-                              [zpos + h / 2, ypos - h],
-                              [zpos - h / 2, ypos - h],
-                              [zpos, ypos]]
-            ax.add_patch(mpatches.Polygon(bearing_points, color=r_pal[&#39;bearing&#39;]))
-
-        elif type(bearing).__name__ == &#39;SealElement&#39;:
-            zpos = rotor.nodes_pos[bearing.n]
-            #  check if the bearing is in the last node
-            ypos = rotor.nodes_o_d[bearing.n]
-            hw = 0.05
-            # TODO adapt hw according to bal drum diameter
-
-            #  node (x pos), outer diam. (y pos)
-            seal_points_u = [[zpos, ypos*1.1],  # upper
-                             [zpos + hw, ypos*1.1],
-                             [zpos + hw, ypos*1.3],
-                             [zpos - hw, ypos*1.3],
-                             [zpos - hw, ypos*1.1],
-                             [zpos, ypos*1.1]]
-            seal_points_l = [[zpos, -ypos*1.1],  # lower
-                             [zpos + hw, -(ypos*1.1)],
-                             [zpos + hw, -(ypos*1.3)],
-                             [zpos - hw, -(ypos*1.3)],
-                             [zpos - hw, -(ypos*1.1)],
-                             [zpos, -ypos*1.1]]
-            ax.add_patch(mpatches.Polygon(seal_points_u, facecolor=r_pal[&#39;seal&#39;]))
-            ax.add_patch(mpatches.Polygon(seal_points_l, facecolor=r_pal[&#39;seal&#39;]))
-
-    return fig
-
-</div>
-def MAC(u, v):
-    &quot;&quot;&quot;MAC for two vectors&quot;&quot;&quot;
-    H = lambda a: a.T.conj()
-    return np.absolute((H(u) @ v)**2 / ((H(u) @ u)*(H(v) @ v)))
+<span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s1">r&#39;styles/matplotlibrc&#39;</span><span class="p">)</span>
 
 
-def MAC_modes(U, V, n=None, plot=True):
-    &quot;&quot;&quot;MAC for multiple vectors&quot;&quot;&quot;
-    # n is the number of modes to be evaluated
-    if n is None:
-        n = U.shape[1]
-    macs = np.zeros((n, n))
-    for u in enumerate(U.T[:n]):
-        for v in enumerate(V.T[:n]):
-            macs[u[0], v[0]] = MAC(u[1], v[1])
+<div class="viewcode-block" id="plot_rotor"><a class="viewcode-back" href="../../api/results.html#LaviRot.results.plot_rotor">[docs]</a><span class="k">def</span> <span class="nf">plot_rotor</span><span class="p">(</span><span class="n">rotor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Plots a rotor object.</span>
 
-    if not plot:
-        return macs
+<span class="sd">    This function will take a rotor object and plot its shaft,</span>
+<span class="sd">    disks and bearing elements</span>
 
-    xpos, ypos = np.meshgrid(range(n), range(n))
-    xpos, ypos = 0.5 + xpos.flatten(), 0.5 + ypos.flatten()
-    zpos = np.zeros_like(xpos)
-    dx = 0.75 * np.ones_like(xpos)
-    dy = 0.75 * np.ones_like(xpos)
-    dz = macs.T.flatten()
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rotor: rotor object</span>
+<span class="sd">        A rotor object</span>
 
-    fig = plt.figure(figsize=(12, 8))
-    #fig.suptitle(&#39;MAC - %s vs %s&#39; % (U.name, V.name), fontsize=12)
-    ax = fig.add_subplot(111, projection=&#39;3d&#39;)
-    ax.bar3d(xpos, ypos, zpos, dx, dy, dz,
-             color=plt.cm.viridis(dz), alpha=0.7)
-    ax.set_xticks(range(1, n + 1))
-    ax.set_yticks(range(1, n + 1))
-    #ax.set_xlabel(&#39;%s  modes&#39; % U.name)
-    #ax.set_ylabel(&#39;%s  modes&#39; % V.name)
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Plots the rotor object.</span>
 
-    sm = plt.cm.ScalarMappable(cmap=plt.cm.viridis,
-                               norm=plt.Normalize(vmin=0, vmax=1))
-    # fake up the array of the scalar mappable
-    sm._A = []
-    cbar = fig.colorbar(sm, shrink=0.5, aspect=10)
-    cbar.set_label(&#39;MAC&#39;)
+<span class="sd">    Examples:</span>
 
-    return macs
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rc_params_from_file</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.facecolor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;#E5E5E5&#39;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;xtick.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;ytick.labelsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1">#  define a color palette for the rotor</span>
+    <span class="n">r_pal</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;shaft&#39;</span><span class="p">:</span> <span class="s1">&#39;#525252&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;node&#39;</span><span class="p">:</span> <span class="s1">&#39;#6caed6&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;disk&#39;</span><span class="p">:</span> <span class="s1">&#39;#bc625b&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;bearing&#39;</span><span class="p">:</span> <span class="s1">&#39;#355d7a&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;seal&#39;</span><span class="p">:</span> <span class="s1">&#39;#77ACA2&#39;</span><span class="p">}</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+
+    <span class="c1">#  plot shaft centerline</span>
+    <span class="n">shaft_end</span> <span class="o">=</span> <span class="n">rotor</span><span class="o">.</span><span class="n">nodes_pos</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="o">-.</span><span class="mi">2</span> <span class="o">*</span> <span class="n">shaft_end</span><span class="p">,</span> <span class="mf">1.2</span> <span class="o">*</span> <span class="n">shaft_end</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;k-.&#39;</span><span class="p">)</span>
+    <span class="n">max_diameter</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">disk</span><span class="o">.</span><span class="n">o_d</span> <span class="k">for</span> <span class="n">disk</span> <span class="ow">in</span> <span class="n">rotor</span><span class="o">.</span><span class="n">disk_elements</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.2</span> <span class="o">*</span> <span class="n">max_diameter</span><span class="p">,</span> <span class="mf">1.2</span> <span class="o">*</span> <span class="n">max_diameter</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+
+    <span class="c1">#  plot nodes</span>
+    <span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">position</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rotor</span><span class="o">.</span><span class="n">nodes_pos</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">r_pal</span><span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">],</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s1">&#39;</span><span class="si">%.0f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">node</span><span class="p">,</span>
+                <span class="n">size</span><span class="o">=</span><span class="s1">&#39;smaller&#39;</span><span class="p">,</span>
+                <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+
+    <span class="c1"># plot shaft elements</span>
+    <span class="k">for</span> <span class="n">sh_elm</span> <span class="ow">in</span> <span class="n">rotor</span><span class="o">.</span><span class="n">shaft_elements</span><span class="p">:</span>
+        <span class="n">position_u</span> <span class="o">=</span> <span class="p">[</span><span class="n">rotor</span><span class="o">.</span><span class="n">nodes_pos</span><span class="p">[</span><span class="n">sh_elm</span><span class="o">.</span><span class="n">n</span><span class="p">],</span> <span class="n">sh_elm</span><span class="o">.</span><span class="n">i_d</span><span class="p">]</span>  <span class="c1"># upper</span>
+        <span class="n">position_l</span> <span class="o">=</span> <span class="p">[</span><span class="n">rotor</span><span class="o">.</span><span class="n">nodes_pos</span><span class="p">[</span><span class="n">sh_elm</span><span class="o">.</span><span class="n">n</span><span class="p">],</span> <span class="o">-</span><span class="n">sh_elm</span><span class="o">.</span><span class="n">o_d</span> <span class="o">+</span> <span class="n">sh_elm</span><span class="o">.</span><span class="n">i_d</span><span class="p">]</span>  <span class="c1"># lower</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">sh_elm</span><span class="o">.</span><span class="n">L</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">sh_elm</span><span class="o">.</span><span class="n">o_d</span> <span class="o">-</span> <span class="n">sh_elm</span><span class="o">.</span><span class="n">i_d</span>
+
+        <span class="c1">#  plot the upper half of the shaft</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">position_u</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
+                                        <span class="n">facecolor</span><span class="o">=</span><span class="n">r_pal</span><span class="p">[</span><span class="s1">&#39;shaft&#39;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">))</span>
+        <span class="c1">#  plot the lower half of the shaft</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">position_l</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
+                                        <span class="n">facecolor</span><span class="o">=</span><span class="n">r_pal</span><span class="p">[</span><span class="s1">&#39;shaft&#39;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">))</span>
+
+    <span class="c1"># plot disk elements</span>
+    <span class="k">for</span> <span class="n">disk</span> <span class="ow">in</span> <span class="n">rotor</span><span class="o">.</span><span class="n">disk_elements</span><span class="p">:</span>
+        <span class="n">zpos</span> <span class="o">=</span> <span class="n">rotor</span><span class="o">.</span><span class="n">nodes_pos</span><span class="p">[</span><span class="n">disk</span><span class="o">.</span><span class="n">n</span><span class="p">]</span>
+        <span class="n">ypos</span> <span class="o">=</span> <span class="n">rotor</span><span class="o">.</span><span class="n">shaft_elements</span><span class="p">[</span><span class="n">disk</span><span class="o">.</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">o_d</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">disk</span><span class="o">.</span><span class="n">o_d</span>
+        <span class="n">hw</span> <span class="o">=</span> <span class="n">disk</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>  <span class="c1"># half width</span>
+
+        <span class="c1">#  node (x pos), outer diam. (y pos)</span>
+        <span class="n">disk_points_u</span> <span class="o">=</span> <span class="p">[[</span><span class="n">zpos</span><span class="p">,</span> <span class="n">ypos</span><span class="p">],</span>  <span class="c1"># upper</span>
+                         <span class="p">[</span><span class="n">zpos</span> <span class="o">+</span> <span class="n">hw</span><span class="p">,</span> <span class="n">ypos</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">D</span><span class="p">],</span>
+                         <span class="p">[</span><span class="n">zpos</span> <span class="o">+</span> <span class="n">hw</span><span class="p">,</span> <span class="n">ypos</span> <span class="o">+</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">D</span><span class="p">],</span>
+                         <span class="p">[</span><span class="n">zpos</span> <span class="o">-</span> <span class="n">hw</span><span class="p">,</span> <span class="n">ypos</span> <span class="o">+</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">D</span><span class="p">],</span>
+                         <span class="p">[</span><span class="n">zpos</span> <span class="o">-</span> <span class="n">hw</span><span class="p">,</span> <span class="n">ypos</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">D</span><span class="p">],</span>
+                         <span class="p">[</span><span class="n">zpos</span><span class="p">,</span> <span class="n">ypos</span><span class="p">]]</span>
+        <span class="n">disk_points_l</span> <span class="o">=</span> <span class="p">[[</span><span class="n">zpos</span><span class="p">,</span> <span class="o">-</span><span class="n">ypos</span><span class="p">],</span>  <span class="c1"># lower</span>
+                         <span class="p">[</span><span class="n">zpos</span> <span class="o">+</span> <span class="n">hw</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">ypos</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">D</span><span class="p">)],</span>
+                         <span class="p">[</span><span class="n">zpos</span> <span class="o">+</span> <span class="n">hw</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">ypos</span> <span class="o">+</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">D</span><span class="p">)],</span>
+                         <span class="p">[</span><span class="n">zpos</span> <span class="o">-</span> <span class="n">hw</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">ypos</span> <span class="o">+</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">D</span><span class="p">)],</span>
+                         <span class="p">[</span><span class="n">zpos</span> <span class="o">-</span> <span class="n">hw</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">ypos</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">D</span><span class="p">)],</span>
+                         <span class="p">[</span><span class="n">zpos</span><span class="p">,</span> <span class="o">-</span><span class="n">ypos</span><span class="p">]]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">disk_points_u</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">r_pal</span><span class="p">[</span><span class="s1">&#39;disk&#39;</span><span class="p">]))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">disk_points_l</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">r_pal</span><span class="p">[</span><span class="s1">&#39;disk&#39;</span><span class="p">]))</span>
+
+    <span class="c1"># plot bearings</span>
+    <span class="k">for</span> <span class="n">bearing</span> <span class="ow">in</span> <span class="n">rotor</span><span class="o">.</span><span class="n">bearing_seal_elements</span><span class="p">:</span>
+        <span class="c1"># name is used here because classes are not import to this module</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">bearing</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;BearingElement&#39;</span><span class="p">:</span>
+            <span class="n">zpos</span> <span class="o">=</span> <span class="n">rotor</span><span class="o">.</span><span class="n">nodes_pos</span><span class="p">[</span><span class="n">bearing</span><span class="o">.</span><span class="n">n</span><span class="p">]</span>
+            <span class="c1">#  TODO this will need to be modified for tapppered elements</span>
+            <span class="c1">#  check if the bearing is in the last node</span>
+            <span class="n">ypos</span> <span class="o">=</span> <span class="o">-</span><span class="n">rotor</span><span class="o">.</span><span class="n">nodes_o_d</span><span class="p">[</span><span class="n">bearing</span><span class="o">.</span><span class="n">n</span><span class="p">]</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.75</span> <span class="o">*</span> <span class="n">ypos</span>  <span class="c1"># height</span>
+
+            <span class="c1">#  node (x pos), outer diam. (y pos)</span>
+            <span class="n">bearing_points</span> <span class="o">=</span> <span class="p">[[</span><span class="n">zpos</span><span class="p">,</span> <span class="n">ypos</span><span class="p">],</span>  <span class="c1"># upper</span>
+                              <span class="p">[</span><span class="n">zpos</span> <span class="o">+</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ypos</span> <span class="o">-</span> <span class="n">h</span><span class="p">],</span>
+                              <span class="p">[</span><span class="n">zpos</span> <span class="o">-</span> <span class="n">h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ypos</span> <span class="o">-</span> <span class="n">h</span><span class="p">],</span>
+                              <span class="p">[</span><span class="n">zpos</span><span class="p">,</span> <span class="n">ypos</span><span class="p">]]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">bearing_points</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">r_pal</span><span class="p">[</span><span class="s1">&#39;bearing&#39;</span><span class="p">]))</span>
+
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">bearing</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;SealElement&#39;</span><span class="p">:</span>
+            <span class="n">zpos</span> <span class="o">=</span> <span class="n">rotor</span><span class="o">.</span><span class="n">nodes_pos</span><span class="p">[</span><span class="n">bearing</span><span class="o">.</span><span class="n">n</span><span class="p">]</span>
+            <span class="c1">#  check if the bearing is in the last node</span>
+            <span class="n">ypos</span> <span class="o">=</span> <span class="n">rotor</span><span class="o">.</span><span class="n">nodes_o_d</span><span class="p">[</span><span class="n">bearing</span><span class="o">.</span><span class="n">n</span><span class="p">]</span>
+            <span class="n">hw</span> <span class="o">=</span> <span class="mf">0.05</span>
+            <span class="c1"># TODO adapt hw according to bal drum diameter</span>
+
+            <span class="c1">#  node (x pos), outer diam. (y pos)</span>
+            <span class="n">seal_points_u</span> <span class="o">=</span> <span class="p">[[</span><span class="n">zpos</span><span class="p">,</span> <span class="n">ypos</span><span class="o">*</span><span class="mf">1.1</span><span class="p">],</span>  <span class="c1"># upper</span>
+                             <span class="p">[</span><span class="n">zpos</span> <span class="o">+</span> <span class="n">hw</span><span class="p">,</span> <span class="n">ypos</span><span class="o">*</span><span class="mf">1.1</span><span class="p">],</span>
+                             <span class="p">[</span><span class="n">zpos</span> <span class="o">+</span> <span class="n">hw</span><span class="p">,</span> <span class="n">ypos</span><span class="o">*</span><span class="mf">1.3</span><span class="p">],</span>
+                             <span class="p">[</span><span class="n">zpos</span> <span class="o">-</span> <span class="n">hw</span><span class="p">,</span> <span class="n">ypos</span><span class="o">*</span><span class="mf">1.3</span><span class="p">],</span>
+                             <span class="p">[</span><span class="n">zpos</span> <span class="o">-</span> <span class="n">hw</span><span class="p">,</span> <span class="n">ypos</span><span class="o">*</span><span class="mf">1.1</span><span class="p">],</span>
+                             <span class="p">[</span><span class="n">zpos</span><span class="p">,</span> <span class="n">ypos</span><span class="o">*</span><span class="mf">1.1</span><span class="p">]]</span>
+            <span class="n">seal_points_l</span> <span class="o">=</span> <span class="p">[[</span><span class="n">zpos</span><span class="p">,</span> <span class="o">-</span><span class="n">ypos</span><span class="o">*</span><span class="mf">1.1</span><span class="p">],</span>  <span class="c1"># lower</span>
+                             <span class="p">[</span><span class="n">zpos</span> <span class="o">+</span> <span class="n">hw</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">ypos</span><span class="o">*</span><span class="mf">1.1</span><span class="p">)],</span>
+                             <span class="p">[</span><span class="n">zpos</span> <span class="o">+</span> <span class="n">hw</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">ypos</span><span class="o">*</span><span class="mf">1.3</span><span class="p">)],</span>
+                             <span class="p">[</span><span class="n">zpos</span> <span class="o">-</span> <span class="n">hw</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">ypos</span><span class="o">*</span><span class="mf">1.3</span><span class="p">)],</span>
+                             <span class="p">[</span><span class="n">zpos</span> <span class="o">-</span> <span class="n">hw</span><span class="p">,</span> <span class="o">-</span><span class="p">(</span><span class="n">ypos</span><span class="o">*</span><span class="mf">1.1</span><span class="p">)],</span>
+                             <span class="p">[</span><span class="n">zpos</span><span class="p">,</span> <span class="o">-</span><span class="n">ypos</span><span class="o">*</span><span class="mf">1.1</span><span class="p">]]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">seal_points_u</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">r_pal</span><span class="p">[</span><span class="s1">&#39;seal&#39;</span><span class="p">]))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">mpatches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">seal_points_l</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">r_pal</span><span class="p">[</span><span class="s1">&#39;seal&#39;</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
 
 
-def whirl(kappa_mode):
-    &quot;&quot;&quot;Evaluates the whirl of a mode&quot;&quot;&quot;
-    if all(kappa &gt;= -1e-3 for kappa in kappa_mode):
-        whirldir = &#39;Forward&#39;
-    elif all(kappa &lt;= 1e-3 for kappa in kappa_mode):
-        whirldir = &#39;Backward&#39;
-    else:
-        whirldir = &#39;Mixed&#39;
-    return whirldir
+<span class="k">def</span> <span class="nf">MAC</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;MAC for two vectors&quot;&quot;&quot;</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">((</span><span class="n">H</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">@</span> <span class="n">v</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">((</span><span class="n">H</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">@</span> <span class="n">u</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">H</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">@</span> <span class="n">v</span><span class="p">)))</span>
 
 
-def whirl_to_cmap(whirl):
-    &quot;&quot;&quot;Maps the whirl to a value&quot;&quot;&quot;
-    if whirl == &#39;Forward&#39;:
-        return 0
-    elif whirl == &#39;Backward&#39;:
-        return 1
-    else:
-        return 0.5
+<span class="k">def</span> <span class="nf">MAC_modes</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;MAC for multiple vectors&quot;&quot;&quot;</span>
+    <span class="c1"># n is the number of modes to be evaluated</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">macs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">U</span><span class="o">.</span><span class="n">T</span><span class="p">[:</span><span class="n">n</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">V</span><span class="o">.</span><span class="n">T</span><span class="p">[:</span><span class="n">n</span><span class="p">]):</span>
+            <span class="n">macs</span><span class="p">[</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">MAC</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">plot</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">macs</span>
+
+    <span class="n">xpos</span><span class="p">,</span> <span class="n">ypos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+    <span class="n">xpos</span><span class="p">,</span> <span class="n">ypos</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="n">xpos</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="n">ypos</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">zpos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">xpos</span><span class="p">)</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xpos</span><span class="p">)</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xpos</span><span class="p">)</span>
+    <span class="n">dz</span> <span class="o">=</span> <span class="n">macs</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="c1">#fig.suptitle(&#39;MAC - %s vs %s&#39; % (U.name, V.name), fontsize=12)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar3d</span><span class="p">(</span><span class="n">xpos</span><span class="p">,</span> <span class="n">ypos</span><span class="p">,</span> <span class="n">zpos</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span>
+             <span class="n">color</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">dz</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="c1">#ax.set_xlabel(&#39;%s  modes&#39; % U.name)</span>
+    <span class="c1">#ax.set_ylabel(&#39;%s  modes&#39; % V.name)</span>
+
+    <span class="n">sm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span>
+                               <span class="n">norm</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="c1"># fake up the array of the scalar mappable</span>
+    <span class="n">sm</span><span class="o">.</span><span class="n">_A</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;MAC&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">macs</span>
 
 
-<div class="viewcode-block" id="campbell"><a class="viewcode-back" href="../../api/results.html#LaviRot.results.campbell">[docs]</a>def campbell(rotor, speed_hz, freqs=6, mult=[1]):
-    #  TODO mult will be the harmonics for interest e.g., 1x, 2x etc.
-    mpl.rcParams.update(mpl.rc_params_from_file(fn))
-    rotor_state_speed = rotor.w
+<span class="k">def</span> <span class="nf">whirl</span><span class="p">(</span><span class="n">kappa_mode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Evaluates the whirl of a mode&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">kappa</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">3</span> <span class="k">for</span> <span class="n">kappa</span> <span class="ow">in</span> <span class="n">kappa_mode</span><span class="p">):</span>
+        <span class="n">whirldir</span> <span class="o">=</span> <span class="s1">&#39;Forward&#39;</span>
+    <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">kappa</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">3</span> <span class="k">for</span> <span class="n">kappa</span> <span class="ow">in</span> <span class="n">kappa_mode</span><span class="p">):</span>
+        <span class="n">whirldir</span> <span class="o">=</span> <span class="s1">&#39;Backward&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">whirldir</span> <span class="o">=</span> <span class="s1">&#39;Mixed&#39;</span>
+    <span class="k">return</span> <span class="n">whirldir</span>
 
-    z = []  # will contain values for each whirl (0, 0.5, 1)
 
-    # input to rotor.w must be in rad/s
-    # so we change from  hertz to rad/s
-    speed_rad = speed_hz*2*np.pi
+<span class="k">def</span> <span class="nf">whirl_to_cmap</span><span class="p">(</span><span class="n">whirl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Maps the whirl to a value&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">whirl</span> <span class="o">==</span> <span class="s1">&#39;Forward&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">whirl</span> <span class="o">==</span> <span class="s1">&#39;Backward&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.5</span>
 
-    for w0, w1 in (zip(speed_rad[:-1], speed_rad[1:])):
-        # define shaft speed
-        # check rotor state to avoid recalculating eigenvalues
-        if not rotor.w == w0:
-            rotor.w = w0
 
-        # define x as the current speed and y as each wd
-        x_w0 = np.full_like(range(freqs), w0/(2*np.pi))  # rad -&gt; hz
-        y_wd0 = rotor.wd[:freqs]
+<div class="viewcode-block" id="campbell"><a class="viewcode-back" href="../../api/results.html#LaviRot.results.campbell">[docs]</a><span class="k">def</span> <span class="nf">campbell</span><span class="p">(</span><span class="n">rotor</span><span class="p">,</span> <span class="n">speed_hz</span><span class="p">,</span> <span class="n">freqs</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+    <span class="c1">#  TODO mult will be the harmonics for interest e.g., 1x, 2x etc.</span>
+    <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">rc_params_from_file</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
+    <span class="n">rotor_state_speed</span> <span class="o">=</span> <span class="n">rotor</span><span class="o">.</span><span class="n">w</span>
 
-        # generate points for the first speed
-        points0 = np.array([x_w0, y_wd0]).T.reshape(-1, 1, 2)
+    <span class="n">z</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># will contain values for each whirl (0, 0.5, 1)</span>
 
-        # go to the next speed
-        rotor.w = w1
-        x_w1 = np.full_like(range(freqs), w1/(2*np.pi))  # rad -&gt; hz
-        y_wd1 = rotor.wd[:freqs]
-        points1 = np.array([x_w1, y_wd1]).T.reshape(-1, 1, 2)
+    <span class="c1"># input to rotor.w must be in rad/s</span>
+    <span class="c1"># so we change from  hertz to rad/s</span>
+    <span class="n">speed_rad</span> <span class="o">=</span> <span class="n">speed_hz</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
 
-        new_segment = np.concatenate([points0, points1], axis=1)
+    <span class="k">for</span> <span class="n">w0</span><span class="p">,</span> <span class="n">w1</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">speed_rad</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">speed_rad</span><span class="p">[</span><span class="mi">1</span><span class="p">:])):</span>
+        <span class="c1"># define shaft speed</span>
+        <span class="c1"># check rotor state to avoid recalculating eigenvalues</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">rotor</span><span class="o">.</span><span class="n">w</span> <span class="o">==</span> <span class="n">w0</span><span class="p">:</span>
+            <span class="n">rotor</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w0</span>
 
-        if w0 == speed_rad[0]:
-            segments = new_segment
-        else:
-            segments = np.concatenate([segments, new_segment])
+        <span class="c1"># define x as the current speed and y as each wd</span>
+        <span class="n">x_w0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">freqs</span><span class="p">),</span> <span class="n">w0</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>  <span class="c1"># rad -&gt; hz</span>
+        <span class="n">y_wd0</span> <span class="o">=</span> <span class="n">rotor</span><span class="o">.</span><span class="n">wd</span><span class="p">[:</span><span class="n">freqs</span><span class="p">]</span>
 
-        whirl_w = [whirl(rotor.kappa_mode(wn)) for wn in range(freqs)]
-        z.append([whirl_to_cmap(i) for i in whirl_w])
+        <span class="c1"># generate points for the first speed</span>
+        <span class="n">points0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_w0</span><span class="p">,</span> <span class="n">y_wd0</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-    z = np.array(z).flatten()
+        <span class="c1"># go to the next speed</span>
+        <span class="n">rotor</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w1</span>
+        <span class="n">x_w1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">freqs</span><span class="p">),</span> <span class="n">w1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>  <span class="c1"># rad -&gt; hz</span>
+        <span class="n">y_wd1</span> <span class="o">=</span> <span class="n">rotor</span><span class="o">.</span><span class="n">wd</span><span class="p">[:</span><span class="n">freqs</span><span class="p">]</span>
+        <span class="n">points1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_w1</span><span class="p">,</span> <span class="n">y_wd1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-    cmap = ListedColormap([c_pal[&#39;blue&#39;],
-                           c_pal[&#39;grey&#39;],
-                           c_pal[&#39;red&#39;]])
+        <span class="n">new_segment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">points0</span><span class="p">,</span> <span class="n">points1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    fig, ax = plt.subplots()
-    lines_2 = LineCollection(segments, array=z, cmap=cmap)
-    ax.add_collection(lines_2)
+        <span class="k">if</span> <span class="n">w0</span> <span class="o">==</span> <span class="n">speed_rad</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">segments</span> <span class="o">=</span> <span class="n">new_segment</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">segments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">segments</span><span class="p">,</span> <span class="n">new_segment</span><span class="p">])</span>
 
-    # plot harmonics in hertz
-    for m in mult:
-        ax.plot(speed_hz, m*speed_hz,
-                 color=c_pal[&#39;green2&#39;],
-                 linestyle=&#39;dashed&#39;)
+        <span class="n">whirl_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">whirl</span><span class="p">(</span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa_mode</span><span class="p">(</span><span class="n">wn</span><span class="p">))</span> <span class="k">for</span> <span class="n">wn</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">freqs</span><span class="p">)]</span>
+        <span class="n">z</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">whirl_to_cmap</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">whirl_w</span><span class="p">])</span>
 
-    # axis limits
-    ax.set_xlim(0, max(speed_hz))
-    ax.set_ylim(0, max(max(mult)*speed_hz))
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
-    # legend and title
-    ax.set_xlabel(r&#39;Rotor speed ($Hz$)&#39;)
-    ax.set_ylabel(r&#39;Damped natural frequencies ($Hz$)&#39;)
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">([</span><span class="n">c_pal</span><span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">],</span>
+                           <span class="n">c_pal</span><span class="p">[</span><span class="s1">&#39;grey&#39;</span><span class="p">],</span>
+                           <span class="n">c_pal</span><span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">]])</span>
 
-    forward_label = mpl.lines.Line2D([], [],
-                                     color=c_pal[&#39;blue&#39;],
-                                     label=&#39;Forward&#39;)
-    backwardlabel = mpl.lines.Line2D([], [],
-                                     color=c_pal[&#39;red&#39;],
-                                     label=&#39;Backward&#39;)
-    mixedlabel = mpl.lines.Line2D([], [],
-                                  color=c_pal[&#39;grey&#39;],
-                                  label=&#39;Mixed&#39;)
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">lines_2</span> <span class="o">=</span> <span class="n">LineCollection</span><span class="p">(</span><span class="n">segments</span><span class="p">,</span> <span class="n">array</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">lines_2</span><span class="p">)</span>
 
-    ax.legend(handles=[forward_label, backwardlabel, mixedlabel],
-              loc=2)
+    <span class="c1"># plot harmonics in hertz</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mult</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">speed_hz</span><span class="p">,</span> <span class="n">m</span><span class="o">*</span><span class="n">speed_hz</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="n">c_pal</span><span class="p">[</span><span class="s1">&#39;green2&#39;</span><span class="p">],</span>
+                 <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
 
-    # restore rotor speed
-    rotor.w = rotor_state_speed
+    <span class="c1"># axis limits</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">speed_hz</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">mult</span><span class="p">)</span><span class="o">*</span><span class="n">speed_hz</span><span class="p">))</span>
 
-    return fig
+    <span class="c1"># legend and title</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">r&#39;Rotor speed ($Hz$)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">r&#39;Damped natural frequencies ($Hz$)&#39;</span><span class="p">)</span>
 
-# TODO critical speed map
-</pre></div></div>
+    <span class="n">forward_label</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">([],</span> <span class="p">[],</span>
+                                     <span class="n">color</span><span class="o">=</span><span class="n">c_pal</span><span class="p">[</span><span class="s1">&#39;blue&#39;</span><span class="p">],</span>
+                                     <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Forward&#39;</span><span class="p">)</span>
+    <span class="n">backwardlabel</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">([],</span> <span class="p">[],</span>
+                                     <span class="n">color</span><span class="o">=</span><span class="n">c_pal</span><span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">],</span>
+                                     <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Backward&#39;</span><span class="p">)</span>
+    <span class="n">mixedlabel</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">([],</span> <span class="p">[],</span>
+                                  <span class="n">color</span><span class="o">=</span><span class="n">c_pal</span><span class="p">[</span><span class="s1">&#39;grey&#39;</span><span class="p">],</span>
+                                  <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mixed&#39;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="p">[</span><span class="n">forward_label</span><span class="p">,</span> <span class="n">backwardlabel</span><span class="p">,</span> <span class="n">mixedlabel</span><span class="p">],</span>
+              <span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># restore rotor speed</span>
+    <span class="n">rotor</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">rotor_state_speed</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+<span class="c1"># TODO critical speed map</span>
+
+</pre></div>
 
     </div>
       
@@ -443,7 +445,7 @@ def whirl_to_cmap(whirl):
     </p>
     <p>
         &copy; Copyright 2016, Lavi.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.<br/>
     </p>
   </div>
 </footer>
