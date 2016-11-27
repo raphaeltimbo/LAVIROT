@@ -15,10 +15,10 @@ From their `website <http://jupyter.org/>`__ :
     and share documents that contain live code, equations,
     visualizations and explanatory text.
 
-There are a lot of material to learn Python using the jupyter notebook.
-Basically these are interactive books, where you can read some
-explanation about a code and you get the chance to immediately execute
-that code, change things to see what happen and interact with the
+There is a lot of material to learn Python using the jupyter notebook.
+Basically, these are interactive books, where you can read some
+explanation about a code and get the chance to immediately execute
+that code, change things to see what happens and interact with the
 results. It is great for learning.
 
 You can see the basics for jupyter notebooks
@@ -31,7 +31,7 @@ For Matlab® users `Numpy for Matlab
 users <https://docs.scipy.org/doc/numpy-dev/user/numpy-for-matlab-users.html>`__
 is recommended.
 
-There are also thousands of videos/tutorials from conferences: `SciPy
+There are also many videos/tutorials from conferences: `SciPy
 Conference <https://www.youtube.com/user/EnthoughtMedia/playlists>`__
 
 Basics
