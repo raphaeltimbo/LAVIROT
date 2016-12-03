@@ -392,7 +392,7 @@ class Rotor(object):
               r_u cos(\eta_u + \omega_i t)\\
               r_v cos(\eta_v + \omega_i t)
               \end{bmatrix}
-              = T
+              = {\bf T}
               \begin{bmatrix}
               cos(\omega_i t)\\
               sin(\omega_i t)
@@ -403,6 +403,14 @@ class Rotor(object):
         elements of the *i*\th eigenvector, corresponding to the node and
         natural frequency of interest (mode).
 
+        .. math::
+
+            {\bf T} =
+            \begin{bmatrix}
+            r_u cos(\eta_u) & -r_u sin(\eta_u)\\
+            r_u cos(\eta_u) & -r_v sin(\eta_v)
+            \end{bmatrix}
+
         Parameters
         ----------
         node: int
@@ -411,16 +419,19 @@ class Rotor(object):
             Index corresponding to the natural frequency
             of interest.
         return_T: bool, optional
-            If True, returns the matrix and a dictionary with the
+            If True, returns the H matrix and a dictionary with the
             values for :math:`r_u, r_v, \eta_u, \eta_v`.
 
             Default is false.
 
         Returns
         -------
-        kappa: dict
-            A dictionary with values for the natural frequency,
-            major axis, minor axis and kappa.
+        H: array
+            Matrix H.
+        Tdic: dict
+            Dictionary with values for :math:`r_u, r_v, \eta_u, \eta_v`.
+
+            It will be returned only if return_T is True.
 
         Examples
         --------
@@ -455,13 +466,23 @@ class Rotor(object):
 
         return H
 
-    # TODO separate kappa-create a function that will return lam and U (extract method)
     def kappa(self, node, w, wd=True):
         r"""Calculates kappa for a given node and natural frequency.
 
-        w is the the index of the natural frequency of interest
+        w is the the index of the natural frequency of interest.
+        The function calculates the orbit parameter :math:`\kappa`:
 
-        .. math:: [x_1, y_1, \alpha_1, \beta_1, x_2, y_2, \alpha_2, \beta_2]^T
+        .. math::
+
+            \kappa = \pm \sqrt{\lambda_2 / \lambda_1}
+
+        Where :math:`\sqrt{\lambda_1}` is the length of the semiminor axes
+        and :math:`\sqrt{\lambda_2}` is the length of the semimajor axes.
+
+        If :math:`\kappa = \pm 1`, the orbit is circular.
+
+        If :math:`\kappa` is positive we have a forward rotating orbit
+        and if it is negative we have a backward rotating orbit.
 
         Parameters
         ----------
@@ -481,8 +502,6 @@ class Rotor(object):
             A dictionary with values for the natural frequency,
             major axis, minor axis and kappa.
 
-
-
         Examples
         --------
         >>> rotor = rotor_example()
@@ -490,7 +509,7 @@ class Rotor(object):
         >>> # Major axes for node 0 and natural frequency (mode) 0.
         >>> rotor.kappa(0, 0)['Major axes'] # doctest: +ELLIPSIS
         array(0.00145...)
-        >>> # kappa for node 0 and natural frequency (mode) 0.
+        >>> # kappa for node 2 and natural frequency (mode) 3.
         >>> rotor.kappa(2, 3)['kappa'] # doctest: +ELLIPSIS
         array(8.7006...e-13)
 
