@@ -475,6 +475,8 @@ class BearingElement(object):
         if w is None:
             w = np.linspace(0, 10000, 4)
 
+        self.w = w
+
         for arg, val in args.items():
             if isinstance(val, (int, float)):
                 # set values for each val so that interpolation can be created

@@ -304,5 +304,11 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1]):
 
     return fig
 
+    def bearing_parameters(bearing):
+        pass
+
+
+
+
 # TODO critical speed map
 
