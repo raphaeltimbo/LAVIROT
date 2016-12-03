@@ -179,11 +179,11 @@ class Rotor(object):
         Examples
         --------
         >>> rotor = rotor_example()
-        >>> rotor.K()[:4, :4]/1e6
-        array([[ 46.69644273,   0.        ,   0.        ,   5.71205534],
-               [  0.        ,  46.69644273,  -5.71205534,   0.        ],
-               [  0.        ,  -5.71205534,   0.97294287,   0.        ],
-               [  5.71205534,   0.        ,   0.        ,   0.97294287]])
+        >>> np.round(rotor.K()[:4, :4]/1e6)
+        array([[ 47.,   0.,   0.,   6.],
+               [  0.,  46.,  -6.,   0.],
+               [  0.,  -6.,   1.,   0.],
+               [  6.,   0.,   0.,   1.]])
         """
         if w is None:
             w = self.w
@@ -269,11 +269,13 @@ class Rotor(object):
         Examples
         --------
         >>> rotor = rotor_example()
-        >>> rotor.A()[12:16, :2]
-        array([[  2.06299048e+08,  -0.00000000e+00],
-               [ -0.00000000e+00,   2.06299048e+08],
-               [  0.00000000e+00,   6.97351178e+09],
-               [ -6.97351178e+09,  -0.00000000e+00]])
+        >>> np.round(rotor.A()[50:56, :2])
+        array([[     0.,  11110.],
+               [-11106.,     -0.],
+               [  -169.,      0.],
+               [    -0.,   -169.],
+               [    -0.,  10511.],
+               [-10507.,     -0.]])
         """
         if w is None:
             w = self.w
@@ -311,10 +313,10 @@ class Rotor(object):
         >>> evalues, evectors = rotor._eigen(0, sorted_=False)
         >>> idx = rotor._index(evalues)
         >>> idx[:6] # doctest: +ELLIPSIS
-        array([ 1,  5,  3,  7, 11,  9]...
+        array([ 1,  3,  5,  7,  9, 11]...
         """
         # avoid float point errors when sorting
-        evals_truncated = np.around(eigenvalues, decimals=10)
+        evals_truncated = np.around(eigenvalues, decimals=5)
         a = np.imag(evals_truncated)  # First column
         b = np.absolute(evals_truncated)  # Second column
         ind = np.lexsort((b, a))  # Sort by imag, then by absolute
@@ -348,8 +350,8 @@ class Rotor(object):
         --------
         >>> rotor = rotor_example()
         >>> evalues, evectors = rotor._eigen(0)
-        >>> evalues[0].imag
-        215.37072557293124
+        >>> evalues[0].imag # doctest: +ELLIPSIS
+        82.653...
         """
         if w is None:
             w = self.w
@@ -363,6 +365,73 @@ class Rotor(object):
         return evalues[idx], evectors[:, idx]
 
     def H(self, node, w, return_T=False):
+        r"""Calculates the H matrix for a given node and natural frequency.
+
+        The matrix H contains information about the whirl direction,
+        the orbit minor and major axis and the orbit inclination.
+        The matrix is calculated by :math:`H = T.T^T` where the
+        matrix T is constructed using the eigenvector corresponding
+        to the natural frequency of interest:
+
+        .. math::
+           :nowrap:
+
+           \begin{eqnarray}
+              \begin{bmatrix}
+              u(t)\\
+              v(t)
+              \end{bmatrix}
+              = \mathfrak{R}\Bigg(
+              \begin{bmatrix}
+              r_u e^{j\eta_u}\\
+              r_v e^{j\eta_v}
+              \end{bmatrix}\Bigg)
+              e^{j\omega_i t}
+              =
+              \begin{bmatrix}
+              r_u cos(\eta_u + \omega_i t)\\
+              r_v cos(\eta_v + \omega_i t)
+              \end{bmatrix}
+              = T
+              \begin{bmatrix}
+              cos(\omega_i t)\\
+              sin(\omega_i t)
+              \end{bmatrix}
+           \end{eqnarray}
+
+        Where :math:`r_u e^{j\eta_u}` e :math:`r_v e^{j\eta_v}` are the
+        elements of the *i*\th eigenvector, corresponding to the node and
+        natural frequency of interest (mode).
+
+        Parameters
+        ----------
+        node: int
+            Node for which the matrix H will be calculated.
+        w: int
+            Index corresponding to the natural frequency
+            of interest.
+        return_T: bool, optional
+            If True, returns the matrix and a dictionary with the
+            values for :math:`r_u, r_v, \eta_u, \eta_v`.
+
+            Default is false.
+
+        Returns
+        -------
+        kappa: dict
+            A dictionary with values for the natural frequency,
+            major axis, minor axis and kappa.
+
+        Examples
+        --------
+        >>> rotor = rotor_example()
+        >>> # H matrix for the 0th node
+        >>> rotor.H(0, 0) # doctest: +ELLIPSIS
+        array([[  2.46154806e-29,  -7.17353298e-18],
+               [ -7.17353298e-18,   2.11429917e-06]])
+
+
+        """
         # get vector of interest based on freqs
         vector = self.evectors[4 * node:4 * node + 2, w]
         # get translation sdofs for specified node for each mode
@@ -403,6 +472,7 @@ class Rotor(object):
             of interest.
         wd: bool
             If True, damping natural frequencies are used.
+
             Default is true.
 
         Returns
@@ -411,21 +481,18 @@ class Rotor(object):
             A dictionary with values for the natural frequency,
             major axis, minor axis and kappa.
 
-        Notes
-        -----
-        This function calculates the matrix
 
-        and the matrix H = T.T^T for a given node.
-        The eigenvalues of H correspond to the minor and
-        major axis of the orbit.
 
         Examples
         --------
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
-        >>> rotor.kappa_mode(0) # doctest: +ELLIPSIS
-        [array(0.0002477...), array(0.0002477...), array(0.0002477...)]
-
+        >>> # Major axes for node 0 and natural frequency (mode) 0.
+        >>> rotor.kappa(0, 0)['Major axes'] # doctest: +ELLIPSIS
+        array(0.00145...)
+        >>> # kappa for node 0 and natural frequency (mode) 0.
+        >>> rotor.kappa(2, 3)['kappa'] # doctest: +ELLIPSIS
+        array(8.7006...e-13)
 
         """
         if wd:
@@ -474,7 +541,7 @@ class Rotor(object):
         Values of kappa are evaluated for each node of the
         corresponding frequency mode.
 
-        Parametersbbb
+        Parameters
         ----------
         w: int
             Index corresponding to the natural frequency
@@ -491,7 +558,7 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
         >>> rotor.kappa_mode(0) # doctest: +ELLIPSIS
-        [array(0.000792...), array(0.000792...), array(0.000792...)]
+        [array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0)]
         """
         kappa_mode = [self.kappa(node, w)['kappa'] for node in self.nodes]
         return kappa_mode
@@ -520,32 +587,32 @@ def rotor_example():
     Examples
     --------
     >>> rotor = rotor_example()
-    >>> rotor.wd
-    array([  34.27731557,   34.27731557,   95.17859364,   95.17859364,
-            629.65276152,  629.6527618 ])
+    >>> np.round(rotor.wd[:4])
+    array([ 13.,  14.,  41.,  44.])
     """
 
     #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
-    le = 0.25
     i_d = 0
     o_d = 0.05
     E = 211e9
-    G = 81.2e9
+    Gs = 81.2e9
     rho = 7810
+    n = 6
+    nelem = [x for x in range(n)]
+    L = [0.25 for i in range(n)]
 
-    tim0 = ShaftElement(0, le, i_d, o_d, E, G, rho,
-                        shear_effects=True,
-                        rotary_inertia=True,
-                        gyroscopic=True)
-    tim1 = ShaftElement(1, le, i_d, o_d, E, G, rho,
-                        shear_effects=True,
-                        rotary_inertia=True,
-                        gyroscopic=True)
+    shaft_elem = [ShaftElement(n, l, i_d, o_d, E, Gs, rho,
+                               shear_effects=True,
+                               rotary_inertia=True,
+                               gyroscopic=True) for n, l in zip(nelem, L)]
 
-    shaft_elm = [tim0, tim1]
-    disk0 = DiskElement(1, rho, 0.07, 0.05, 0.28)
-    stf = 1e6
-    bearing0 = BearingElement(0, kxx=stf, kyy=stf, cxx=0, cyy=0)
-    bearing1 = BearingElement(2, kxx=stf, kyy=stf, cxx=0, cyy=0)
-    return Rotor(shaft_elm, [disk0], [bearing0, bearing1])
+    disk0 = DiskElement(2, rho, 0.07, 0.05, 0.28)
+    disk1 = DiskElement(4, rho, 0.07, 0.05, 0.35)
+
+    stfx = 1e6
+    stfy = 0.8e6
+    bearing0 = BearingElement(0, kxx=stfx, kyy=stfy, cxx=0)
+    bearing1 = BearingElement(6, kxx=stfx, kyy=stfy, cxx=0)
+
+    return Rotor(shaft_elem, [disk0, disk1], [bearing0, bearing1])
 
