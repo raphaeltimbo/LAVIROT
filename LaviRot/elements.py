@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.interpolate as interpolate
+from itertools import permutations
 
 
 __all__ = ["ShaftElement", "DiskElement", "BearingElement", "SealElement"]
@@ -14,7 +15,7 @@ class ShaftElement(object):
     coordinate vector:
 
     .. math:: [x_1, y_1, \alpha_1, \beta_1, x_2, y_2, \alpha_2, \beta_2]^T
-
+a
     Where :math:`\alpha_1` and :math:`\alpha_2` are the bending on the yz plane and
     :math:`\beta_1` and :math:`\beta_2` are the bending on the xz plane.
 
@@ -437,14 +438,32 @@ class BearingElement(object):
     #  TODO add speed as an argument
     #  TODO arguments should be lists related to speed
     #  TODO evaluate the use of pandas tables to display
+    #  TODO create tests to evaluate interpolation
+    #  TODO create tests for different cases of bearing instantiation
     def __init__(self, n,
                  kxx, cxx,
                  kyy=None, kxy=0, kyx=0,
                  cyy=None, cxy=0, cyx=0,
                  w=None):
 
-        if kyy is None: kyy = kxx
-        if cyy is None: cyy = cxx
+        if w is not None:
+            for arg in permutations([kxx, cxx, w], 2):
+                if arg[0].shape != arg[1].shape:
+                    raise Exception('kxx, cxx and w must have the same dimension')
+
+        if kyy is None:
+            kyy = kxx
+        if cyy is None:
+            cyy = cxx
+        # adjust array size to avoid error in interpolation
+        if kxy == 0:
+            kxy = 0*kxx
+        if kyx == 0:
+            kyx = 0*kxx
+        if cxy == 0:
+            cxy = 0*cxx
+        if cyx == 0:
+            cyx = 0*cxx
 
         args = {'kxx': kxx, 'cxx': cxx,
                 'kyy': kyy, 'kxy': kxy, 'kyx': kyx,
