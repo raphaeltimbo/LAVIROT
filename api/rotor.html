@@ -258,11 +258,11 @@ disk and bearing elements provided.</p>
 </table>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">K</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span>
-<span class="go">array([[ 46.69644273,   0.        ,   0.        ,   5.71205534],</span>
-<span class="go">       [  0.        ,  46.69644273,  -5.71205534,   0.        ],</span>
-<span class="go">       [  0.        ,  -5.71205534,   0.97294287,   0.        ],</span>
-<span class="go">       [  5.71205534,   0.        ,   0.        ,   0.97294287]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rotor</span><span class="o">.</span><span class="n">K</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span><span class="p">)</span>
+<span class="go">array([[ 47.,   0.,   0.,   6.],</span>
+<span class="go">       [  0.,  46.,  -6.,   0.],</span>
+<span class="go">       [  0.,  -6.,   1.,   0.],</span>
+<span class="go">       [  6.,   0.,   0.,   1.]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -327,11 +327,98 @@ disk and bearing elements provided.</p>
 </table>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">A</span><span class="p">()[</span><span class="mi">12</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-<span class="go">array([[  2.06299048e+08,  -0.00000000e+00],</span>
-<span class="go">       [ -0.00000000e+00,   2.06299048e+08],</span>
-<span class="go">       [  0.00000000e+00,   6.97351178e+09],</span>
-<span class="go">       [ -6.97351178e+09,  -0.00000000e+00]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rotor</span><span class="o">.</span><span class="n">A</span><span class="p">()[</span><span class="mi">50</span><span class="p">:</span><span class="mi">56</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+<span class="go">array([[     0.,  11110.],</span>
+<span class="go">       [-11106.,     -0.],</span>
+<span class="go">       [  -169.,      0.],</span>
+<span class="go">       [    -0.,   -169.],</span>
+<span class="go">       [    -0.,  10511.],</span>
+<span class="go">       [-10507.,     -0.]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.rotor.Rotor.H">
+<code class="descname">H</code><span class="sig-paren">(</span><em>node</em>, <em>w</em>, <em>return_T=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.H"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.H" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the H matrix for a given node and natural frequency.</p>
+<p>The matrix H contains information about the whirl direction,
+the orbit minor and major axis and the orbit inclination.
+The matrix is calculated by <img class="math" src="../_images/math/27dfb6dae3040c219b2743790d9bc5a424f1ea11.png" alt="H = T.T^T"/> where the
+matrix T is constructed using the eigenvector corresponding
+to the natural frequency of interest:</p>
+<div class="math">
+<p><img src="../_images/math/348c9535c92438fbe725a4841c82a55738cf91fc.png" alt="\begin{eqnarray}
+   \begin{bmatrix}
+   u(t)\\
+   v(t)
+   \end{bmatrix}
+   = \mathfrak{R}\Bigg(
+   \begin{bmatrix}
+   r_u e^{j\eta_u}\\
+   r_v e^{j\eta_v}
+   \end{bmatrix}\Bigg)
+   e^{j\omega_i t}
+   =
+   \begin{bmatrix}
+   r_u cos(\eta_u + \omega_i t)\\
+   r_v cos(\eta_v + \omega_i t)
+   \end{bmatrix}
+   = {\bf T}
+   \begin{bmatrix}
+   cos(\omega_i t)\\
+   sin(\omega_i t)
+   \end{bmatrix}
+\end{eqnarray}"/></p>
+</div><p>Where <img class="math" src="../_images/math/75ee201ba4be1158b05f3b95bd5405aceff9bb3b.png" alt="r_u e^{j\eta_u}"/> e <img class="math" src="../_images/math/d0e739317c192a94a6fa6665b6c4d46964f4a320.png" alt="r_v e^{j\eta_v}"/> are the
+elements of the <em>i</em>th eigenvector, corresponding to the node and
+natural frequency of interest (mode).</p>
+<div class="math">
+<p><img src="../_images/math/0f732d3fb6d2fa76c8bb647eae3e545ca5f01664.png" alt="{\bf T} =
+\begin{bmatrix}
+r_u cos(\eta_u) &amp; -r_u sin(\eta_u)\\
+r_u cos(\eta_u) &amp; -r_v sin(\eta_v)
+\end{bmatrix}"/></p>
+</div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>node: int</strong></p>
+<blockquote>
+<div><p>Node for which the matrix H will be calculated.</p>
+</div></blockquote>
+<p><strong>w: int</strong></p>
+<blockquote>
+<div><p>Index corresponding to the natural frequency
+of interest.</p>
+</div></blockquote>
+<p><strong>return_T: bool, optional</strong></p>
+<blockquote>
+<div><p>If True, returns the H matrix and a dictionary with the
+values for <img class="math" src="../_images/math/6b946f09ac312c7b1e6d25f1b41a657317ed825a.png" alt="r_u, r_v, \eta_u, \eta_v"/>.</p>
+<p>Default is false.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">H: array</p>
+<blockquote>
+<div><p>Matrix H.</p>
+</div></blockquote>
+<p>Tdic: dict</p>
+<blockquote class="last">
+<div><p>Dictionary with values for <img class="math" src="../_images/math/6b946f09ac312c7b1e6d25f1b41a657317ed825a.png" alt="r_u, r_v, \eta_u, \eta_v"/>.</p>
+<p>It will be returned only if return_T is True.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># H matrix for the 0th node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">H</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> 
+<span class="go">array([[  2.46154806e-29,  -7.17353298e-18],</span>
+<span class="go">       [ -7.17353298e-18,   2.11429917e-06]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -340,10 +427,16 @@ disk and bearing elements provided.</p>
 <dt id="LaviRot.rotor.Rotor.kappa">
 <code class="descname">kappa</code><span class="sig-paren">(</span><em>node</em>, <em>w</em>, <em>wd=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.kappa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.kappa" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates kappa for a given node and natural frequency.</p>
-<p>w is the the index of the natural frequency of interest</p>
+<p>w is the the index of the natural frequency of interest.
+The function calculates the orbit parameter <img class="math" src="../_images/math/dd95c55069c86910ffbe2f9833321d0034fd8036.png" alt="\kappa"/>:</p>
 <div class="math">
-<p><img src="../_images/math/6edfbaecd3189bda0c4b391eabedb661b07080f0.png" alt="[x_1, y_1, \alpha_1, \beta_1, x_2, y_2, \alpha_2, \beta_2]^T"/></p>
-</div><table class="docutils field-list" frame="void" rules="none">
+<p><img src="../_images/math/24898fdcd2c33572006a06955c96e1e691c47862.png" alt="\kappa = \pm \sqrt{\lambda_2 / \lambda_1}"/></p>
+</div><p>Where <img class="math" src="../_images/math/efe89e133b7203625dba0a458100bbc33a588850.png" alt="\sqrt{\lambda_1}"/> is the length of the semiminor axes
+and <img class="math" src="../_images/math/6cf48d8d78eb8d6ac96c3dae78869cb903fdbb41.png" alt="\sqrt{\lambda_2}"/> is the length of the semimajor axes.</p>
+<p>If <img class="math" src="../_images/math/1b3419fa7b7c7cd8c7c176da44a589ef82581eb4.png" alt="\kappa = \pm 1"/>, the orbit is circular.</p>
+<p>If <img class="math" src="../_images/math/dd95c55069c86910ffbe2f9833321d0034fd8036.png" alt="\kappa"/> is positive we have a forward rotating orbit
+and if it is negative we have a backward rotating orbit.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -358,8 +451,8 @@ of interest.</p>
 </div></blockquote>
 <p><strong>wd: bool</strong></p>
 <blockquote>
-<div><p>If True, damping natural frequencies are used.
-Default is true.</p>
+<div><p>If True, damping natural frequencies are used.</p>
+<p>Default is true.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -372,16 +465,15 @@ major axis, minor axis and kappa.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Notes</p>
-<p>This function calculates the matrix</p>
-<p>and the matrix H = T.T^T for a given node.
-The eigenvalues of H correspond to the minor and
-major axis of the orbit.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># kappa for each node of the first natural frequency</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa_mode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> 
-<span class="go">[array(0.0002477...), array(0.0002477...), array(0.0002477...)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Major axes for node 0 and natural frequency (mode) 0.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;Major axes&#39;</span><span class="p">]</span> 
+<span class="go">array(0.00145...)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># kappa for node 2 and natural frequency (mode) 3.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)[</span><span class="s1">&#39;kappa&#39;</span><span class="p">]</span> 
+<span class="go">array(8.7006...e-13)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -393,16 +485,18 @@ major axis of the orbit.</p>
 the natural frequency of interest.
 Values of kappa are evaluated for each node of the
 corresponding frequency mode.</p>
-<dl class="docutils">
-<dt>w: int</dt>
-<dd>Index corresponding to the natural frequency
-of interest.</dd>
-</dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">kappa_mode: list</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>w: int</strong></p>
+<blockquote>
+<div><p>Index corresponding to the natural frequency
+of interest.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">kappa_mode: list</p>
 <blockquote class="last">
 <div><p>A list with the value of kappa for each node related
 to the mode/natural frequency of interest.</p>
@@ -415,7 +509,7 @@ to the mode/natural frequency of interest.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># kappa for each node of the first natural frequency</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa_mode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> 
-<span class="go">[array(0.000792...), array(0.000792...), array(0.000792...)]</span>
+<span class="go">[array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0)]</span>
 </pre></div>
 </div>
 </dd></dl>
