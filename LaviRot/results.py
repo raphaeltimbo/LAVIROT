@@ -13,6 +13,10 @@ from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap
 from mpl_toolkits.mplot3d import Axes3D
 
+
+__all__ = ["plot_rotor", "MAC", "MAC_modes", "bearing_parameters"]
+
+
 c_pal = {'red': '#C93C3C',
          'blue': '#0760BA',
          'green': '#2ECC71',
@@ -304,8 +308,33 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1]):
 
     return fig
 
-    def bearing_parameters(bearing):
-        pass
+
+def bearing_parameters(bearing):
+    mpl.rcParams.update(mpl.rc_params_from_file(fn))
+    fig, ax = plt.subplots(2, sharex=True)
+
+    for a in ax:
+        a.ticklabel_format(style='sci',
+                           axis='both',
+                           scilimits=(0, 0))
+
+    ax[0].set_ylabel(r'Bearing Stiffness ($N/m$)')
+    ax[1].set_ylabel(r'Bearing Damping ($Ns/m$)')
+    ax[1].set_xlabel(r'Speed (RPM)')
+
+    ax[0].plot(bearing.w, bearing.kxx(bearing.w))
+    ax[0].plot(bearing.w, bearing.kyy(bearing.w))
+    ax[0].plot(bearing.w, bearing.kxy(bearing.w))
+    ax[0].plot(bearing.w, bearing.kyx(bearing.w))
+
+    ax[1].plot(bearing.w, bearing.cxx(bearing.w))
+    ax[1].plot(bearing.w, bearing.cyy(bearing.w))
+    ax[1].plot(bearing.w, bearing.cxy(bearing.w))
+    ax[1].plot(bearing.w, bearing.cyx(bearing.w))
+
+    return fig
+
+
 
 
 
