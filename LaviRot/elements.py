@@ -456,14 +456,14 @@ class BearingElement(object):
         if cyy is None:
             cyy = cxx
         # adjust array size to avoid error in interpolation
-        if kxy == 0:
-            kxy = 0*kxx
-        if kyx == 0:
-            kyx = 0*kxx
-        if cxy == 0:
-            cxy = 0*cxx
-        if cyx == 0:
-            cyx = 0*cxx
+        if isinstance(kxy, (int, float)):
+            kxy = [kxy for i in range(len(w))]
+        if isinstance(kyx, (int, float)):
+            kyx = [kyx for i in range(len(w))]
+        if isinstance(cxy, (int, float)):
+            cxy = [cxy for i in range(len(w))]
+        if isinstance(cyx, (int, float)):
+            cyx = [cyx for i in range(len(w))]
 
         args = {'kxx': kxx, 'cxx': cxx,
                 'kyy': kyy, 'kxy': kxy, 'kyx': kyx,

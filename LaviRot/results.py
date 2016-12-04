@@ -14,7 +14,11 @@ from matplotlib.colors import ListedColormap
 from mpl_toolkits.mplot3d import Axes3D
 
 
-__all__ = ["plot_rotor", "MAC", "MAC_modes", "bearing_parameters"]
+__all__ = ["plot_rotor",
+           "MAC",
+           "MAC_modes",
+           "campbell",
+           "bearing_parameters"]
 
 
 c_pal = {'red': '#C93C3C',
@@ -313,6 +317,8 @@ def bearing_parameters(bearing):
     mpl.rcParams.update(mpl.rc_params_from_file(fn))
     fig, ax = plt.subplots(2, sharex=True)
 
+    w = np.linspace(0, 1.3*bearing.w[-1], 1000)
+
     for a in ax:
         a.ticklabel_format(style='sci',
                            axis='both',
@@ -320,17 +326,17 @@ def bearing_parameters(bearing):
 
     ax[0].set_ylabel(r'Bearing Stiffness ($N/m$)')
     ax[1].set_ylabel(r'Bearing Damping ($Ns/m$)')
-    ax[1].set_xlabel(r'Speed (RPM)')
+    ax[1].set_xlabel(r'Speed (Hz)')
 
-    ax[0].plot(bearing.w, bearing.kxx(bearing.w))
-    ax[0].plot(bearing.w, bearing.kyy(bearing.w))
-    ax[0].plot(bearing.w, bearing.kxy(bearing.w))
-    ax[0].plot(bearing.w, bearing.kyx(bearing.w))
+    ax[0].plot(w, bearing.kxx(w))
+    ax[0].plot(w, bearing.kyy(w))
+    ax[0].plot(w, bearing.kxy(w))
+    ax[0].plot(w, bearing.kyx(w))
 
-    ax[1].plot(bearing.w, bearing.cxx(bearing.w))
-    ax[1].plot(bearing.w, bearing.cyy(bearing.w))
-    ax[1].plot(bearing.w, bearing.cxy(bearing.w))
-    ax[1].plot(bearing.w, bearing.cyx(bearing.w))
+    ax[1].plot(w, bearing.cxx(w))
+    ax[1].plot(w, bearing.cyy(w))
+    ax[1].plot(w, bearing.cxy(w))
+    ax[1].plot(w, bearing.cyx(w))
 
     return fig
 
