@@ -451,6 +451,10 @@ class BearingElement(object):
                 if arg[0].shape != arg[1].shape:
                     raise Exception('kxx, cxx and w must have the same dimension')
 
+        # set values for speed so that interpolation can be created
+        if w is None:
+            w = np.linspace(0, 10000, 4)
+
         if kyy is None:
             kyy = kxx
         if cyy is None:
@@ -470,11 +474,6 @@ class BearingElement(object):
                 'cyy': cyy, 'cxy': cxy, 'cyx': cyx}
 
         self.n = n
-
-        # set values for speed so that interpolation can be created
-        if w is None:
-            w = np.linspace(0, 10000, 4)
-
         self.w = w
 
         for arg, val in args.items():
