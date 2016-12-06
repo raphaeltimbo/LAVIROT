@@ -258,7 +258,7 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1]):
         rotor.w = w1
         x_w1 = np.full_like(range(freqs), w1/(2*np.pi))  # rad -> hz
         y_wd1 = rotor.wd[:freqs]
-        points1 = np.array([x_w1, y_wn1]).T.reshape(-1, 1, 2)
+        points1 = np.array([x_w1, y_wd1]).T.reshape(-1, 1, 2)
 
         new_segment = np.concatenate([points0, points1], axis=1)
 
@@ -267,7 +267,7 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1]):
         else:
             segments = np.concatenate([segments, new_segment])
 
-        whirl_w = [whirl(rotor.kappa_mode(wn)) for wn in range(freqs)]
+        whirl_w = [whirl(rotor.kappa_mode(wd)) for wd in range(freqs)]
         z.append([whirl_to_cmap(i) for i in whirl_w])
 
     z = np.array(z).flatten()
