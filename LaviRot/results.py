@@ -247,17 +247,17 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1]):
         if not rotor.w == w0:
             rotor.w = w0
 
-        # define x as the current speed and y as each wn
+        # define x as the current speed and y as each wd
         x_w0 = np.full_like(range(freqs), w0/(2*np.pi))  # rad -> hz
-        y_wn0 = rotor.wn[:freqs]
+        y_wd0 = rotor.wd[:freqs]
 
         # generate points for the first speed
-        points0 = np.array([x_w0, y_wn0]).T.reshape(-1, 1, 2)
+        points0 = np.array([x_w0, y_wd0]).T.reshape(-1, 1, 2)
 
         # go to the next speed
         rotor.w = w1
         x_w1 = np.full_like(range(freqs), w1/(2*np.pi))  # rad -> hz
-        y_wn1 = rotor.wn[:freqs]
+        y_wd1 = rotor.wd[:freqs]
         points1 = np.array([x_w1, y_wn1]).T.reshape(-1, 1, 2)
 
         new_segment = np.concatenate([points0, points1], axis=1)
@@ -341,9 +341,4 @@ def bearing_parameters(bearing):
     return fig
 
 
-
-
-
-
 # TODO critical speed map
-
