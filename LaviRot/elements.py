@@ -425,8 +425,7 @@ class BearingElement(object):
         Cross coupled damping in the y direction.
         (defaults to 0)
     w: array, optional
-        Array with the speeds.
-
+        Array with the speeds (rad/s).
 
     Examples
     --------
