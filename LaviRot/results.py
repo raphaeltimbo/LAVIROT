@@ -326,7 +326,7 @@ def bearing_parameters(bearing):
 
     ax[0].set_ylabel(r'Bearing Stiffness ($N/m$)')
     ax[1].set_ylabel(r'Bearing Damping ($Ns/m$)')
-    ax[1].set_xlabel(r'Speed (Hz)')
+    ax[1].set_xlabel(r'Speed (rad/s)')
 
     ax[0].plot(w, bearing.kxx(w))
     ax[0].plot(w, bearing.kyy(w))
