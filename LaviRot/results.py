@@ -237,10 +237,6 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1]):
 
     z = []  # will contain values for each whirl (0, 0.5, 1)
 
-    # input to rotor.w must be in rad/s
-    # so we change from  hertz to rad/s
-    speed_rad = speed_rad * 2 * np.pi
-
     for w0, w1 in (zip(speed_rad[:-1], speed_rad[1:])):
         # define shaft speed
         # check rotor state to avoid recalculating eigenvalues
@@ -256,7 +252,7 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1]):
 
         # go to the next speed
         rotor.w = w1
-        x_w1 = np.full_like(range(freqs), w1)  # rad -> hz
+        x_w1 = np.full_like(range(freqs), w1)
         y_wd1 = rotor.wd[:freqs]
         points1 = np.array([x_w1, y_wd1]).T.reshape(-1, 1, 2)
 
