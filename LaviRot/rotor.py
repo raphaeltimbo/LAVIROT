@@ -35,9 +35,9 @@ class Rotor(object):
     evectors : array
         Rotor's eigenvectors.
     wn : array
-        Rotor's natural frequencies in Hz.
+        Rotor's natural frequencies in rad/s.
     wd : array
-        Rotor's damped natural frequencies in Hz.
+        Rotor's damped natural frequencies in rad/s.
 
     Examples
     --------
@@ -110,8 +110,8 @@ class Rotor(object):
 
     def _calc_system(self):
         self.evalues, self.evectors = self._eigen(self._w)
-        self.wn = (np.absolute(self.evalues)/(2*np.pi))[:self.ndof//2]
-        self.wd = (np.imag(self.evalues)/(2*np.pi))[:self.ndof//2]
+        self.wn = (np.absolute(self.evalues))[:self.ndof//2]
+        self.wd = (np.imag(self.evalues))[:self.ndof//2]
 
     @property
     def w(self):
