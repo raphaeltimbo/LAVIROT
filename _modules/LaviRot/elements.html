@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>LaviRot.elements &#8212; LaviRot 0.1b documentation</title>
+    <title>LaviRot.elements &#8212; LaviRot 0.1.2b documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.1b',
+        VERSION:     '0.1.2b',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="LaviRot 0.1b documentation" href="../../index.html" />
+    <link rel="top" title="LaviRot 0.1.2b documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -51,7 +51,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           LaviRot</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1b</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.2b</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -125,6 +125,7 @@
   <h1>Source code for LaviRot.elements</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy.interpolate</span> <span class="k">as</span> <span class="nn">interpolate</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">permutations</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ShaftElement&quot;</span><span class="p">,</span> <span class="s2">&quot;DiskElement&quot;</span><span class="p">,</span> <span class="s2">&quot;BearingElement&quot;</span><span class="p">,</span> <span class="s2">&quot;SealElement&quot;</span><span class="p">]</span>
@@ -549,8 +550,7 @@
 <span class="sd">        Cross coupled damping in the y direction.</span>
 <span class="sd">        (defaults to 0)</span>
 <span class="sd">    w: array, optional</span>
-<span class="sd">        Array with the speeds.</span>
-
+<span class="sd">        Array with the speeds (rad/s).</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -562,24 +562,43 @@
     <span class="c1">#  TODO add speed as an argument</span>
     <span class="c1">#  TODO arguments should be lists related to speed</span>
     <span class="c1">#  TODO evaluate the use of pandas tables to display</span>
+    <span class="c1">#  TODO create tests to evaluate interpolation</span>
+    <span class="c1">#  TODO create tests for different cases of bearing instantiation</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span>
                  <span class="n">kxx</span><span class="p">,</span> <span class="n">cxx</span><span class="p">,</span>
                  <span class="n">kyy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kxy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kyx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                  <span class="n">cyy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cxy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cyx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                  <span class="n">w</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-        <span class="k">if</span> <span class="n">kyy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">kyy</span> <span class="o">=</span> <span class="n">kxx</span>
-        <span class="k">if</span> <span class="n">cyy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="n">cyy</span> <span class="o">=</span> <span class="n">cxx</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">([</span><span class="n">kxx</span><span class="p">,</span> <span class="n">cxx</span><span class="p">,</span> <span class="n">w</span><span class="p">],</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;kxx, cxx and w must have the same dimension&#39;</span><span class="p">)</span>
+
+        <span class="c1"># set values for speed so that interpolation can be created</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kyy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kyy</span> <span class="o">=</span> <span class="n">kxx</span>
+        <span class="k">if</span> <span class="n">cyy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cyy</span> <span class="o">=</span> <span class="n">cxx</span>
+        <span class="c1"># adjust array size to avoid error in interpolation</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kxy</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">kxy</span> <span class="o">=</span> <span class="p">[</span><span class="n">kxy</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">))]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kyx</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">kyx</span> <span class="o">=</span> <span class="p">[</span><span class="n">kyx</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">))]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cxy</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">cxy</span> <span class="o">=</span> <span class="p">[</span><span class="n">cxy</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">))]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cyx</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">cyx</span> <span class="o">=</span> <span class="p">[</span><span class="n">cyx</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">))]</span>
 
         <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;kxx&#39;</span><span class="p">:</span> <span class="n">kxx</span><span class="p">,</span> <span class="s1">&#39;cxx&#39;</span><span class="p">:</span> <span class="n">cxx</span><span class="p">,</span>
                 <span class="s1">&#39;kyy&#39;</span><span class="p">:</span> <span class="n">kyy</span><span class="p">,</span> <span class="s1">&#39;kxy&#39;</span><span class="p">:</span> <span class="n">kxy</span><span class="p">,</span> <span class="s1">&#39;kyx&#39;</span><span class="p">:</span> <span class="n">kyx</span><span class="p">,</span>
                 <span class="s1">&#39;cyy&#39;</span><span class="p">:</span> <span class="n">cyy</span><span class="p">,</span> <span class="s1">&#39;cxy&#39;</span><span class="p">:</span> <span class="n">cxy</span><span class="p">,</span> <span class="s1">&#39;cyx&#39;</span><span class="p">:</span> <span class="n">cyx</span><span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
-
-        <span class="c1"># set values for speed so that interpolation can be created</span>
-        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span>
 
         <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>

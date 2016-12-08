@@ -17,9 +17,8 @@ From their `website <http://jupyter.org/>`__ :
 
 There is a lot of material to learn Python using the jupyter notebook.
 Basically, these are interactive books, where you can read some
-explanation about a code and get the chance to immediately execute
-that code, change things to see what happens and interact with the
-results. It is great for learning.
+explanation about a code and get the chance to immediately execute that
+code, change things to see what happens and interact with the
 
 You can see the basics for jupyter notebooks
 `here <https://github.com/numerical-mooc/numerical-mooc/blob/master/lessons/00_getting_started/00_03_Intro_to_Jupyter_notebook.md>`__.
