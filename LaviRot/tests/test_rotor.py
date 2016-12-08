@@ -352,23 +352,23 @@ def test_evects_not_sorted_rotor3(rotor3):
 
 
 def test_kappa_rotor3(rotor3):
-    assert_allclose(rotor3.kappa(0, 0)['Frequency'], 13.154639, rtol=1e-3)
+    assert_allclose(rotor3.kappa(0, 0)['Frequency'], 82.653037, rtol=1e-3)
     assert_allclose(rotor3.kappa(0, 0)['Major axes'], 0.001454062985920231, rtol=1e-3)
     assert_allclose(rotor3.kappa(0, 0)['Minor axes'], 2.0579515874459978e-11, rtol=1e-3, atol=1e-6)
     assert_allclose(rotor3.kappa(0, 0)['kappa'], -1.415311171090584e-08, rtol=1e-3, atol=1e-6)
 
     rotor3.w = 2000
-    assert_allclose(rotor3.kappa(0, 0)['Frequency'], 12.437916, rtol=1e-3)
+    assert_allclose(rotor3.kappa(0, 0)['Frequency'], 78.149731, rtol=1e-3)
     assert_allclose(rotor3.kappa(0, 0)['Major axes'], 0.0012684572844586523, rtol=1e-3)
     assert_allclose(rotor3.kappa(0, 0)['Minor axes'], 0.0006038839712968117, rtol=1e-3)
     assert_allclose(rotor3.kappa(0, 0)['kappa'], -0.4760774987819437, rtol=1e-3)
 
-    assert_allclose(rotor3.kappa(0, 1)['Frequency'], 14.018575802002003, rtol=1e-3)
+    assert_allclose(rotor3.kappa(0, 1)['Frequency'], 88.08130950672094, rtol=1e-3)
     assert_allclose(rotor3.kappa(0, 1)['Major axes'], 0.0009748776471415336, rtol=1e-3)
     assert_allclose(rotor3.kappa(0, 1)['Minor axes'], 0.0009175930931051902, rtol=1e-3)
     assert_allclose(rotor3.kappa(0, 1)['kappa'], 0.9412392373501342, rtol=1e-3)
 
-    assert_allclose(rotor3.kappa(1, 1)['Frequency'], 14.018575802002003, rtol=1e-3)
+    assert_allclose(rotor3.kappa(1, 1)['Frequency'], 88.08130950672094, rtol=1e-3)
     assert_allclose(rotor3.kappa(1, 1)['Major axes'], 0.0018353712883928638, rtol=1e-3)
     assert_allclose(rotor3.kappa(1, 1)['Minor axes'], 0.0015705146844725273, rtol=1e-3)
     assert_allclose(rotor3.kappa(1, 1)['kappa'], 0.8556931746751595, rtol=1e-3)

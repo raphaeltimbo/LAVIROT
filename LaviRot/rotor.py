@@ -65,7 +65,7 @@ class Rotor(object):
     >>> bearing1 = BearingElement(2, kxx=stf, cxx=0)
     >>> rotor = Rotor(shaft_elm, [disk0], [bearing0, bearing1])
     >>> rotor.wd[0] # doctest: +ELLIPSIS
-    34.2773...
+    215.3707...
     """
 
     def __init__(self, shaft_elements, disk_elements, bearing_seal_elements, w=0):
@@ -607,7 +607,7 @@ def rotor_example():
     --------
     >>> rotor = rotor_example()
     >>> np.round(rotor.wd[:4])
-    array([ 13.,  14.,  41.,  44.])
+    array([  83.,   87.,  255.,  274.])
     """
 
     #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
