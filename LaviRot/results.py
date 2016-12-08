@@ -230,7 +230,7 @@ def whirl_to_cmap(whirl):
         return 0.5
 
 
-def campbell(rotor, speed_hz, freqs=6, mult=[1]):
+def campbell(rotor, speed_rad, freqs=6, mult=[1]):
     #  TODO mult will be the harmonics for interest e.g., 1x, 2x etc.
     mpl.rcParams.update(mpl.rc_params_from_file(fn))
     rotor_state_speed = rotor.w
@@ -239,7 +239,7 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1]):
 
     # input to rotor.w must be in rad/s
     # so we change from  hertz to rad/s
-    speed_rad = speed_hz*2*np.pi
+    speed_rad = speed_rad * 2 * np.pi
 
     for w0, w1 in (zip(speed_rad[:-1], speed_rad[1:])):
         # define shaft speed
@@ -248,7 +248,7 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1]):
             rotor.w = w0
 
         # define x as the current speed and y as each wd
-        x_w0 = np.full_like(range(freqs), w0/(2*np.pi))  # rad -> hz
+        x_w0 = np.full_like(range(freqs), w0)
         y_wd0 = rotor.wd[:freqs]
 
         # generate points for the first speed
@@ -256,7 +256,7 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1]):
 
         # go to the next speed
         rotor.w = w1
-        x_w1 = np.full_like(range(freqs), w1/(2*np.pi))  # rad -> hz
+        x_w1 = np.full_like(range(freqs), w1)  # rad -> hz
         y_wd1 = rotor.wd[:freqs]
         points1 = np.array([x_w1, y_wd1]).T.reshape(-1, 1, 2)
 
@@ -282,17 +282,17 @@ def campbell(rotor, speed_hz, freqs=6, mult=[1]):
 
     # plot harmonics in hertz
     for m in mult:
-        ax.plot(speed_hz, m*speed_hz,
-                 color=c_pal['green2'],
-                 linestyle='dashed')
+        ax.plot(speed_rad, m * speed_rad,
+                color=c_pal['green2'],
+                linestyle='dashed')
 
     # axis limits
-    ax.set_xlim(0, max(speed_hz))
-    ax.set_ylim(0, max(max(mult)*speed_hz))
+    ax.set_xlim(0, max(speed_rad))
+    ax.set_ylim(0, max(max(mult) * speed_rad))
 
     # legend and title
-    ax.set_xlabel(r'Rotor speed ($Hz$)')
-    ax.set_ylabel(r'Damped natural frequencies ($Hz$)')
+    ax.set_xlabel(r'Rotor speed ($rad/s$)')
+    ax.set_ylabel(r'Damped natural frequencies ($rad/s$)')
 
     forward_label = mpl.lines.Line2D([], [],
                                      color=c_pal['blue'],
