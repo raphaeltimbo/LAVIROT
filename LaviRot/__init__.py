@@ -11,4 +11,4 @@ from .results import *
 
 # TODO add setup.py
 
-__version__ = '0.1.1b'
+__version__ = '0.1.2b'
