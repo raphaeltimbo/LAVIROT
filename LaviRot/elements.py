@@ -15,7 +15,7 @@ class ShaftElement(object):
     coordinate vector:
 
     .. math:: [x_1, y_1, \alpha_1, \beta_1, x_2, y_2, \alpha_2, \beta_2]^T
-a
+
     Where :math:`\alpha_1` and :math:`\alpha_2` are the bending on the yz plane and
     :math:`\beta_1` and :math:`\beta_2` are the bending on the xz plane.
 
