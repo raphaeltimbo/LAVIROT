@@ -5,6 +5,7 @@ Compressor
 .. code:: python
 
     from LaviRot import *
+    import numpy as np
     %matplotlib inline
 
 For this example we will consider a compressor with shaft and impellers
@@ -113,7 +114,7 @@ analyze.
 
 .. code:: python
 
-    speed = np.linspace(0, 200, 10)
+    speed = np.linspace(0, 1500, 10)
 
 Now we can call the :ref:`campbell` function with mult=[1, 2] to plot 1x and 2x the speed.
 

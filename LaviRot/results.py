@@ -231,6 +231,7 @@ def whirl_to_cmap(whirl):
 
 
 def campbell(rotor, speed_rad, freqs=6, mult=[1]):
+    #  TODO docstrinc
     #  TODO mult will be the harmonics for interest e.g., 1x, 2x etc.
     mpl.rcParams.update(mpl.rc_params_from_file(fn))
     rotor_state_speed = rotor.w
