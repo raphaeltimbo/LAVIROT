@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Rotor &#8212; LaviRot 0.1b documentation</title>
+    <title>Rotor &#8212; LaviRot 0.1.2b documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1b',
+        VERSION:     '0.1.2b',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="LaviRot 0.1b documentation" href="../index.html" />
+    <link rel="top" title="LaviRot 0.1.2b documentation" href="../index.html" />
     <link rel="up" title="API" href="index.html" />
     <link rel="next" title="Results" href="results.html" />
     <link rel="prev" title="Bearing Element" href="elements.BearingElement.html" />
@@ -53,7 +53,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           LaviRot</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1b</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.2b</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -196,14 +196,14 @@ disk and bearing elements provided.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bearing1</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">kxx</span><span class="o">=</span><span class="n">stf</span><span class="p">,</span> <span class="n">cxx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">Rotor</span><span class="p">(</span><span class="n">shaft_elm</span><span class="p">,</span> <span class="p">[</span><span class="n">disk0</span><span class="p">],</span> <span class="p">[</span><span class="n">bearing0</span><span class="p">,</span> <span class="n">bearing1</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">wd</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
-<span class="go">34.2773...</span>
+<span class="go">215.3707...</span>
 </pre></div>
 </div>
 <p class="rubric">Attributes</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="14%" />
-<col width="86%" />
+<col width="13%" />
+<col width="87%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>evalues</td>
@@ -213,10 +213,10 @@ disk and bearing elements provided.</p>
 <td>(array) Rotor&#8217;s eigenvectors.</td>
 </tr>
 <tr class="row-odd"><td>wn</td>
-<td>(array) Rotor&#8217;s natural frequencies in Hz.</td>
+<td>(array) Rotor&#8217;s natural frequencies in rad/s.</td>
 </tr>
 <tr class="row-even"><td>wd</td>
-<td>(array) Rotor&#8217;s damped natural frequencies in Hz.</td>
+<td>(array) Rotor&#8217;s damped natural frequencies in rad/s.</td>
 </tr>
 </tbody>
 </table>

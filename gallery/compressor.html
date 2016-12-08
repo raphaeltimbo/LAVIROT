@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Compressor &#8212; LaviRot 0.1b documentation</title>
+    <title>Compressor &#8212; LaviRot 0.1.2b documentation</title>
     
     <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1b',
+        VERSION:     '0.1.2b',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="LaviRot 0.1b documentation" href="../index.html" />
+    <link rel="top" title="LaviRot 0.1.2b documentation" href="../index.html" />
     <link rel="up" title="Examples Gallery" href="index.html" />
     <link rel="next" title="References" href="../zreferences.html" />
     <link rel="prev" title="Examples Gallery" href="index.html" />
@@ -53,7 +53,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           LaviRot</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1b</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.2b</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -139,6 +139,7 @@
   <div class="section" id="compressor">
 <h1>Compressor<a class="headerlink" href="#compressor" title="Permalink to this headline">¶</a></h1>
 <div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">LaviRot</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 </pre></div>
 </div>
@@ -221,7 +222,7 @@ len(L)).</p>
 <p>Now we are going to check the natural frequencies using the Campbell
 diagram. First we need to define the speed range that we want to
 analyze.</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1500</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now we can call the <a class="reference internal" href="../api/results.html#campbell"><span class="std std-ref">Campbell</span></a> function with mult=[1, 2] to plot 1x and 2x the speed.</p>
