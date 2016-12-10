@@ -142,3 +142,52 @@ def test_gyroscopic_matrix_disk(disk):
 
 # TODO add tests for bearing elements
 
+@pytest.fixture
+def bearing0():
+    Kxx_bearing = np.array([8.5e+07, 1.1e+08, 1.3e+08, 1.6e+08, 1.8e+08,
+                           2.0e+08, 2.3e+08, 2.5e+08, 2.6e+08])
+    Kyy_bearing = np.array([9.2e+07, 1.1e+08, 1.4e+08, 1.6e+08, 1.9e+08,
+                            2.1e+08, 2.3e+08, 2.5e+08, 2.6e+08])
+    Cxx_bearing = np.array([226837, 211247, 197996, 185523, 174610,
+                            163697, 153563, 144209, 137973])
+    Cyy_bearing = np.array([235837, 211247, 197996, 185523, 174610,
+                            163697, 153563, 144209, 137973])
+    wb = np.array([314.2, 418.9, 523.6, 628.3, 733.,
+                   837.8, 942.5, 1047.2, 1151.9])
+    bearing0 = BearingElement(4,
+                              kxx=Kxx_bearing,
+                              kyy=Kyy_bearing,
+                              cxx=Cxx_bearing,
+                              cyy=Cyy_bearing,
+                              w=wb)
+    return bearing0
+
+
+def test_bearing_interpol_kxx(bearing0):
+    assert_allclose(bearing0.kxx(314.2), 8.5e7)
+    assert_allclose(bearing0.kxx(1151.9), 2.6e8)
+
+
+def test_bearing_interpol_kyy(bearing0):
+    assert_allclose(bearing0.kyy(314.2), 9.2e7)
+    assert_allclose(bearing0.kyy(1151.9), 2.6e8)
+
+
+def test_bearing_interpol_cxx(bearing0):
+    assert_allclose(bearing0.cxx(314.2), 226837, rtol=1e5)
+    assert_allclose(bearing0.cxx(1151.9), 137973, rtol=1e5)
+
+
+def test_bearing_interpol_cyy(bearing0):
+    assert_allclose(bearing0.kxx(314.2), 235837, rtol=1e5)
+    assert_allclose(bearing0.kxx(1151.9), 2.6e8, rtol=1e5)
+
+
+def test_bearing_error1():
+    speed = np.linspace(0, 10000, 5)
+    kx = 1e8 * speed
+    cx = 1e8 * speed
+    with pytest.raises(Exception) as excinfo:
+        BearingElement(-1, kxx=kx, cxx=cx)
+    assert ('w should be an array with'
+            ' the parameters dimension') in str(excinfo.value)

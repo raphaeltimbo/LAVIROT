@@ -445,6 +445,8 @@ class BearingElement(object):
                  cyy=None, cxy=0, cyx=0,
                  w=None):
 
+        # check for args consistency
+
         if w is not None:
             for arg in permutations([kxx, cxx, w], 2):
                 if arg[0].shape != arg[1].shape:
@@ -452,6 +454,12 @@ class BearingElement(object):
 
         # set values for speed so that interpolation can be created
         if w is None:
+            for arg in [kxx, cxx,
+                        kyy, kxy, kyx,
+                        cyy, cxy, cyx]:
+                if isinstance(arg, np.ndarray):
+                    raise Exception('w should be an array with'
+                                    ' the parameters dimension')
             w = np.linspace(0, 10000, 4)
 
         if kyy is None:
