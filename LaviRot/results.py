@@ -29,7 +29,7 @@ c_pal = {'red': '#C93C3C',
          'grey': '#2D2D2D',
          'green2': '#08A4AF'}
 
-fn = os.path.join(os.path.dirname(__file__), r'styles/matplotlibrc')
+fn = os.path.join(os.path.dirname(__file__), 'styles', 'matplotlibrc')
 
 
 def plot_rotor(rotor):
