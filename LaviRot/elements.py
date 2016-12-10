@@ -446,7 +446,6 @@ class BearingElement(object):
                  w=None):
 
         # check for args consistency
-
         if w is not None:
             for arg in permutations([kxx, cxx, w], 2):
                 if arg[0].shape != arg[1].shape:
