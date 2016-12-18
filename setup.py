@@ -2,7 +2,7 @@
 from setuptools import setup
 
 setup(name='LaviRot',
-      version='0.1.3b',
+      version='0.1.4b',
       description='LaviRot',
       author='Lavi',
       author_email='raphaelts@gmail.com',
