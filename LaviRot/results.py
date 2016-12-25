@@ -230,7 +230,40 @@ def whirl_to_cmap(whirl):
         return 0.5
 
 
-def campbell(rotor, speed_rad, freqs=6, mult=[1]):
+def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True):
+    r"""Calculates the Campbell diagram.
+
+    This function will calculate the damped natural frequencies
+    for a speed range.
+
+    Parameters
+    ----------
+    rotor: Rotor instance
+        Rotor instance that will be used for calculating the
+        Campbell diagram.
+    speed_rad: array
+        Array with the speed range in rad/s.
+    freqs: int, optional
+        Number of frequencies that will be calculated.
+        Default is 6.
+    mult: list, optional
+        List withe the harmonics to be plotted.
+        The default is to plot 1x.
+    plot: bool, optional
+        If the campbell will be plotted.
+        If plot=False, points for the Campbell will be returned.
+
+
+    Returns
+    -------
+    points: array
+        Array with the natural frequencies corresponding to each speed
+         of the speed_rad array. It will be returned if plot=False.
+
+    Examples
+    --------
+
+    """
     #  TODO docstrinc
     #  TODO mult will be the harmonics for interest e.g., 1x, 2x etc.
     mpl.rcParams.update(mpl.rc_params_from_file(fn))
