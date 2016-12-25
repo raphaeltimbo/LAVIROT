@@ -86,7 +86,7 @@ def plot_rotor(rotor):
     # plot shaft elements
     for sh_elm in rotor.shaft_elements:
         position_u = [rotor.nodes_pos[sh_elm.n], sh_elm.i_d]  # upper
-        position_l = [rotor.nodes_pos[sh_elm.n], -sh_elm.o_d + sh_elm.i_d]  # lower
+        position_l = [rotor.nodes_pos[sh_elm.n], -sh_elm.o_d]  # lower
         width = sh_elm.L
         height = sh_elm.o_d - sh_elm.i_d
 
