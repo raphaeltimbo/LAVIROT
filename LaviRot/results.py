@@ -12,6 +12,7 @@ import numpy as np
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap
 from mpl_toolkits.mplot3d import Axes3D
+from LaviRot.rotor import rotor_example
 
 
 __all__ = ["plot_rotor",
@@ -262,7 +263,13 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True):
 
     Examples
     --------
-
+    >>> rotor1 = rotor_example()
+    >>> speed = np.linspace(0, 400, 101)
+    >>> camp = campbell(rotor1, speed, plot=False)
+    >>> np.round(camp[:, 0], 1) #  damped natural frequencies at the first rotor speed (0 rad/s)
+    array([  82.7,   86.7,  254.5,  274.3,  679.5,  716.8])
+    >>> np.round(camp[:, 10], 1) # damped natural frequencies at 40 rad/s
+    array([  82.7,   86.7,  254.3,  274.5,  676.5,  719.7])
     """
     #  TODO docstrinc
     #  TODO mult will be the harmonics for interest e.g., 1x, 2x etc.
