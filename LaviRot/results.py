@@ -270,8 +270,11 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True):
     rotor_state_speed = rotor.w
 
     z = []  # will contain values for each whirl (0, 0.5, 1)
+    points_all = np.zeros([freqs, speed_rad.shape[0]])
 
-    for w0, w1 in (zip(speed_rad[:-1], speed_rad[1:])):
+    for idx, w0, w1 in(zip(range(len(speed_rad)),
+                           speed_rad[:-1],
+                           speed_rad[1:])):
         # define shaft speed
         # check rotor state to avoid recalculating eigenvalues
         if not rotor.w == w0:
@@ -283,6 +286,7 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True):
 
         # generate points for the first speed
         points0 = np.array([x_w0, y_wd0]).T.reshape(-1, 1, 2)
+        points_all[:, idx] += y_wd0  # TODO verificar teste
 
         # go to the next speed
         rotor.w = w1
@@ -299,6 +303,9 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True):
 
         whirl_w = [whirl(rotor.kappa_mode(wd)) for wd in range(freqs)]
         z.append([whirl_to_cmap(i) for i in whirl_w])
+
+    if plot is False:
+        return points_all
 
     z = np.array(z).flatten()
 
