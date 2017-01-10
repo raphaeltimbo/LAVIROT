@@ -331,7 +331,7 @@ class Rotor(object):
 
         return idx
 
-    def _eigen(self, w=None, sorted_=True):
+    def _eigen(self, w=None, sorted_=True, sparse=True):
         r"""This method will return the eigenvalues and eigenvectors of the
         state space matrix A, sorted by the index method which considers
         the imaginary part (wd) of the eigenvalues for sorting.
@@ -359,7 +359,11 @@ class Rotor(object):
         if w is None:
             w = self.w
 
-        evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM')
+        if sparse is True:
+            evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM')
+        else:
+            evalues, evectors = la.eig(self.A(w))
+
         if sorted_ is False:
             return evalues, evectors
 
