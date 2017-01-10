@@ -111,7 +111,7 @@ class Rotor(object):
         self._calc_system()
 
     def _calc_system(self):
-        self.evalues, self.evectors = self._eigen(self._w)
+        self.evalues, self.evectors = self._eigen(self.w)
         self.wn = (np.absolute(self.evalues))[:self.ndof//2]
         self.wd = (np.imag(self.evalues))[:self.ndof//2]
         self.H = self._H()
@@ -663,17 +663,16 @@ class Rotor(object):
         C = self.H.C
         D = self.H.D
 
-        evals = self.evalues
-        psi = self.evectors
+        evals, psi = self._eigen(self.w, sparse=False)
         psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
 
         # if omega is not given, define a range
         if omega is None:
-            omega = np.linspace(0, max(evals.imag) * 1.5, 1000)
+            omega = np.linspace(0, 3000, 5000)
 
         # if modes are selected:
             if modes is not None:
-                n = self.n  # n dof -> number of modes
+                n = self.ndof  # n dof -> number of modes
                 m = len(modes)  # -> number of desired modes
                 # idx to get each evalue/evector and its conjugate
                 idx = np.zeros((2 * m), int)
