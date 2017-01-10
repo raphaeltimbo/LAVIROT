@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.linalg as la
 import scipy.sparse.linalg as las
+import scipy.signal as signal
 from LaviRot.elements import *
 
 
@@ -582,12 +583,43 @@ class Rotor(object):
         kappa_mode = [self.kappa(node, w)['kappa'] for node in self.nodes]
         return kappa_mode
 
-
     def orbit(self):
         pass
     #  TODO make w a property. Make eigen an attribute.
     #  TODO when w is changed, eigen is calculated and is available to methods.
     #  TODO static methods as auxiliary functions
+
+    def _H(self):
+        r"""Continuous-time linear time invariant system.
+
+        This method is used to create a Continuous-time linear
+        time invariant system for the mdof system.
+        From this system we can obtain poles, impulse response,
+        generate a bode, etc.
+
+        """
+        Z = np.zeros((self.ndof, self.ndof))
+        I = np.eye(self.ndof)
+
+        # x' = Ax + Bu
+        B2 = I
+        A = self.A()
+        B = np.vstack([Z,
+                       la.solve(self.M(), B2)])
+
+        # y = Cx + Du
+        # Observation matrices
+        Cd = I
+        Cv = Z
+        Ca = Z
+
+        # TODO Check equation below regarding gyroscopic matrix
+        C = np.hstack((Cd - Ca @ la.solve(self.M(), self.K()), Cv - Ca @ la.solve(self.M(), self.C())))
+        D = Ca @ la.solve(self.M(), B2)
+
+        sys = signal.lti(A, B, C, D)
+
+        return sys
 
 
 def rotor_example():

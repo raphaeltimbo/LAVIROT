@@ -110,3 +110,4 @@ imgs/
 /docs/gallery/.ipynb_checkpoints/
 /docs/tutorial/.ipynb_checkpoints/
 /update_LaviRot.sh
+/debug.py
