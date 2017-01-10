@@ -19,7 +19,8 @@ __all__ = ["plot_rotor",
            "MAC",
            "MAC_modes",
            "campbell",
-           "bearing_parameters"]
+           "bearing_parameters",
+           "plot_freq_response"]
 
 
 c_pal = {'red': '#C93C3C',
@@ -386,3 +387,27 @@ def bearing_parameters(bearing):
 
 
 # TODO critical speed map
+
+
+def plot_freq_response(ax0, ax1, omega, magdb, phase, inp, out):
+    art0 = ax0.plot(omega, magdb[out, inp, :])
+    art1 = ax1.plot(omega, phase[out, inp, :])
+    for ax in [ax0, ax1]:
+        ax.set_xlim(0, max(omega))
+        ax.yaxis.set_major_locator(
+            mpl.ticker.MaxNLocator(prune='lower'))
+        ax.yaxis.set_major_locator(
+            mpl.ticker.MaxNLocator(prune='upper'))
+
+    ax0.text(.9, .9, 'Input %s' % inp,
+             horizontalalignment='center',
+             transform=ax0.transAxes)
+    ax0.text(.9, .7, 'Output %s' % out,
+             horizontalalignment='center',
+             transform=ax0.transAxes)
+
+    ax0.set_ylabel('Magnitude $(dB)$')
+    ax1.set_ylabel('Phase')
+    ax1.set_xlabel('Frequency (rad/s)')
+
+    return art0, art1
