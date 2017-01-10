@@ -80,6 +80,7 @@ class Rotor(object):
         self.evectors = None
         self.wn = None
         self.wd = None
+        self.H = None
         #  TODO check when disk diameter in no consistent with shaft diameter
         #  TODO add error for elements added to the same n (node)
         # number of dofs
@@ -113,6 +114,7 @@ class Rotor(object):
         self.evalues, self.evectors = self._eigen(self._w)
         self.wn = (np.absolute(self.evalues))[:self.ndof//2]
         self.wd = (np.imag(self.evalues))[:self.ndof//2]
+        self.H = self._H()
 
     @property
     def w(self):
@@ -365,7 +367,7 @@ class Rotor(object):
 
         return evalues[idx], evectors[:, idx]
 
-    def H(self, node, w, return_T=False):
+    def H_kappa(self, node, w, return_T=False):
         r"""Calculates the H matrix for a given node and natural frequency.
 
         The matrix H contains information about the whirl direction,
@@ -438,7 +440,7 @@ class Rotor(object):
         --------
         >>> rotor = rotor_example()
         >>> # H matrix for the 0th node
-        >>> rotor.H(0, 0) # doctest: +ELLIPSIS
+        >>> rotor.H_kappa(0, 0) # doctest: +ELLIPSIS
         array([[  2.46154806e-29,  -7.17353298e-18],
                [ -7.17353298e-18,   2.11429917e-06]])
 
@@ -520,7 +522,7 @@ class Rotor(object):
         else:
             nat_freq = self.wn[w]
 
-        H, Tvals = self.H(node, w, return_T=True)
+        H, Tvals = self.H_kappa(node, w, return_T=True)
         nu = Tvals['nu']
         nv = Tvals['nv']
 
@@ -620,6 +622,93 @@ class Rotor(object):
         sys = signal.lti(A, B, C, D)
 
         return sys
+
+    def freq_response(self, omega=None, modes=None):
+        r"""Frequency response for a mdof system.
+
+        This method returns the frequency response for a mdof system
+        given a range of frequencies and the modes that will be used.
+
+        Parameters
+        ----------
+        omega : array, optional
+            Array with the desired range of frequencies (the default
+             is 0 to 1.5 x highest damped natural frequency.
+        modes : list, optional
+            Modes that will be used to calculate the frequency response
+            (all modes will be used if a list is not given).
+
+        Returns
+        ----------
+        omega : array
+            Array with the frequencies
+        magdb : array
+            Magnitude (dB) of the frequency response for each pair input/output.
+            The order of the array is: [output, input, magnitude]
+        phase : array
+            Phase of the frequency response for each pair input/output.
+            The order of the array is: [output, input, phase]
+
+        Examples
+        --------
+        """
+        rows = self.H.inputs  # inputs (mag and phase)
+        cols = self.H.inputs  # outputs
+
+        B = self.H.B
+        C = self.H.C
+        D = self.H.D
+
+        evals = self.evalues
+        psi = self.evectors
+        psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
+
+        # if omega is not given, define a range
+        if omega is None:
+            omega = np.linspace(0, max(evals.imag) * 1.5, 1000)
+
+        # if modes are selected:
+            if modes is not None:
+                n = self.n  # n dof -> number of modes
+                m = len(modes)  # -> number of desired modes
+                # idx to get each evalue/evector and its conjugate
+                idx = np.zeros((2 * m), int)
+                idx[0:m] = modes  # modes
+                idx[m:] = range(2 * n)[-m:]  # conjugates (see how evalues are ordered)
+
+                evals_m = evals[np.ix_(idx)]
+                psi_m = psi[np.ix_(range(2 * n), idx)]
+                psi_inv_m = psi_inv[np.ix_(idx, range(2 * n))]
+
+                magdb_m = np.empty((cols, rows, len(omega)))
+                phase_m = np.empty((cols, rows, len(omega)))
+
+                for wi, w in enumerate(omega):
+                    diag = np.diag([1 / (1j * w - lam) for lam in evals_m])
+                    H = C @ psi_m @ diag @ psi_inv_m @ B + D
+
+                    magh = 20.0 * np.log10(abs(H))
+                    angh = np.rad2deg((np.angle(H)))
+
+                    magdb_m[:, :, wi] = magh
+                    phase_m[:, :, wi] = angh
+
+                return omega, magdb_m, phase_m
+
+        magdb = np.empty((cols, rows, len(omega)))
+        phase = np.empty((cols, rows, len(omega)))
+
+        for wi, w in enumerate(omega):
+            diag = np.diag([1 / (1j * w - lam) for lam in evals])
+            H = C @ psi @ diag @ psi_inv @ B + D
+
+            magh = 20.0 * np.log10(abs(H))
+            angh = np.rad2deg((np.angle(H)))
+
+            magdb[:, :, wi] = magh
+            phase[:, :, wi] = angh
+
+        return omega, magdb, phase
 
 
 def rotor_example():
