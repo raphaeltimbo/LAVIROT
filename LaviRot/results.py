@@ -386,3 +386,7 @@ def bearing_parameters(bearing):
 
 
 # TODO critical speed map
+
+
+def FRF():
+    pass
