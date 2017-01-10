@@ -667,6 +667,7 @@ class Rotor(object):
         psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
 
         # if omega is not given, define a range
+        # TODO adapt this range
         if omega is None:
             omega = np.linspace(0, 3000, 5000)
 
