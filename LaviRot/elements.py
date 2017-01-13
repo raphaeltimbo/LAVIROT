@@ -273,7 +273,102 @@ class ShaftElement(object):
         #  TODO add tappered element. Modify shaft element to accept i_d and o_d as a list with to entries.
 
 
-class DiskElement(object):
+class LumpedDiskElement:
+    """A lumped disk element.
+
+     This class will create a lumped disk element.
+
+     Parameters
+     ----------
+     m : float
+         Mass of the disk element.
+     Id : float
+         Diametral moment of inertia.
+     Ip : float
+         Polar moment of inertia
+
+     References
+     ----------
+     .. [1] 'Dynamics of Rotating Machinery' by MI Friswell, JET Penny, SD Garvey
+        & AW Lees, published by Cambridge University Press, 2010 pp. 156-157.
+
+     Examples
+     --------
+     >>> disk = LumpedDiskElement(32.58972765, 0.17808928, 0.32956362)
+     >>> disk.Ip
+     0.32956362
+     """
+    def __init__(self, m, Id, Ip):
+        self.m = m
+        self.Id = Id
+        self.Ip = Ip
+
+    def M(self):
+        """
+        This method will return the mass matrix for an instance of a disk
+        element.
+
+        Parameters
+        ----------
+        self
+
+        Returns
+        -------
+        Mass matrix for the disk element.
+
+        Examples
+        --------
+        >>> disk = LumpedDiskElement(32.58972765, 0.17808928, 0.32956362)
+        >>> disk.M()
+        array([[ 32.58972765,   0.        ,   0.        ,   0.        ],
+               [  0.        ,  32.58972765,   0.        ,   0.        ],
+               [  0.        ,   0.        ,   0.17808928,   0.        ],
+               [  0.        ,   0.        ,   0.        ,   0.17808928]])
+        """
+        m = self.m
+        Id = self.Id
+
+        M = np.array([[m, 0,  0,  0],
+                       [0, m,  0,  0],
+                       [0, 0, Id,  0],
+                       [0, 0,  0, Id]])
+
+        return M
+
+    def G(self):
+        """
+        This method will return the gyroscopic matrix for an instance of a disk
+        element.
+
+        Parameters
+        ----------
+        self
+
+        Returns
+        -------
+        Gyroscopic matrix for the disk element.
+
+        Examples
+        --------
+        >>> disk = LumpedDiskElement(32.58972765, 0.17808928, 0.32956362)
+        >>> disk.G()
+        array([[ 0.        ,  0.        ,  0.        ,  0.        ],
+               [ 0.        ,  0.        ,  0.        ,  0.        ],
+               [ 0.        ,  0.        ,  0.        ,  0.32956362],
+               [ 0.        ,  0.        , -0.32956362,  0.        ]])
+        """
+
+        Ip = self.Ip
+
+        G = np.array([[0, 0,   0,  0],
+                      [0, 0,   0,  0],
+                      [0, 0,   0, Ip],
+                      [0, 0, -Ip,  0]])
+
+        return G
+
+
+class DiskElement(LumpedDiskElement):
     #  TODO detail this class attributes inside the docstring
     """A disk element.
 
@@ -324,69 +419,7 @@ class DiskElement(object):
         self.Id = 0.015625 * rho * np.pi * width*(o_d**4 - i_d**4) + self.m*(width**2)/12
         self.Ip = 0.03125 * rho * np.pi * width * (o_d**4 - i_d**4)
 
-    def M(self):
-        """
-        This method will return the mass matrix for an instance of a disk
-        element.
-
-        Parameters
-        ----------
-        self
-
-        Returns
-        -------
-        Mass matrix for the disk element.
-
-        Examples
-        --------
-        >>> disk = DiskElement(0, 7810, 0.07, 0.05, 0.28)
-        >>> disk.M()
-        array([[ 32.58972765,   0.        ,   0.        ,   0.        ],
-               [  0.        ,  32.58972765,   0.        ,   0.        ],
-               [  0.        ,   0.        ,   0.17808928,   0.        ],
-               [  0.        ,   0.        ,   0.        ,   0.17808928]])
-        """
-        m = self.m
-        Id = self.Id
-
-        M = np.array([[m, 0,  0,  0],
-                       [0, m,  0,  0],
-                       [0, 0, Id,  0],
-                       [0, 0,  0, Id]])
-
-        return M
-
-    def G(self):
-        """
-        This method will return the gyroscopic matrix for an instance of a disk
-        element.
-
-        Parameters
-        ----------
-        self
-
-        Returns
-        -------
-        Gyroscopic matrix for the disk element.
-
-        Examples
-        --------
-        >>> disk = DiskElement(0, 7810, 0.07, 0.05, 0.28)
-        >>> disk.G()
-        array([[ 0.        ,  0.        ,  0.        ,  0.        ],
-               [ 0.        ,  0.        ,  0.        ,  0.        ],
-               [ 0.        ,  0.        ,  0.        ,  0.32956362],
-               [ 0.        ,  0.        , -0.32956362,  0.        ]])
-        """
-
-        Ip = self.Ip
-
-        G = np.array([[0, 0,   0,  0],
-                       [0, 0,   0,  0],
-                       [0, 0,   0, Ip],
-                       [0, 0, -Ip,  0]])
-
-        return G
+        super().__init__(self.m, self.Id, self.Ip)
 
 
 class BearingElement(object):
