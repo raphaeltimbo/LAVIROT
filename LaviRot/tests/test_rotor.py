@@ -183,21 +183,9 @@ def test_evals_sorted_rotor2(rotor2):
     assert_allclose(rotor2.evalues, evals_sorted_w_10000, rtol=1e-1)
 
 
-def test_evals_not_sorted_rotor2(rotor2):
-    evals = np.array([ -5.591645e-13 -215.370726j,  -5.591645e-13 +215.370726j,
-                       -4.312884e-11 -598.024741j,  -4.312884e-11 +598.024741j,
-                       -6.257892e-13 -215.370726j,  -6.257892e-13 +215.370726j,
-                       -1.121150e-11 -598.024741j,  -1.121150e-11 +598.024741j,
-                       1.240578e-08-3956.224991j,   1.240578e-08+3956.224991j,
-                       3.525884e-09-3956.224974j,   3.525884e-09+3956.224974j])
-
-    rotor2_evals, rotor2_evects = rotor2._eigen(sorted_=False)
-    assert_allclose(rotor2_evals, evals, rtol=1e-3)
-
-
 @pytest.fixture
 def rotor3():
-    #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
+    #  Rotor without damping with 6 shaft elements 2 disks and 2 bearings
     i_d = 0
     o_d = 0.05
     E = 211e9
