@@ -280,6 +280,8 @@ class LumpedDiskElement:
 
      Parameters
      ----------
+     n: int
+         Node in which the disk will be inserted.
      m : float
          Mass of the disk element.
      Id : float
@@ -294,11 +296,12 @@ class LumpedDiskElement:
 
      Examples
      --------
-     >>> disk = LumpedDiskElement(32.58972765, 0.17808928, 0.32956362)
+     >>> disk = LumpedDiskElement(0, 32.58972765, 0.17808928, 0.32956362)
      >>> disk.Ip
      0.32956362
      """
-    def __init__(self, m, Id, Ip):
+    def __init__(self, n, m, Id, Ip):
+        self.n = n
         self.m = m
         self.Id = Id
         self.Ip = Ip
@@ -318,7 +321,7 @@ class LumpedDiskElement:
 
         Examples
         --------
-        >>> disk = LumpedDiskElement(32.58972765, 0.17808928, 0.32956362)
+        >>> disk = LumpedDiskElement(0, 32.58972765, 0.17808928, 0.32956362)
         >>> disk.M()
         array([[ 32.58972765,   0.        ,   0.        ,   0.        ],
                [  0.        ,  32.58972765,   0.        ,   0.        ],
@@ -350,7 +353,7 @@ class LumpedDiskElement:
 
         Examples
         --------
-        >>> disk = LumpedDiskElement(32.58972765, 0.17808928, 0.32956362)
+        >>> disk = LumpedDiskElement(0, 32.58972765, 0.17808928, 0.32956362)
         >>> disk.G()
         array([[ 0.        ,  0.        ,  0.        ,  0.        ],
                [ 0.        ,  0.        ,  0.        ,  0.        ],
@@ -419,7 +422,7 @@ class DiskElement(LumpedDiskElement):
         self.Id = 0.015625 * rho * np.pi * width*(o_d**4 - i_d**4) + self.m*(width**2)/12
         self.Ip = 0.03125 * rho * np.pi * width * (o_d**4 - i_d**4)
 
-        super().__init__(self.m, self.Id, self.Ip)
+        super().__init__(self.n, self.m, self.Id, self.Ip)
 
 
 class BearingElement(object):
