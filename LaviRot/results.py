@@ -389,7 +389,7 @@ def bearing_parameters(bearing):
 # TODO critical speed map
 
 
-def plot_freq_response(ax0, ax1, omega, magdb, phase, inp, out):
+def plot_freq_response(ax0, ax1, omega, magdb, phase, out, inp):
     art0 = ax0.plot(omega, magdb[out, inp, :])
     art1 = ax1.plot(omega, phase[out, inp, :])
     for ax in [ax0, ax1]:
@@ -399,10 +399,10 @@ def plot_freq_response(ax0, ax1, omega, magdb, phase, inp, out):
         ax.yaxis.set_major_locator(
             mpl.ticker.MaxNLocator(prune='upper'))
 
-    ax0.text(.9, .9, 'Input %s' % inp,
+    ax0.text(.9, .9, 'Output %s' % out,
              horizontalalignment='center',
              transform=ax0.transAxes)
-    ax0.text(.9, .7, 'Output %s' % out,
+    ax0.text(.9, .7, 'Input %s' % inp,
              horizontalalignment='center',
              transform=ax0.transAxes)
 
