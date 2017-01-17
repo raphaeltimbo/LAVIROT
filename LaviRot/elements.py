@@ -6,7 +6,7 @@ from itertools import permutations
 __all__ = ["ShaftElement", "DiskElement", "BearingElement", "SealElement"]
 
 
-class ShaftElement(object):
+class ShaftElement:
     r"""A shaft element.
 
     This class will create a shaft element that may take into
@@ -428,7 +428,7 @@ class DiskElement(LumpedDiskElement):
         super().__init__(self.n, self.m, self.Id, self.Ip)
 
 
-class BearingElement(object):
+class BearingElement:
     #  TODO detail this class attributes inside the docstring
     """A bearing element.
 
