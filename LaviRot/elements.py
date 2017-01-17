@@ -210,14 +210,16 @@ class ShaftElement(object):
         phi = self.phi
         L = self.L
 
-        K = np.array([[12,     0,            0,          6*L,  -12,     0,            0,          6*L],
-                        [0,     12,         -6*L,            0,    0,   -12,         -6*L,            0],
-                        [0,   -6*L, (4+phi)*L**2,            0,    0,   6*L, (2-phi)*L**2,            0],
-                        [6*L,    0,            0, (4+phi)*L**2, -6*L,     0,            0, (2-phi)*L**2],
-                        [-12,    0,            0,         -6*L,   12,     0,            0,         -6*L],
-                        [0,    -12,          6*L,            0,    0,    12,          6*L,            0],
-                        [0,   -6*L, (2-phi)*L**2,            0,    0,   6*L, (4+phi)*L**2,            0],
-                        [6*L,    0,            0, (2-phi)*L**2, -6*L,     0,            0, (4+phi)*L**2]])
+        K = np.array([
+            [12,     0,            0,          6*L,  -12,     0,            0,          6*L],
+            [0,     12,         -6*L,            0,    0,   -12,         -6*L,            0],
+            [0,   -6*L, (4+phi)*L**2,            0,    0,   6*L, (2-phi)*L**2,            0],
+            [6*L,    0,            0, (4+phi)*L**2, -6*L,     0,            0, (2-phi)*L**2],
+            [-12,    0,            0,         -6*L,   12,     0,            0,         -6*L],
+            [0,    -12,          6*L,            0,    0,    12,          6*L,            0],
+            [0,   -6*L, (2-phi)*L**2,            0,    0,   6*L, (4+phi)*L**2,            0],
+            [6*L,    0,            0, (2-phi)*L**2, -6*L,     0,            0, (4+phi)*L**2]
+        ])
 
         K = self.E * self.Ie * K/((1 + phi)*L**3)
 
@@ -419,7 +421,8 @@ class DiskElement(LumpedDiskElement):
         self.i_d = i_d
         self.o_d = o_d
         self.m = 0.25 * rho * np.pi * width * (o_d**2 - i_d**2)
-        self.Id = 0.015625 * rho * np.pi * width*(o_d**4 - i_d**4) + self.m*(width**2)/12
+        self.Id = (0.015625 * rho * np.pi * width*(o_d**4 - i_d**4)
+                   + self.m*(width**2)/12)
         self.Ip = 0.03125 * rho * np.pi * width * (o_d**4 - i_d**4)
 
         super().__init__(self.n, self.m, self.Id, self.Ip)
@@ -485,7 +488,9 @@ class BearingElement(object):
         if w is not None:
             for arg in permutations([kxx, cxx, w], 2):
                 if arg[0].shape != arg[1].shape:
-                    raise Exception('kxx, cxx and w must have the same dimension')
+                    raise Exception(
+                        'kxx, cxx and w must have the same dimension'
+                    )
 
         # set values for speed so that interpolation can be created
         if w is None:
@@ -493,8 +498,9 @@ class BearingElement(object):
                         kyy, kxy, kyx,
                         cyy, cxy, cyx]:
                 if isinstance(arg, np.ndarray):
-                    raise Exception('w should be an array with'
-                                    ' the parameters dimension')
+                    raise Exception(
+                        'w should be an array with the parameters dimension'
+                    )
             w = np.linspace(0, 10000, 4)
 
         if kyy is None:
