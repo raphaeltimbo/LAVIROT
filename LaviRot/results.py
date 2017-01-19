@@ -3,6 +3,7 @@ This module contains :py:meth:`LaviRot.results` with functions
 to evaluate results and functions to create plots
 """
 # TODO detail the results docstring
+# TODO not possible to return figures. Return axs instead.
 import os
 
 import matplotlib as mpl
@@ -20,7 +21,8 @@ __all__ = ["plot_rotor",
            "MAC_modes",
            "campbell",
            "bearing_parameters",
-           "plot_freq_response"]
+           "plot_freq_response",
+           "plot_time_response"]
 
 
 c_pal = {'red': '#C93C3C',
@@ -411,3 +413,57 @@ def plot_freq_response(ax0, ax1, omega, magdb, phase, out, inp):
     ax1.set_xlabel('Frequency (rad/s)')
 
     return art0, art1
+
+
+def plot_time_response(rotor, F, t, dof, ax=None):
+    """Plot the time response.
+
+    This function will take a rotor object and plot its time response
+    given a force and a time.
+
+    Parameters
+    ----------
+    rotor: rotor object
+        A rotor object.
+    F : array
+        Force array (needs to have the same number of rows as time array).
+        Each column corresponds to a dof and each row to a time.
+    t : array
+        Time array.
+    dof : int
+        Degree of freedom that will be observed.
+
+    Returns
+    -------
+    ax : matplotlib Axes
+        Returns the Axes object with the plot.
+
+    Examples:
+    ---------
+    """
+    t_, yout, xout = rotor.time_response(F, t)
+
+    if ax is None:
+        ax = plt.gca()
+
+    ax.plot(t, yout[:, dof])
+
+    if dof % 4 == 0:
+        obs_dof = '$x$'
+        amp = 'm'
+    elif dof + 1 % 4 == 0:
+        obs_dof = '$y$'
+        amp = 'm'
+    elif dof + 2 % 4 == 0:
+        obs_dof = '$\alpha$'
+        amp = 'rad'
+    else:
+        obs_dof = '$\beta$'
+        amp = 'rad'
+
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Amplitude (%s)' % amp)
+    ax.set_title('Response for node %s and degree of freedom %s'
+                 % (dof//4, obs_dof))
+
+    return ax
