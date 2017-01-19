@@ -643,7 +643,7 @@ class Rotor(object):
             (all modes will be used if a list is not given).
 
         Returns
-        ----------
+        -------
         omega : array
             Array with the frequencies
         magdb : array
@@ -730,7 +730,7 @@ class Rotor(object):
             The initial conditions on the state vector (zero by default).
 
         Returns
-        ----------
+        -------
         t : array
             Time values for the output.
         yout : array
