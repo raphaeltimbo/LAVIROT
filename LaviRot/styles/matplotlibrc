@@ -245,7 +245,7 @@ axes.titlesize      : x-large   # fontsize of the axes title
 axes.labelsize      : large  # fontsize of the x any y labels
 #axes.labelpad       : 5.0     # space between label and axis
 #axes.labelweight    : normal  # weight of the x and y labels
-axes.labelcolor     : 363737   # dark grey
+axes.labelcolor     : .15   # dark gray
 axes.axisbelow      : True   # whether axis gridlines and ticks are below
                                # the axes elements (lines, text, etc)
 

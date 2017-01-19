@@ -357,7 +357,7 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True):
     # restore rotor speed
     rotor.w = rotor_state_speed
 
-    return fig
+    return ax
 
 
 def bearing_parameters(bearing):
