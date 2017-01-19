@@ -714,6 +714,39 @@ class Rotor(object):
 
         return omega, magdb, phase
 
+    def time_response(self, F, t, ic=None):
+        r"""Time response for a rotor.
+
+        This method returns the time response for a rotor
+        given a force, time and initial conditions.
+
+        Parameters
+        ----------
+        F : array
+            Force array (needs to have the same length as time array).
+        t : array
+            Time array.
+        ic : array, optional
+            The initial conditions on the state vector (zero by default).
+
+        Returns
+        ----------
+        t : array
+            Time values for the output.
+        yout : array
+            System response.
+        xout : array
+            Time evolution of the state vector.
+
+
+        Examples
+        --------
+        """
+        if ic is not None:
+            return signal.lsim(self.H, F, t, ic)
+        else:
+            return signal.lsim(self.H, F, t)
+
 
 def rotor_example():
     r"""This function returns an instance of a simple rotor with
