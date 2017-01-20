@@ -10,6 +10,7 @@ import matplotlib as mpl
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap
 from mpl_toolkits.mplot3d import Axes3D
@@ -24,6 +25,16 @@ __all__ = ["plot_rotor",
            "plot_freq_response",
            "plot_time_response"]
 
+# set style and colors
+sns.set_style('white', rc={'axes.grid':True,
+                           'axes.linewidth': 0.1,
+                           'grid.color':'.9',
+                           'grid.linestyle': '--',
+                           'legend.frameon': True,
+                           'legend.framealpha': 0.2})
+sns.set_context('paper', rc={"lines.linewidth": 1})
+
+_orig_rc_params = mpl.rcParams.copy()
 
 c_pal = {'red': '#C93C3C',
          'blue': '#0760BA',
@@ -32,8 +43,6 @@ c_pal = {'red': '#C93C3C',
          'purple': '#A349C6',
          'grey': '#2D2D2D',
          'green2': '#08A4AF'}
-
-fn = os.path.join(os.path.dirname(__file__), 'styles', 'matplotlibrc')
 
 
 def plot_rotor(rotor, ax=None):
@@ -57,9 +66,7 @@ def plot_rotor(rotor, ax=None):
     Examples:
 
     """
-    mpl.rcParams.update(mpl.rc_params_from_file(fn))
-    plt.rcParams['axes.facecolor'] = '#E5E5E5'
-    plt.rcParams['figure.figsize'] = (10, 6)
+    plt.rcParams['figure.figsize'] = (10, 5)
     plt.rcParams['xtick.labelsize'] = 0
     plt.rcParams['ytick.labelsize'] = 0
 
@@ -167,6 +174,9 @@ def plot_rotor(rotor, ax=None):
             ax.add_patch(mpatches.Polygon(seal_points_u, facecolor=r_pal['seal']))
             ax.add_patch(mpatches.Polygon(seal_points_l, facecolor=r_pal['seal']))
 
+    # restore rc parameters after plotting
+    mpl.rcParams.update(_orig_rc_params)
+
     return ax
 
 
@@ -237,7 +247,7 @@ def whirl_to_cmap(whirl):
         return 0.5
 
 
-def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True):
+def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True, ax=None):
     r"""Calculates the Campbell diagram.
 
     This function will calculate the damped natural frequencies
@@ -259,13 +269,16 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True):
     plot: bool, optional
         If the campbell will be plotted.
         If plot=False, points for the Campbell will be returned.
-
+    ax : matplotlib axes, optional
+        Axes in which the plot will be drawn.
 
     Returns
     -------
     points: array
         Array with the natural frequencies corresponding to each speed
          of the speed_rad array. It will be returned if plot=False.
+    ax : matplotlib axes
+        Returns the axes object with the plot.
 
     Examples
     --------
@@ -277,9 +290,6 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True):
     >>> np.round(camp[:, 10], 1) # damped natural frequencies at 40 rad/s
     array([  82.7,   86.7,  254.3,  274.5,  676.5,  719.7])
     """
-    #  TODO docstrinc
-    #  TODO mult will be the harmonics for interest e.g., 1x, 2x etc.
-    mpl.rcParams.update(mpl.rc_params_from_file(fn))
     rotor_state_speed = rotor.w
 
     z = []  # will contain values for each whirl (0, 0.5, 1)
@@ -326,7 +336,8 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True):
                            c_pal['grey'],
                            c_pal['red']])
 
-    fig, ax = plt.subplots()
+    if ax is None:
+        ax = plt.gca()
     lines_2 = LineCollection(segments, array=z, cmap=cmap)
     ax.add_collection(lines_2)
 
@@ -364,7 +375,6 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True):
 
 
 def bearing_parameters(bearing):
-    mpl.rcParams.update(mpl.rc_params_from_file(fn))
     fig, ax = plt.subplots(2, sharex=True)
 
     w = np.linspace(0, 1.3*bearing.w[-1], 1000)
