@@ -21,8 +21,6 @@ class ShaftElement:
 
     Parameters
     ----------
-    n : int
-        Element number (coincident with it's first node).
     L : float
         Element length.
     i_d : float
@@ -48,7 +46,11 @@ class ShaftElement:
     gyroscopic : bool
         Determine if gyroscopic effects are taken into account.
         Default is False.
-
+    n : int, optional
+        Element number (coincident with it's first node).
+        If not given, it will be set when the rotor is assembled
+        according to the element's position in the list supplied to
+        the rotor constructor.
     Returns
     -------
 
@@ -72,17 +74,16 @@ class ShaftElement:
 
     Examples
     --------
-    >>> n = 1
     >>> le = 0.25
     >>> i_d = 0
     >>> o_d = 0.05
     >>> E = 211e9
     >>> G_s = 81.2e9
     >>> rho = 7810
-    >>> Euler_Bernoulli_Element = ShaftElement(n, le, i_d, o_d, E, G_s, rho)
+    >>> Euler_Bernoulli_Element = ShaftElement(le, i_d, o_d, E, G_s, rho)
     >>> Euler_Bernoulli_Element.phi
     0
-    >>> Timoshenko_Element = ShaftElement(n, le, i_d, o_d, E, G_s, rho,
+    >>> Timoshenko_Element = ShaftElement(le, i_d, o_d, E, G_s, rho,
     ...                                   rotary_inertia=True,
     ...                                   shear_effects=True)
     >>> Timoshenko_Element.phi
@@ -90,11 +91,12 @@ class ShaftElement:
     """
     #  TODO detail this class attributes inside the docstring
     #  TODO add __repr__ to the class
-    def __init__(self, n, L, i_d, o_d, E, G_s, rho,
+    def __init__(self, L, i_d, o_d, E, G_s, rho,
                  axial_force=0, torque=0,
                  shear_effects=False,
                  rotary_inertia=False,
-                 gyroscopic=True):
+                 gyroscopic=True,
+                 n=None):
 
         self.shear_effects = shear_effects
         self.rotary_inertia = rotary_inertia
@@ -140,7 +142,7 @@ class ShaftElement:
 
         Examples
         --------
-        >>> Timoshenko_Element = ShaftElement(1, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, 211e9, 81.2e9, 7810,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.M()[:4, :4]
@@ -198,7 +200,7 @@ class ShaftElement:
 
         Examples
         --------
-        >>> Timoshenko_Element = ShaftElement(1, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, 211e9, 81.2e9, 7810,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.K()[:4, :4]/1e6
@@ -234,7 +236,7 @@ class ShaftElement:
 
         Examples
         --------
-        >>> Timoshenko_Element = ShaftElement(1, 0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, 211e9, 81.2e9, 7810,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.G()[:4, :4]
