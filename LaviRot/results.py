@@ -4,7 +4,6 @@ to evaluate results and functions to create plots
 """
 # TODO detail the results docstring
 # TODO not possible to return figures. Return axs instead.
-import os
 
 import matplotlib as mpl
 import matplotlib.patches as mpatches
