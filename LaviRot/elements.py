@@ -92,11 +92,12 @@ class ShaftElement:
     #  TODO detail this class attributes inside the docstring
     #  TODO add __repr__ to the class
     def __init__(self, L, i_d, o_d, E, G_s, rho,
+                 n=None,
                  axial_force=0, torque=0,
                  shear_effects=False,
                  rotary_inertia=False,
-                 gyroscopic=True,
-                 n=None):
+                 gyroscopic=True
+                 ):
 
         self.shear_effects = shear_effects
         self.rotary_inertia = rotary_inertia

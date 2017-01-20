@@ -72,9 +72,16 @@ class Rotor(object):
     def __init__(self, shaft_elements, disk_elements, bearing_seal_elements, w=0):
         #  TODO consider speed as a rotor property. Setter should call __init__ again
         self._w = w
+
+        # set n for each shaft element
+        for i, sh in enumerate(shaft_elements):
+            if sh.n is None:
+                sh.n = i
+
         self.shaft_elements = shaft_elements
         self.bearing_seal_elements = bearing_seal_elements
         self.disk_elements = disk_elements
+
         # Values for evalues and evectors will be calculated by self._calc_system
         self.evalues = None
         self.evectors = None
