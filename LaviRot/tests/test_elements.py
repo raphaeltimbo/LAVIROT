@@ -15,14 +15,13 @@ rho_ = 7810
 @pytest.fixture
 def eb():
     #  Euler-Bernoulli element
-    n_ = 1
     le_ = 0.25
     i_d_ = 0
     o_d_ = 0.05
     E_ = 211e9
     G_ = 81.2e9
     rho_ = 7810
-    return ShaftElement(n_, le_, i_d_, o_d_, E_, G_, rho_)
+    return ShaftElement(le_, i_d_, o_d_, E_, G_, rho_)
 
 
 def test_parameters_eb(eb):
@@ -63,7 +62,6 @@ def test_stiffness_matrix_eb(eb):
 @pytest.fixture
 def tim():
     #  Timoshenko element
-    n_ = 1
     z_ = 0
     le_ = 0.25
     i_d_ = 0
@@ -71,7 +69,7 @@ def tim():
     E_ = 211e9
     G_ = 81.2e9
     rho_ = 7810
-    return ShaftElement(n_, le_, i_d_, o_d_, E_, G_, rho_,
+    return ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
                         rotary_inertia=True,
                         shear_effects=True)
 
