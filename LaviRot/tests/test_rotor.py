@@ -16,11 +16,11 @@ def rotor1():
     G_ = 81.2e9
     rho_ = 7810
 
-    tim0 = ShaftElement(0, le_, i_d_, o_d_, E_, G_, rho_,
+    tim0 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
-    tim1 = ShaftElement(1, le_, i_d_, o_d_, E_, G_, rho_,
+    tim1 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
@@ -63,11 +63,11 @@ def rotor2():
     G_ = 81.2e9
     rho_ = 7810
 
-    tim0 = ShaftElement(0, le_, i_d_, o_d_, E_, G_, rho_,
+    tim0 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
-    tim1 = ShaftElement(1, le_, i_d_, o_d_, E_, G_, rho_,
+    tim1 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
@@ -192,13 +192,12 @@ def rotor3():
     Gs = 81.2e9
     rho = 7810
     n = 6
-    nelem = [x for x in range(n)]
-    L = [0.25 for i in range(n)]
+    L = [0.25 for _ in range(n)]
 
-    shaft_elem = [ShaftElement(n, l, i_d, o_d, E, Gs, rho,
+    shaft_elem = [ShaftElement(l, i_d, o_d, E, Gs, rho,
                                shear_effects=True,
                                rotary_inertia=True,
-                               gyroscopic=True) for n, l in zip(nelem, L)]
+                               gyroscopic=True) for l in L]
 
     disk0 = DiskElement(2, rho, 0.07, 0.05, 0.28)
     disk1 = DiskElement(4, rho, 0.07, 0.05, 0.35)
