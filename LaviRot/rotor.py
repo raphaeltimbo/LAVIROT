@@ -43,7 +43,6 @@ class Rotor(object):
     Examples
     --------
     >>> #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
-    >>> n = 1
     >>> z = 0
     >>> le = 0.25
     >>> i_d = 0
@@ -51,11 +50,11 @@ class Rotor(object):
     >>> E = 211e9
     >>> G = 81.2e9
     >>> rho = 7810
-    >>> tim0 = ShaftElement(0, le, i_d, o_d, E, G, rho,
+    >>> tim0 = ShaftElement(le, i_d, o_d, E, G, rho,
     ...                    shear_effects=True,
     ...                    rotary_inertia=True,
     ...                    gyroscopic=True)
-    >>> tim1 = ShaftElement(1, le, i_d, o_d, E, G, rho,
+    >>> tim1 = ShaftElement(le, i_d, o_d, E, G, rho,
     ...                    shear_effects=True,
     ...                    rotary_inertia=True,
     ...                    gyroscopic=True)
@@ -782,13 +781,12 @@ def rotor_example():
     Gs = 81.2e9
     rho = 7810
     n = 6
-    nelem = [x for x in range(n)]
     L = [0.25 for i in range(n)]
 
-    shaft_elem = [ShaftElement(n, l, i_d, o_d, E, Gs, rho,
+    shaft_elem = [ShaftElement(l, i_d, o_d, E, Gs, rho,
                                shear_effects=True,
                                rotary_inertia=True,
-                               gyroscopic=True) for n, l in zip(nelem, L)]
+                               gyroscopic=True) for l in L]
 
     disk0 = DiskElement(2, rho, 0.07, 0.05, 0.28)
     disk1 = DiskElement(4, rho, 0.07, 0.05, 0.35)
