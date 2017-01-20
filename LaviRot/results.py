@@ -36,7 +36,7 @@ c_pal = {'red': '#C93C3C',
 fn = os.path.join(os.path.dirname(__file__), 'styles', 'matplotlibrc')
 
 
-def plot_rotor(rotor):
+def plot_rotor(rotor, ax=None):
     """ Plots a rotor object.
 
     This function will take a rotor object and plot its shaft,
@@ -46,10 +46,13 @@ def plot_rotor(rotor):
     ----------
     rotor: rotor object
         A rotor object
+    ax : matplotlib axes, optional
+        Axes in which the plot will be drawn.
 
     Returns
     -------
-    Plots the rotor object.
+    ax : matplotlib axes
+        Returns the axes object with the plot.
 
     Examples:
 
@@ -67,8 +70,8 @@ def plot_rotor(rotor):
              'bearing': '#355d7a',
              'seal': '#77ACA2'}
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
+    if ax is None:
+        ax = plt.gca()
 
     #  plot shaft centerline
     shaft_end = rotor.nodes_pos[-1]
@@ -164,7 +167,7 @@ def plot_rotor(rotor):
             ax.add_patch(mpatches.Polygon(seal_points_u, facecolor=r_pal['seal']))
             ax.add_patch(mpatches.Polygon(seal_points_l, facecolor=r_pal['seal']))
 
-    return fig
+    return ax
 
 
 def MAC(u, v):
@@ -432,11 +435,13 @@ def plot_time_response(rotor, F, t, dof, ax=None):
         Time array.
     dof : int
         Degree of freedom that will be observed.
+    ax : matplotlib axes, optional
+        Axes in which the plot will be drawn.
 
     Returns
     -------
-    ax : matplotlib Axes
-        Returns the Axes object with the plot.
+    ax : matplotlib axes
+        Returns the axes object with the plot.
 
     Examples:
     ---------
