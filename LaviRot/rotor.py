@@ -781,7 +781,7 @@ def rotor_example():
     Gs = 81.2e9
     rho = 7810
     n = 6
-    L = [0.25 for i in range(n)]
+    L = [0.25 for _ in range(n)]
 
     shaft_elem = [ShaftElement(l, i_d, o_d, E, Gs, rho,
                                shear_effects=True,
