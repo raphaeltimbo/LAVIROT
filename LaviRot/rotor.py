@@ -89,6 +89,8 @@ class Rotor(object):
         self.wn = None
         self.wd = None
         self.H = None
+
+        self._v0 = None  # used to call eigs
         #  TODO check when disk diameter in no consistent with shaft diameter
         #  TODO add error for elements added to the same n (node)
         # number of dofs
@@ -368,9 +370,11 @@ class Rotor(object):
             w = self.w
 
         if sparse is True:
-            evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM')
+            evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM', v0=self._v0)
         else:
             evalues, evectors = la.eig(self.A(w))
+
+        self._v0 = evectors[:, 0]  # store v0 to use in the next call to eigs
 
         if sorted_ is False:
             return evalues, evectors
