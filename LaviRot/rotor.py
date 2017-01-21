@@ -1,7 +1,9 @@
+import os
 import numpy as np
 import scipy.linalg as la
 import scipy.sparse.linalg as las
 import scipy.signal as signal
+import scipy.io as sio
 from LaviRot.elements import *
 
 
@@ -752,6 +754,18 @@ class Rotor(object):
             return signal.lsim(self.H, F, t, ic)
         else:
             return signal.lsim(self.H, F, t)
+
+    def save_mat(self, file_name):
+        """
+        Save matrices and rotor model to a .mat file.
+        """
+        dic = {'M': self.M(),
+               'K': self.K(),
+               'C': self.C(),
+               'G': self.G(),
+               'nodes': self.nodes_pos}
+
+        sio.savemat('%s/%s.mat' % (os.getcwd(), file_name), dic)
 
 
 def rotor_example():
