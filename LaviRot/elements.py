@@ -33,6 +33,11 @@ class ShaftElement:
         Shear modulus.
     rho : float
         Density.
+    n : int, optional
+        Element number (coincident with it's first node).
+        If not given, it will be set when the rotor is assembled
+        according to the element's position in the list supplied to
+        the rotor constructor.
     axial_force : float
         Axial force.
     torque : float
@@ -46,11 +51,7 @@ class ShaftElement:
     gyroscopic : bool
         Determine if gyroscopic effects are taken into account.
         Default is False.
-    n : int, optional
-        Element number (coincident with it's first node).
-        If not given, it will be set when the rotor is assembled
-        according to the element's position in the list supplied to
-        the rotor constructor.
+
     Returns
     -------
 
@@ -270,6 +271,82 @@ class ShaftElement:
             G = - self.rho * self.Ie * G / (15 * L * (1 + phi)**2)
 
         return G
+
+    @classmethod
+    def section(cls, L, ne,
+                si_d, so_d, E, Gs, rho,
+                n=None,
+                shear_effects=True,
+                rotary_inertia=True,
+                gyroscopic=True
+                ):
+        """Shaft section constructor.
+
+        This method will create a shaft section with length 'L'
+        divided into 'ne' elements.
+
+        Parameters
+        ----------
+        i_d : float
+            Inner diameter of the section.
+        o_d : float
+            Outer diameter of the section.
+        E : float
+            Young's modulus.
+        G_s : float
+            Shear modulus.
+        rho : float
+            Density.
+        n : int, optional
+            Element number (coincident with it's first node).
+            If not given, it will be set when the rotor is assembled
+            according to the element's position in the list supplied to
+            the rotor constructor.
+        axial_force : float
+            Axial force.
+        torque : float
+            Torque.
+        shear_effects : bool
+            Determine if shear effects are taken into account.
+            Default is False.
+        rotary_inertia : bool
+            Determine if rotary_inertia effects are taken into account.
+            Default is False.
+        gyroscopic : bool
+            Determine if gyroscopic effects are taken into account.
+            Default is False.
+
+        Returns
+        -------
+        elements: list
+            List with the 'ne' shaft elements.
+
+        Examples
+        --------
+        >>> # shaft properties
+        >>> E = 211e9
+        >>> Gs = 81.2e9
+        >>> rho = 7810
+        >>> # shaft inner and outer diameters
+        >>> si_d = 0
+        >>> so_d = 0.01585
+        >>> sec = ShaftElement.section(247.65e-3, 4, 0, 15.8e-3, E, Gs, rho)
+        >>> len(sec)
+        4
+        >>> sec[0].i_d
+        0
+        """
+
+        le = L / ne
+
+        elements = [cls(le, si_d, so_d, E, Gs, rho,
+                        n,
+                        shear_effects,
+                        rotary_inertia,
+                        gyroscopic)
+                    for _ in range(ne)]
+
+        return elements
 
         #  TODO stiffness Matrix due to an axial load
         #  TODO stiffness Matrix due to an axial torque
