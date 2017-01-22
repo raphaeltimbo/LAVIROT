@@ -380,6 +380,45 @@ def test_kappa_mode_rotor3(rotor3):
                                            0.8964329651295495], rtol=1e-3)
 
 
+@pytest.fixture
+def rotor4():
+    #  Rotor without damping with 6 shaft elements 2 disks and 2 bearings
+    #  Same as rotor3, but constructed with sections.
+    i_d = 0
+    o_d = 0.05
+    E = 211e9
+    Gs = 81.2e9
+    rho = 7810
+    n = 6
+    L = [0.25 for _ in range(n)]
+
+    n0 = len(L)//2
+    n1 = len(L)//2
+    L0 = sum(L[:n0])
+    L1 = sum(L[n1:])
+    sec0 = ShaftElement.section(L0, n0, i_d, o_d, E, Gs, rho,)
+    sec1 = ShaftElement.section(L1, n1, i_d, o_d, E, Gs, rho,)
+
+    shaft_elem = [sec0, sec1]
+
+    disk0 = DiskElement(2, rho, 0.07, 0.05, 0.28)
+    disk1 = DiskElement(4, rho, 0.07, 0.05, 0.35)
+
+    stfx = 1e6
+    stfy = 0.8e6
+    bearing0 = BearingElement(0, kxx=stfx, kyy=stfy, cxx=0)
+    bearing1 = BearingElement(6, kxx=stfx, kyy=stfy, cxx=0)
+
+    return Rotor(shaft_elem, [disk0, disk1], [bearing0, bearing1])
+
+
+def test_evals_rotor3_rotor4(rotor3, rotor4):
+    rotor3_evals, rotor3_evects = rotor3._eigen()
+    rotor4_evals, rotor4_evects = rotor4._eigen()
+
+    assert_allclose(rotor3_evals, rotor4_evals, rtol=1e-3)
+
+
 #  TODO implement more tests using a simple rotor with 2 elements and one disk
 #  TODO add test for damped case
 
