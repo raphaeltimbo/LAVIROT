@@ -372,7 +372,9 @@ class Rotor(object):
         if sparse is True:
             try:
                 evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM', v0=self._v0)
-                self._v0 = evectors[:, 0]  # store v0 to use in the next call to eigs
+                # store v0 as a linear combination of the previously
+                # calculated eigenvectors to use in the next call to eigs
+                self._v0 = np.real(sum(evectors.T))
             except las.ArpackError:
                 evalues, evectors = la.eig(self.A(w))
         else:
