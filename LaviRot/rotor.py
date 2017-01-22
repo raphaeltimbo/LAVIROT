@@ -370,11 +370,13 @@ class Rotor(object):
             w = self.w
 
         if sparse is True:
-            evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM', v0=self._v0)
+            try:
+                evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM', v0=self._v0)
+                self._v0 = evectors[:, 0]  # store v0 to use in the next call to eigs
+            except las.ArpackError:
+                evalues, evectors = la.eig(self.A(w))
         else:
             evalues, evectors = la.eig(self.A(w))
-
-        self._v0 = evectors[:, 0]  # store v0 to use in the next call to eigs
 
         if sorted_ is False:
             return evalues, evectors
