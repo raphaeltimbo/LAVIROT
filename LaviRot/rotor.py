@@ -4,6 +4,7 @@ import scipy.linalg as la
 import scipy.sparse.linalg as las
 import scipy.signal as signal
 import scipy.io as sio
+from collections import Iterable
 from LaviRot.elements import *
 
 
@@ -73,6 +74,17 @@ class Rotor(object):
     def __init__(self, shaft_elements, disk_elements, bearing_seal_elements, w=0):
         #  TODO consider speed as a rotor property. Setter should call __init__ again
         self._w = w
+
+        # flatten shaft_elements
+        def flatten(l):
+            for el in l:
+                if isinstance(el, Iterable) \
+                        and not isinstance(el, (str, bytes)):
+                    yield from flatten(el)
+                else:
+                    yield el
+
+        shaft_elements = [el for el in flatten(shaft_elements)]
 
         # set n for each shaft element
         for i, sh in enumerate(shaft_elements):
