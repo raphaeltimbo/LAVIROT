@@ -111,3 +111,4 @@ imgs/
 /docs/tutorial/.ipynb_checkpoints/
 /update_LaviRot.sh
 /debug.py
+/update_gh_page.sh
