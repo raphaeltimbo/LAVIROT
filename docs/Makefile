@@ -7,7 +7,7 @@ SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = _build
 # custom
-GH_PAGES_SOURCES = docs/Makefile docs
+GH_PAGES_SOURCES = docs LaviRot docs/Makefile
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
@@ -209,6 +209,7 @@ gh-pages:
 	@echo "$(GH_PAGES_SOURCES)"
 	git checkout gh-pages
 	rm -rf _build _sources _static
+	@echo "test"
 	git checkout master $(GH_PAGES_SOURCES)
 	git reset HEAD
 	make html
