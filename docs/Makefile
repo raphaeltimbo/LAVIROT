@@ -208,6 +208,7 @@ pseudoxml:
 gh-pages:
 	@echo "$(GH_PAGES_SOURCES)"
 	git checkout gh-pages
+	rm -rf _build _sources _static
 	@echo "test"
 	git checkout master $(GH_PAGES_SOURCES)
 	git reset HEAD
