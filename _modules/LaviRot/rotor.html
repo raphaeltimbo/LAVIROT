@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>LaviRot.rotor &#8212; LaviRot 0.1.5b documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.5b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          LaviRot</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.5b</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../api/index.html">API</a></li>
+                <li><a href="../../tutorial/index.html">Tutorial</a></li>
+                <li><a href="../../gallery/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/elements.html">Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/rotor.html">Rotor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/results.html">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery/index.html">Examples Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../gallery/compressor.html">Compressor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../zreferences.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for LaviRot.rotor</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.linalg</span> <span class="k">as</span> <span class="nn">la</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse.linalg</span> <span class="k">as</span> <span class="nn">las</span>
+<span class="kn">import</span> <span class="nn">scipy.signal</span> <span class="k">as</span> <span class="nn">signal</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span> <span class="k">as</span> <span class="nn">sio</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">LaviRot.elements</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Rotor&#39;</span><span class="p">,</span> <span class="s1">&#39;rotor_example&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Rotor"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor">[docs]</a><span class="k">class</span> <span class="nc">Rotor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">r&quot;&quot;&quot;A rotor object.</span>
+
+<span class="sd">    This class will create a rotor with the shaft,</span>
+<span class="sd">    disk and bearing elements provided.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    shaft_elements: list</span>
+<span class="sd">        List with the shaft elements</span>
+<span class="sd">    disk_elements: list</span>
+<span class="sd">        List with the disk elements</span>
+<span class="sd">    bearing_elements: list</span>
+<span class="sd">        List with the bearing elements</span>
+<span class="sd">    w: float, optional</span>
+<span class="sd">        Rotor speed. Defaults to 0.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A rotor object.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    evalues : array</span>
+<span class="sd">        Rotor&#39;s eigenvalues.</span>
+<span class="sd">    evectors : array</span>
+<span class="sd">        Rotor&#39;s eigenvectors.</span>
+<span class="sd">    wn : array</span>
+<span class="sd">        Rotor&#39;s natural frequencies in rad/s.</span>
+<span class="sd">    wd : array</span>
+<span class="sd">        Rotor&#39;s damped natural frequencies in rad/s.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings</span>
+<span class="sd">    &gt;&gt;&gt; z = 0</span>
+<span class="sd">    &gt;&gt;&gt; le = 0.25</span>
+<span class="sd">    &gt;&gt;&gt; i_d = 0</span>
+<span class="sd">    &gt;&gt;&gt; o_d = 0.05</span>
+<span class="sd">    &gt;&gt;&gt; E = 211e9</span>
+<span class="sd">    &gt;&gt;&gt; G = 81.2e9</span>
+<span class="sd">    &gt;&gt;&gt; rho = 7810</span>
+<span class="sd">    &gt;&gt;&gt; tim0 = ShaftElement(le, i_d, o_d, E, G, rho,</span>
+<span class="sd">    ...                    shear_effects=True,</span>
+<span class="sd">    ...                    rotary_inertia=True,</span>
+<span class="sd">    ...                    gyroscopic=True)</span>
+<span class="sd">    &gt;&gt;&gt; tim1 = ShaftElement(le, i_d, o_d, E, G, rho,</span>
+<span class="sd">    ...                    shear_effects=True,</span>
+<span class="sd">    ...                    rotary_inertia=True,</span>
+<span class="sd">    ...                    gyroscopic=True)</span>
+<span class="sd">    &gt;&gt;&gt; shaft_elm = [tim0, tim1]</span>
+<span class="sd">    &gt;&gt;&gt; disk0 = DiskElement(1, rho, 0.07, 0.05, 0.28)</span>
+<span class="sd">    &gt;&gt;&gt; stf = 1e6</span>
+<span class="sd">    &gt;&gt;&gt; bearing0 = BearingElement(0, kxx=stf, cxx=0)</span>
+<span class="sd">    &gt;&gt;&gt; bearing1 = BearingElement(2, kxx=stf, cxx=0)</span>
+<span class="sd">    &gt;&gt;&gt; rotor = Rotor(shaft_elm, [disk0], [bearing0, bearing1])</span>
+<span class="sd">    &gt;&gt;&gt; rotor.wd[0] # doctest: +ELLIPSIS</span>
+<span class="sd">    215.3707...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shaft_elements</span><span class="p">,</span> <span class="n">disk_elements</span><span class="p">,</span> <span class="n">bearing_seal_elements</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="c1">#  TODO consider speed as a rotor property. Setter should call __init__ again</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_w</span> <span class="o">=</span> <span class="n">w</span>
+
+        <span class="c1"># flatten shaft_elements</span>
+        <span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> \
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
+                    <span class="k">yield from</span> <span class="n">flatten</span><span class="p">(</span><span class="n">el</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">el</span>
+
+        <span class="n">shaft_elements</span> <span class="o">=</span> <span class="p">[</span><span class="n">el</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">flatten</span><span class="p">(</span><span class="n">shaft_elements</span><span class="p">)]</span>
+
+        <span class="c1"># set n for each shaft element</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sh</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">shaft_elements</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">sh</span><span class="o">.</span><span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">sh</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">i</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">shaft_elements</span> <span class="o">=</span> <span class="n">shaft_elements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bearing_seal_elements</span> <span class="o">=</span> <span class="n">bearing_seal_elements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disk_elements</span> <span class="o">=</span> <span class="n">disk_elements</span>
+
+        <span class="c1"># Values for evalues and evectors will be calculated by self._calc_system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evalues</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evectors</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wd</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_v0</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># used to call eigs</span>
+        <span class="c1">#  TODO check when disk diameter in no consistent with shaft diameter</span>
+        <span class="c1">#  TODO add error for elements added to the same n (node)</span>
+        <span class="c1"># number of dofs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndof</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">shaft_elements</span><span class="p">)</span> <span class="o">+</span> <span class="mi">4</span>
+
+        <span class="c1">#  nodes axial position</span>
+        <span class="n">nodes_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">sh</span> <span class="ow">in</span> <span class="n">shaft_elements</span><span class="p">:</span>
+            <span class="n">length</span> <span class="o">+=</span> <span class="n">sh</span><span class="o">.</span><span class="n">L</span>
+            <span class="n">nodes_pos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes_pos</span> <span class="o">=</span> <span class="n">nodes_pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes_pos</span><span class="p">))]</span>
+
+        <span class="c1">#  TODO for tappered elements i_d and o_d will be a list with two elements</span>
+        <span class="c1">#  diameter at node position</span>
+        <span class="n">nodes_i_d</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">i_d</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shaft_elements</span><span class="p">]</span>
+        <span class="c1"># append i_d for last node</span>
+        <span class="n">nodes_i_d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shaft_elements</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">i_d</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes_i_d</span> <span class="o">=</span> <span class="n">nodes_i_d</span>
+
+        <span class="n">nodes_o_d</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">o_d</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shaft_elements</span><span class="p">]</span>
+        <span class="c1"># append o_d for last node</span>
+        <span class="n">nodes_o_d</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shaft_elements</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">o_d</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes_o_d</span> <span class="o">=</span> <span class="n">nodes_o_d</span>
+
+        <span class="c1"># call self._calc_system() to calculate current evalues and evectors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calc_system</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_calc_system</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evalues</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">evectors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eigen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wn</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">evalues</span><span class="p">))[:</span><span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wd</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">evalues</span><span class="p">))[:</span><span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_H</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">w</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span>
+
+    <span class="nd">@w</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">w</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_w</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calc_system</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_dofs</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The first and last dof for a given element&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="o">==</span> <span class="n">ShaftElement</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">n</span>
+            <span class="n">n1</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">node</span>
+            <span class="n">n2</span> <span class="o">=</span> <span class="n">n1</span> <span class="o">+</span> <span class="mi">8</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="o">==</span> <span class="n">DiskElement</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">n</span>
+            <span class="n">n1</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">node</span>
+            <span class="n">n2</span> <span class="o">=</span> <span class="n">n1</span> <span class="o">+</span> <span class="mi">4</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">BearingElement</span><span class="p">):</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">n</span>
+            <span class="n">n1</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">node</span>
+            <span class="n">n2</span> <span class="o">=</span> <span class="n">n1</span> <span class="o">+</span> <span class="mi">2</span>
+        <span class="c1"># TODO implement this for bearing with more dofs</span>
+        <span class="k">return</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span>
+
+<div class="viewcode-block" id="Rotor.M"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor.M">[docs]</a>    <span class="k">def</span> <span class="nf">M</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Mass matrix for an instance of a rotor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Mass matrix for the rotor.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; rotor = rotor_example()</span>
+<span class="sd">        &gt;&gt;&gt; rotor.M()[:4, :4]</span>
+<span class="sd">        array([[ 1.42050794,  0.        ,  0.        ,  0.04931719],</span>
+<span class="sd">               [ 0.        ,  1.42050794, -0.04931719,  0.        ],</span>
+<span class="sd">               [ 0.        , -0.04931719,  0.00231392,  0.        ],</span>
+<span class="sd">               [ 0.04931719,  0.        ,  0.        ,  0.00231392]])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#  Create the matrices</span>
+        <span class="n">M0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shaft_elements</span><span class="p">:</span>
+            <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dofs</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span>
+            <span class="n">M0</span><span class="p">[</span><span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">,</span> <span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">elm</span><span class="o">.</span><span class="n">M</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">disk_elements</span><span class="p">:</span>
+            <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dofs</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span>
+            <span class="n">M0</span><span class="p">[</span><span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">,</span> <span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">elm</span><span class="o">.</span><span class="n">M</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">M0</span></div>
+
+<div class="viewcode-block" id="Rotor.K"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor.K">[docs]</a>    <span class="k">def</span> <span class="nf">K</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stiffness matrix for an instance of a rotor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Stiffness matrix for the rotor.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; rotor = rotor_example()</span>
+<span class="sd">        &gt;&gt;&gt; np.round(rotor.K()[:4, :4]/1e6)</span>
+<span class="sd">        array([[ 47.,   0.,   0.,   6.],</span>
+<span class="sd">               [  0.,  46.,  -6.,   0.],</span>
+<span class="sd">               [  0.,  -6.,   1.,   0.],</span>
+<span class="sd">               [  6.,   0.,   0.,   1.]])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span>
+        <span class="c1">#  Create the matrices</span>
+        <span class="n">K0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shaft_elements</span><span class="p">:</span>
+            <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dofs</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span>
+            <span class="n">K0</span><span class="p">[</span><span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">,</span> <span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">elm</span><span class="o">.</span><span class="n">K</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bearing_seal_elements</span><span class="p">:</span>
+            <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dofs</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span>
+            <span class="n">K0</span><span class="p">[</span><span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">,</span> <span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">elm</span><span class="o">.</span><span class="n">K</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="c1">#  Skew-symmetric speed dependent contribution to element stiffness matrix</span>
+        <span class="c1">#  from the internal damping.</span>
+        <span class="c1">#  TODO add the contribution for K1 matrix</span>
+
+        <span class="k">return</span> <span class="n">K0</span></div>
+
+<div class="viewcode-block" id="Rotor.C"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor.C">[docs]</a>    <span class="k">def</span> <span class="nf">C</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Damping matrix for an instance of a rotor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Damping matrix for the rotor.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; rotor = rotor_example()</span>
+<span class="sd">        &gt;&gt;&gt; rotor.C()[:4, :4]</span>
+<span class="sd">        array([[ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.],</span>
+<span class="sd">               [ 0.,  0.,  0.,  0.]])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span>
+        <span class="c1">#  Create the matrices</span>
+        <span class="n">C0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bearing_seal_elements</span><span class="p">:</span>
+            <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dofs</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span>
+            <span class="n">C0</span><span class="p">[</span><span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">,</span> <span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">elm</span><span class="o">.</span><span class="n">C</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">C0</span></div>
+
+<div class="viewcode-block" id="Rotor.G"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor.G">[docs]</a>    <span class="k">def</span> <span class="nf">G</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gyroscopic matrix for an instance of a rotor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Gyroscopic matrix for the rotor.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; rotor = rotor_example()</span>
+<span class="sd">        &gt;&gt;&gt; rotor.G()[:4, :4]</span>
+<span class="sd">        array([[ 0.        , -0.01943344, -0.00022681,  0.        ],</span>
+<span class="sd">               [-0.01943344,  0.        ,  0.        , -0.00022681],</span>
+<span class="sd">               [ 0.00022681,  0.        ,  0.        ,  0.0001524 ],</span>
+<span class="sd">               [ 0.        ,  0.00022681, -0.0001524 ,  0.        ]])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#  Create the matrices</span>
+        <span class="n">G0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shaft_elements</span><span class="p">:</span>
+            <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dofs</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span>
+            <span class="n">G0</span><span class="p">[</span><span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">,</span> <span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">elm</span><span class="o">.</span><span class="n">G</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">disk_elements</span><span class="p">:</span>
+            <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dofs</span><span class="p">(</span><span class="n">elm</span><span class="p">)</span>
+            <span class="n">G0</span><span class="p">[</span><span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">,</span> <span class="n">n1</span><span class="p">:</span><span class="n">n2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">elm</span><span class="o">.</span><span class="n">G</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">G0</span></div>
+
+<div class="viewcode-block" id="Rotor.A"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor.A">[docs]</a>    <span class="k">def</span> <span class="nf">A</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;State space matrix for an instance of a rotor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        State space matrix for the rotor.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; rotor = rotor_example()</span>
+<span class="sd">        &gt;&gt;&gt; np.round(rotor.A()[50:56, :2])</span>
+<span class="sd">        array([[     0.,  11110.],</span>
+<span class="sd">               [-11106.,     -0.],</span>
+<span class="sd">               [  -169.,      0.],</span>
+<span class="sd">               [    -0.,   -169.],</span>
+<span class="sd">               [    -0.,  10511.],</span>
+<span class="sd">               [-10507.,     -0.]])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span>
+
+        <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">))</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">)</span>
+        <span class="c1">#  TODO implement K(w) and C(w) for shaft, bearings etc.</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">Z</span><span class="p">,</span> <span class="n">I</span><span class="p">]),</span>
+             <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">la</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">(</span><span class="n">w</span><span class="p">)),</span> <span class="n">la</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">(),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">()</span><span class="o">*</span><span class="n">w</span><span class="p">))])])</span>
+
+        <span class="k">return</span> <span class="n">A</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_index</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Function used to generate an index that will sort</span>
+<span class="sd">        eigenvalues and eigenvectors based on the imaginary (wd)</span>
+<span class="sd">        part of the eigenvalues. Positive eigenvalues will be</span>
+<span class="sd">        positioned at the first half of the array.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eigenvalues: array</span>
+<span class="sd">            Array with the eigenvalues.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        idx:</span>
+<span class="sd">            An array with indices that will sort the</span>
+<span class="sd">            eigenvalues and eigenvectors.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; rotor = rotor_example()</span>
+<span class="sd">        &gt;&gt;&gt; evalues, evectors = rotor._eigen(0, sorted_=False)</span>
+<span class="sd">        &gt;&gt;&gt; idx = rotor._index(evalues)</span>
+<span class="sd">        &gt;&gt;&gt; idx[:6] # doctest: +ELLIPSIS</span>
+<span class="sd">        array([ 1,  3,  5,  7,  9, 11]...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># avoid float point errors when sorting</span>
+        <span class="n">evals_truncated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">evals_truncated</span><span class="p">)</span>  <span class="c1"># First column</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">evals_truncated</span><span class="p">)</span>  <span class="c1"># Second column</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lexsort</span><span class="p">((</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">))</span>  <span class="c1"># Sort by imag, then by absolute</span>
+        <span class="c1"># Positive eigenvalues first</span>
+        <span class="n">positive</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:]]</span>
+        <span class="n">negative</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]]</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">positive</span><span class="p">,</span> <span class="n">negative</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">idx</span>
+
+    <span class="k">def</span> <span class="nf">_eigen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sorted_</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;This method will return the eigenvalues and eigenvectors of the</span>
+<span class="sd">        state space matrix A, sorted by the index method which considers</span>
+<span class="sd">        the imaginary part (wd) of the eigenvalues for sorting.</span>
+<span class="sd">        To avoid sorting use sorted_=False</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        w: float</span>
+<span class="sd">            Rotor speed.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        evalues: array</span>
+<span class="sd">            An array with the eigenvalues</span>
+<span class="sd">        evectors array</span>
+<span class="sd">            An array with the eigenvectors</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; rotor = rotor_example()</span>
+<span class="sd">        &gt;&gt;&gt; evalues, evectors = rotor._eigen(0)</span>
+<span class="sd">        &gt;&gt;&gt; evalues[0].imag # doctest: +ELLIPSIS</span>
+<span class="sd">        82.653...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span>
+
+        <span class="k">if</span> <span class="n">sparse</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">evalues</span><span class="p">,</span> <span class="n">evectors</span> <span class="o">=</span> <span class="n">las</span><span class="o">.</span><span class="n">eigs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ncv</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;LM&#39;</span><span class="p">,</span> <span class="n">v0</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_v0</span><span class="p">)</span>
+                <span class="c1"># store v0 as a linear combination of the previously</span>
+                <span class="c1"># calculated eigenvectors to use in the next call to eigs</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_v0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">evectors</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+            <span class="k">except</span> <span class="n">las</span><span class="o">.</span><span class="n">ArpackError</span><span class="p">:</span>
+                <span class="n">evalues</span><span class="p">,</span> <span class="n">evectors</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">evalues</span><span class="p">,</span> <span class="n">evectors</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">sorted_</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">evalues</span><span class="p">,</span> <span class="n">evectors</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">(</span><span class="n">evalues</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">evalues</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">evectors</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Rotor.H_kappa"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor.H_kappa">[docs]</a>    <span class="k">def</span> <span class="nf">H_kappa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">return_T</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Calculates the H matrix for a given node and natural frequency.</span>
+
+<span class="sd">        The matrix H contains information about the whirl direction,</span>
+<span class="sd">        the orbit minor and major axis and the orbit inclination.</span>
+<span class="sd">        The matrix is calculated by :math:`H = T.T^T` where the</span>
+<span class="sd">        matrix T is constructed using the eigenvector corresponding</span>
+<span class="sd">        to the natural frequency of interest:</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">           :nowrap:</span>
+
+<span class="sd">           \begin{eqnarray}</span>
+<span class="sd">              \begin{bmatrix}</span>
+<span class="sd">              u(t)\\</span>
+<span class="sd">              v(t)</span>
+<span class="sd">              \end{bmatrix}</span>
+<span class="sd">              = \mathfrak{R}\Bigg(</span>
+<span class="sd">              \begin{bmatrix}</span>
+<span class="sd">              r_u e^{j\eta_u}\\</span>
+<span class="sd">              r_v e^{j\eta_v}</span>
+<span class="sd">              \end{bmatrix}\Bigg)</span>
+<span class="sd">              e^{j\omega_i t}</span>
+<span class="sd">              =</span>
+<span class="sd">              \begin{bmatrix}</span>
+<span class="sd">              r_u cos(\eta_u + \omega_i t)\\</span>
+<span class="sd">              r_v cos(\eta_v + \omega_i t)</span>
+<span class="sd">              \end{bmatrix}</span>
+<span class="sd">              = {\bf T}</span>
+<span class="sd">              \begin{bmatrix}</span>
+<span class="sd">              cos(\omega_i t)\\</span>
+<span class="sd">              sin(\omega_i t)</span>
+<span class="sd">              \end{bmatrix}</span>
+<span class="sd">           \end{eqnarray}</span>
+
+<span class="sd">        Where :math:`r_u e^{j\eta_u}` e :math:`r_v e^{j\eta_v}` are the</span>
+<span class="sd">        elements of the *i*\th eigenvector, corresponding to the node and</span>
+<span class="sd">        natural frequency of interest (mode).</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            {\bf T} =</span>
+<span class="sd">            \begin{bmatrix}</span>
+<span class="sd">            r_u cos(\eta_u) &amp; -r_u sin(\eta_u)\\</span>
+<span class="sd">            r_u cos(\eta_u) &amp; -r_v sin(\eta_v)</span>
+<span class="sd">            \end{bmatrix}</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node: int</span>
+<span class="sd">            Node for which the matrix H will be calculated.</span>
+<span class="sd">        w: int</span>
+<span class="sd">            Index corresponding to the natural frequency</span>
+<span class="sd">            of interest.</span>
+<span class="sd">        return_T: bool, optional</span>
+<span class="sd">            If True, returns the H matrix and a dictionary with the</span>
+<span class="sd">            values for :math:`r_u, r_v, \eta_u, \eta_v`.</span>
+
+<span class="sd">            Default is false.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        H: array</span>
+<span class="sd">            Matrix H.</span>
+<span class="sd">        Tdic: dict</span>
+<span class="sd">            Dictionary with values for :math:`r_u, r_v, \eta_u, \eta_v`.</span>
+
+<span class="sd">            It will be returned only if return_T is True.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; rotor = rotor_example()</span>
+<span class="sd">        &gt;&gt;&gt; # H matrix for the 0th node</span>
+<span class="sd">        &gt;&gt;&gt; rotor.H_kappa(0, 0) # doctest: +ELLIPSIS</span>
+<span class="sd">        array([[  2.46154806e-29,  -7.17353298e-18],</span>
+<span class="sd">               [ -7.17353298e-18,   2.11429917e-06]])</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># get vector of interest based on freqs</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evectors</span><span class="p">[</span><span class="mi">4</span> <span class="o">*</span> <span class="n">node</span><span class="p">:</span><span class="mi">4</span> <span class="o">*</span> <span class="n">node</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">w</span><span class="p">]</span>
+        <span class="c1"># get translation sdofs for specified node for each mode</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">ru</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+        <span class="n">nu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="n">nv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">ru</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">nu</span><span class="p">),</span> <span class="o">-</span><span class="n">ru</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">nu</span><span class="p">)],</span>
+                      <span class="p">[</span><span class="n">rv</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">nv</span><span class="p">),</span> <span class="o">-</span><span class="n">rv</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">nv</span><span class="p">)]])</span>
+        <span class="n">H</span> <span class="o">=</span> <span class="n">T</span> <span class="o">@</span> <span class="n">T</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="k">if</span> <span class="n">return_T</span><span class="p">:</span>
+            <span class="n">Tdic</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ru&#39;</span><span class="p">:</span> <span class="n">ru</span><span class="p">,</span>
+                    <span class="s1">&#39;rv&#39;</span><span class="p">:</span> <span class="n">rv</span><span class="p">,</span>
+                    <span class="s1">&#39;nu&#39;</span><span class="p">:</span> <span class="n">nu</span><span class="p">,</span>
+                    <span class="s1">&#39;nv&#39;</span><span class="p">:</span> <span class="n">nv</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">H</span><span class="p">,</span> <span class="n">Tdic</span>
+
+        <span class="k">return</span> <span class="n">H</span></div>
+
+<div class="viewcode-block" id="Rotor.kappa"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor.kappa">[docs]</a>    <span class="k">def</span> <span class="nf">kappa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">wd</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Calculates kappa for a given node and natural frequency.</span>
+
+<span class="sd">        w is the the index of the natural frequency of interest.</span>
+<span class="sd">        The function calculates the orbit parameter :math:`\kappa`:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            \kappa = \pm \sqrt{\lambda_2 / \lambda_1}</span>
+
+<span class="sd">        Where :math:`\sqrt{\lambda_1}` is the length of the semiminor axes</span>
+<span class="sd">        and :math:`\sqrt{\lambda_2}` is the length of the semimajor axes.</span>
+
+<span class="sd">        If :math:`\kappa = \pm 1`, the orbit is circular.</span>
+
+<span class="sd">        If :math:`\kappa` is positive we have a forward rotating orbit</span>
+<span class="sd">        and if it is negative we have a backward rotating orbit.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node: int</span>
+<span class="sd">            Node for which kappa will be calculated.</span>
+<span class="sd">        w: int</span>
+<span class="sd">            Index corresponding to the natural frequency</span>
+<span class="sd">            of interest.</span>
+<span class="sd">        wd: bool</span>
+<span class="sd">            If True, damping natural frequencies are used.</span>
+
+<span class="sd">            Default is true.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        kappa: dict</span>
+<span class="sd">            A dictionary with values for the natural frequency,</span>
+<span class="sd">            major axis, minor axis and kappa.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; rotor = rotor_example()</span>
+<span class="sd">        &gt;&gt;&gt; # kappa for each node of the first natural frequency</span>
+<span class="sd">        &gt;&gt;&gt; # Major axes for node 0 and natural frequency (mode) 0.</span>
+<span class="sd">        &gt;&gt;&gt; rotor.kappa(0, 0)[&#39;Major axes&#39;] # doctest: +ELLIPSIS</span>
+<span class="sd">        array(0.00145...)</span>
+<span class="sd">        &gt;&gt;&gt; # kappa for node 2 and natural frequency (mode) 3.</span>
+<span class="sd">        &gt;&gt;&gt; rotor.kappa(2, 3)[&#39;kappa&#39;] # doctest: +ELLIPSIS</span>
+<span class="sd">        array(8.7006...e-13)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">wd</span><span class="p">:</span>
+            <span class="n">nat_freq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wd</span><span class="p">[</span><span class="n">w</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nat_freq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wn</span><span class="p">[</span><span class="n">w</span><span class="p">]</span>
+
+        <span class="n">H</span><span class="p">,</span> <span class="n">Tvals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H_kappa</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">return_T</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">nu</span> <span class="o">=</span> <span class="n">Tvals</span><span class="p">[</span><span class="s1">&#39;nu&#39;</span><span class="p">]</span>
+        <span class="n">nv</span> <span class="o">=</span> <span class="n">Tvals</span><span class="p">[</span><span class="s1">&#39;nv&#39;</span><span class="p">]</span>
+
+        <span class="n">lam</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">H</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1">#  TODO normalize the orbit (after all orbits have been calculated?)</span>
+        <span class="c1"># lam is the eigenvalue -&gt; sqrt(lam) is the minor/major axis.</span>
+        <span class="c1"># kappa encodes the relation between the axis and the precession.</span>
+        <span class="n">minor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lam</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+        <span class="n">major</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">lam</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        <span class="n">kappa</span> <span class="o">=</span> <span class="n">minor</span> <span class="o">/</span> <span class="n">major</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">nv</span> <span class="o">-</span> <span class="n">nu</span>
+
+        <span class="c1"># we need to evaluate if 0 &lt; nv - nu &lt; pi.</span>
+        <span class="k">if</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+            <span class="n">diff</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">elif</span> <span class="n">diff</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+            <span class="n">diff</span> <span class="o">-=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+        <span class="c1"># if nv = nu or nv = nu + pi then the response is a straight line.</span>
+        <span class="k">if</span> <span class="n">diff</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">diff</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+            <span class="n">kappa</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># if 0 &lt; nv - nu &lt; pi, then a backward rotating mode exists.</span>
+        <span class="k">elif</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+            <span class="n">kappa</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">k</span> <span class="o">=</span> <span class="p">({</span><span class="s1">&#39;Frequency&#39;</span><span class="p">:</span> <span class="n">nat_freq</span><span class="p">,</span>
+              <span class="s1">&#39;Minor axes&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">minor</span><span class="p">),</span>
+              <span class="s1">&#39;Major axes&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">major</span><span class="p">),</span>
+              <span class="s1">&#39;kappa&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">kappa</span><span class="p">)})</span>
+
+        <span class="k">return</span> <span class="n">k</span></div>
+
+<div class="viewcode-block" id="Rotor.kappa_mode"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor.kappa_mode">[docs]</a>    <span class="k">def</span> <span class="nf">kappa_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;This function evaluates kappa given the index of</span>
+<span class="sd">        the natural frequency of interest.</span>
+<span class="sd">        Values of kappa are evaluated for each node of the</span>
+<span class="sd">        corresponding frequency mode.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        w: int</span>
+<span class="sd">            Index corresponding to the natural frequency</span>
+<span class="sd">            of interest.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        kappa_mode: list</span>
+<span class="sd">            A list with the value of kappa for each node related</span>
+<span class="sd">            to the mode/natural frequency of interest.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; rotor = rotor_example()</span>
+<span class="sd">        &gt;&gt;&gt; # kappa for each node of the first natural frequency</span>
+<span class="sd">        &gt;&gt;&gt; rotor.kappa_mode(0) # doctest: +ELLIPSIS</span>
+<span class="sd">        [array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0)]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kappa_mode</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">kappa</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">w</span><span class="p">)[</span><span class="s1">&#39;kappa&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">kappa_mode</span></div>
+
+    <span class="k">def</span> <span class="nf">orbit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+    <span class="c1">#  TODO make w a property. Make eigen an attribute.</span>
+    <span class="c1">#  TODO when w is changed, eigen is calculated and is available to methods.</span>
+    <span class="c1">#  TODO static methods as auxiliary functions</span>
+
+    <span class="k">def</span> <span class="nf">_H</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Continuous-time linear time invariant system.</span>
+
+<span class="sd">        This method is used to create a Continuous-time linear</span>
+<span class="sd">        time invariant system for the mdof system.</span>
+<span class="sd">        From this system we can obtain poles, impulse response,</span>
+<span class="sd">        generate a bode, etc.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">))</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndof</span><span class="p">)</span>
+
+        <span class="c1"># x&#39; = Ax + Bu</span>
+        <span class="n">B2</span> <span class="o">=</span> <span class="n">I</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">A</span><span class="p">()</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">Z</span><span class="p">,</span>
+                       <span class="n">la</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">(),</span> <span class="n">B2</span><span class="p">)])</span>
+
+        <span class="c1"># y = Cx + Du</span>
+        <span class="c1"># Observation matrices</span>
+        <span class="n">Cd</span> <span class="o">=</span> <span class="n">I</span>
+        <span class="n">Cv</span> <span class="o">=</span> <span class="n">Z</span>
+        <span class="n">Ca</span> <span class="o">=</span> <span class="n">Z</span>
+
+        <span class="c1"># TODO Check equation below regarding gyroscopic matrix</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">Cd</span> <span class="o">-</span> <span class="n">Ca</span> <span class="o">@</span> <span class="n">la</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">()),</span> <span class="n">Cv</span> <span class="o">-</span> <span class="n">Ca</span> <span class="o">@</span> <span class="n">la</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">())))</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">Ca</span> <span class="o">@</span> <span class="n">la</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">(),</span> <span class="n">B2</span><span class="p">)</span>
+
+        <span class="n">sys</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">lti</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sys</span>
+
+<div class="viewcode-block" id="Rotor.freq_response"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor.freq_response">[docs]</a>    <span class="k">def</span> <span class="nf">freq_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">omega</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Frequency response for a mdof system.</span>
+
+<span class="sd">        This method returns the frequency response for a mdof system</span>
+<span class="sd">        given a range of frequencies and the modes that will be used.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        omega : array, optional</span>
+<span class="sd">            Array with the desired range of frequencies (the default</span>
+<span class="sd">             is 0 to 1.5 x highest damped natural frequency.</span>
+<span class="sd">        modes : list, optional</span>
+<span class="sd">            Modes that will be used to calculate the frequency response</span>
+<span class="sd">            (all modes will be used if a list is not given).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        omega : array</span>
+<span class="sd">            Array with the frequencies</span>
+<span class="sd">        magdb : array</span>
+<span class="sd">            Magnitude (dB) of the frequency response for each pair input/output.</span>
+<span class="sd">            The order of the array is: [output, input, magnitude]</span>
+<span class="sd">        phase : array</span>
+<span class="sd">            Phase of the frequency response for each pair input/output.</span>
+<span class="sd">            The order of the array is: [output, input, phase]</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">inputs</span>  <span class="c1"># inputs (mag and phase)</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">inputs</span>  <span class="c1"># outputs</span>
+
+        <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">B</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">C</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="o">.</span><span class="n">D</span>
+
+        <span class="n">evals</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eigen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">sparse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">psi_inv</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">psi</span><span class="p">)</span>  <span class="c1"># TODO change to get psi_inv from la.eig</span>
+
+        <span class="c1"># if omega is not given, define a range</span>
+        <span class="c1"># TODO adapt this range</span>
+        <span class="k">if</span> <span class="n">omega</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">omega</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span>
+
+        <span class="c1"># if modes are selected:</span>
+            <span class="k">if</span> <span class="n">modes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndof</span>  <span class="c1"># n dof -&gt; number of modes</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">modes</span><span class="p">)</span>  <span class="c1"># -&gt; number of desired modes</span>
+                <span class="c1"># idx to get each evalue/evector and its conjugate</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">m</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
+                <span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">modes</span>  <span class="c1"># modes</span>
+                <span class="n">idx</span><span class="p">[</span><span class="n">m</span><span class="p">:]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="p">)[</span><span class="o">-</span><span class="n">m</span><span class="p">:]</span>  <span class="c1"># conjugates (see how evalues are ordered)</span>
+
+                <span class="n">evals_m</span> <span class="o">=</span> <span class="n">evals</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span>
+                <span class="n">psi_m</span> <span class="o">=</span> <span class="n">psi</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="p">),</span> <span class="n">idx</span><span class="p">)]</span>
+                <span class="n">psi_inv_m</span> <span class="o">=</span> <span class="n">psi_inv</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="p">))]</span>
+
+                <span class="n">magdb_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)))</span>
+                <span class="n">phase_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)))</span>
+
+                <span class="k">for</span> <span class="n">wi</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">omega</span><span class="p">):</span>
+                    <span class="n">diag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w</span> <span class="o">-</span> <span class="n">lam</span><span class="p">)</span> <span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">evals_m</span><span class="p">])</span>
+                    <span class="n">H</span> <span class="o">=</span> <span class="n">C</span> <span class="o">@</span> <span class="n">psi_m</span> <span class="o">@</span> <span class="n">diag</span> <span class="o">@</span> <span class="n">psi_inv_m</span> <span class="o">@</span> <span class="n">B</span> <span class="o">+</span> <span class="n">D</span>
+
+                    <span class="n">magh</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">H</span><span class="p">))</span>
+                    <span class="n">angh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">H</span><span class="p">)))</span>
+
+                    <span class="n">magdb_m</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">wi</span><span class="p">]</span> <span class="o">=</span> <span class="n">magh</span>
+                    <span class="n">phase_m</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">wi</span><span class="p">]</span> <span class="o">=</span> <span class="n">angh</span>
+
+                <span class="k">return</span> <span class="n">omega</span><span class="p">,</span> <span class="n">magdb_m</span><span class="p">,</span> <span class="n">phase_m</span>
+
+        <span class="n">magdb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)))</span>
+        <span class="n">phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)))</span>
+
+        <span class="k">for</span> <span class="n">wi</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">omega</span><span class="p">):</span>
+            <span class="n">diag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w</span> <span class="o">-</span> <span class="n">lam</span><span class="p">)</span> <span class="k">for</span> <span class="n">lam</span> <span class="ow">in</span> <span class="n">evals</span><span class="p">])</span>
+            <span class="n">H</span> <span class="o">=</span> <span class="n">C</span> <span class="o">@</span> <span class="n">psi</span> <span class="o">@</span> <span class="n">diag</span> <span class="o">@</span> <span class="n">psi_inv</span> <span class="o">@</span> <span class="n">B</span> <span class="o">+</span> <span class="n">D</span>
+
+            <span class="n">magh</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">H</span><span class="p">))</span>
+            <span class="n">angh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">H</span><span class="p">)))</span>
+
+            <span class="n">magdb</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">wi</span><span class="p">]</span> <span class="o">=</span> <span class="n">magh</span>
+            <span class="n">phase</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">wi</span><span class="p">]</span> <span class="o">=</span> <span class="n">angh</span>
+
+        <span class="k">return</span> <span class="n">omega</span><span class="p">,</span> <span class="n">magdb</span><span class="p">,</span> <span class="n">phase</span></div>
+
+<div class="viewcode-block" id="Rotor.time_response"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor.time_response">[docs]</a>    <span class="k">def</span> <span class="nf">time_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">ic</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">r&quot;&quot;&quot;Time response for a rotor.</span>
+
+<span class="sd">        This method returns the time response for a rotor</span>
+<span class="sd">        given a force, time and initial conditions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        F : array</span>
+<span class="sd">            Force array (needs to have the same length as time array).</span>
+<span class="sd">        t : array</span>
+<span class="sd">            Time array.</span>
+<span class="sd">        ic : array, optional</span>
+<span class="sd">            The initial conditions on the state vector (zero by default).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        t : array</span>
+<span class="sd">            Time values for the output.</span>
+<span class="sd">        yout : array</span>
+<span class="sd">            System response.</span>
+<span class="sd">        xout : array</span>
+<span class="sd">            Time evolution of the state vector.</span>
+
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ic</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">signal</span><span class="o">.</span><span class="n">lsim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">ic</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">signal</span><span class="o">.</span><span class="n">lsim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Rotor.save_mat"><a class="viewcode-back" href="../../api/rotor.html#LaviRot.rotor.Rotor.save_mat">[docs]</a>    <span class="k">def</span> <span class="nf">save_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save matrices and rotor model to a .mat file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dic</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;M&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span><span class="p">(),</span>
+               <span class="s1">&#39;K&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">(),</span>
+               <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">(),</span>
+               <span class="s1">&#39;G&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">(),</span>
+               <span class="s1">&#39;nodes&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_pos</span><span class="p">}</span>
+
+        <span class="n">sio</span><span class="o">.</span><span class="n">savemat</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">.mat&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">file_name</span><span class="p">),</span> <span class="n">dic</span><span class="p">)</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">rotor_example</span><span class="p">():</span>
+    <span class="sd">r&quot;&quot;&quot;This function returns an instance of a simple rotor with</span>
+<span class="sd">    two shaft elements, one disk and two simple bearings.</span>
+<span class="sd">    The purpose of this is to make available a simple model</span>
+<span class="sd">    so that doctest can be written using this.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    An instance of a rotor object.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; rotor = rotor_example()</span>
+<span class="sd">    &gt;&gt;&gt; np.round(rotor.wd[:4])</span>
+<span class="sd">    array([  83.,   87.,  255.,  274.])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#  Rotor without damping with 2 shaft elements 1 disk and 2 bearings</span>
+    <span class="n">i_d</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">o_d</span> <span class="o">=</span> <span class="mf">0.05</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="mi">211</span><span class="n">e9</span>
+    <span class="n">Gs</span> <span class="o">=</span> <span class="mf">81.2e9</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="mi">7810</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.25</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+
+    <span class="n">shaft_elem</span> <span class="o">=</span> <span class="p">[</span><span class="n">ShaftElement</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">Gs</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span>
+                               <span class="n">shear_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">gyroscopic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">L</span><span class="p">]</span>
+
+    <span class="n">disk0</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">)</span>
+    <span class="n">disk1</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">)</span>
+
+    <span class="n">stfx</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e6</span>
+    <span class="n">stfy</span> <span class="o">=</span> <span class="mf">0.8e6</span>
+    <span class="n">bearing0</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">kxx</span><span class="o">=</span><span class="n">stfx</span><span class="p">,</span> <span class="n">kyy</span><span class="o">=</span><span class="n">stfy</span><span class="p">,</span> <span class="n">cxx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">bearing1</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">kxx</span><span class="o">=</span><span class="n">stfx</span><span class="p">,</span> <span class="n">kyy</span><span class="o">=</span><span class="n">stfy</span><span class="p">,</span> <span class="n">cxx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Rotor</span><span class="p">(</span><span class="n">shaft_elem</span><span class="p">,</span> <span class="p">[</span><span class="n">disk0</span><span class="p">,</span> <span class="n">disk1</span><span class="p">],</span> <span class="p">[</span><span class="n">bearing0</span><span class="p">,</span> <span class="n">bearing1</span><span class="p">])</span>
+
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Lavi.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

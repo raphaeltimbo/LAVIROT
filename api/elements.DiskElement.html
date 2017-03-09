@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Disk Element &#8212; LaviRot 0.1.5b documentation</title>
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/style.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootswatch-3.3.6/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.5b',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bearing Element" href="elements.BearingElement.html" />
+    <link rel="prev" title="Shaft Element" href="elements.ShaftElement.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          LaviRot</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.5b</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="index.html">API</a></li>
+                <li><a href="../tutorial/index.html">Tutorial</a></li>
+                <li><a href="../gallery/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="elements.html">Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotor.html">Rotor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="results.html">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gallery/index.html">Examples Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/compressor.html">Compressor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../zreferences.html">References</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="elements.ShaftElement.html" title="Previous Chapter: Shaft Element"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Shaft Element</span>
+    </a>
+  </li>
+  <li>
+    <a href="elements.BearingElement.html" title="Next Chapter: Bearing Element"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Bearing Element &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/api/elements.DiskElement.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="disk-element">
+<span id="diskelement"></span><h1>Disk Element<a class="headerlink" href="#disk-element" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="LaviRot.elements.DiskElement">
+<em class="property">class </em><code class="descclassname">LaviRot.elements.</code><code class="descname">DiskElement</code><span class="sig-paren">(</span><em>n</em>, <em>rho</em>, <em>width</em>, <em>i_d</em>, <em>o_d</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#DiskElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.DiskElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>A disk element.</p>
+<p>This class will create a disk element.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n: int</strong></p>
+<blockquote>
+<div><p>Node in which the disk will be inserted.</p>
+</div></blockquote>
+<p><strong>rho: float</strong></p>
+<blockquote>
+<div><p>Mass density.</p>
+</div></blockquote>
+<p><strong>width: float</strong></p>
+<blockquote>
+<div><p>The disk width.</p>
+</div></blockquote>
+<p><strong>i_d: float</strong></p>
+<blockquote>
+<div><p>Inner diameter.</p>
+</div></blockquote>
+<p><strong>o_d: float</strong></p>
+<blockquote class="last">
+<div><p>Outer diameter.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[R1]</a></td><td>&#8216;Dynamics of Rotating Machinery&#8217; by MI Friswell, JET Penny, SD Garvey
+&amp; AW Lees, published by Cambridge University Press, 2010 pp. 156-157.</td></tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">disk</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7810</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">disk</span><span class="o">.</span><span class="n">Ip</span>
+<span class="go">0.32956362089137037</span>
+</pre></div>
+</div>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>m</td>
+<td>(float) Mass of the disk element.</td>
+</tr>
+<tr class="row-even"><td>Id</td>
+<td>(float) Diametral moment of inertia.</td>
+</tr>
+<tr class="row-odd"><td>Ip</td>
+<td>(float) Polar moment of inertia</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, Lavi.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
