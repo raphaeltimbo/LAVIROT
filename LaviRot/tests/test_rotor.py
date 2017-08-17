@@ -275,6 +275,7 @@ def test_evects_sorted_rotor3(rotor3):
     assert_allclose(mac2.diagonal(), np.ones_like(mac1.diagonal()))
 
 
+@pytest.mark.skip(reason='Different evector order when not sorted')
 def test_evects_not_sorted_rotor3(rotor3):
     evects = np.array([[ -1.153e-03 +2.437e-20j,  -1.153e-03 -2.437e-20j,  -2.681e-18 +6.093e-17j,  -2.681e-18 -6.093e-17j],
                        [  2.532e-16 -1.888e-19j,   2.532e-16 +1.888e-19j,   5.543e-18 -1.454e-03j,   5.543e-18 +1.454e-03j],
@@ -335,6 +336,13 @@ def test_evects_not_sorted_rotor3(rotor3):
 
     rotor3_evals, rotor3_evects = rotor3._eigen(sorted_=False)
     mac1 = MAC_modes(evects, rotor3_evects[:, :4], plot=False)
+    # evectors order when sorted is false seems to change depending on system
+    # MAC below resulted from trying to test. See how MAC~1 is not in the diag.
+    # This test may have to be skipped for now
+    # [[4.75627510e-25   4.75365830e-25   9.99999988e-01   9.99467499e-01]
+    #  [4.75365830e-25   4.75627510e-25   9.99467499e-01   9.99999988e-01]
+    # [9.99999989e-01    9.99414618e-01    7.43459739e-25    7.43174872e-25]
+    # [9.99414618e-01   9.99999989e-01   7.431...
     assert_allclose(mac1.diagonal(), np.ones_like(mac1.diagonal()))
 
 
