@@ -5,6 +5,7 @@
        na dinâmica estrutural / Paulo Arthur Lima de Deus - Rio de
        Janeiro: UFRJ/ Escola Politécnica, 2015.
 """
+from .materials import *
 from .elements import *
 from .rotor import *
 from .results import *

@@ -27,12 +27,8 @@ class ShaftElement:
         Inner diameter of the element.
     o_d : float
         Outer diameter of the element.
-    E : float
-        Young's modulus.
-    G_s : float
-        Shear modulus.
-    rho : float
-        Density.
+    material : LaviRot.material
+        Shaft material.
     n : int, optional
         Element number (coincident with it's first node).
         If not given, it will be set when the rotor is assembled
@@ -57,7 +53,7 @@ class ShaftElement:
 
     Attributes
     ----------
-    poisson : float
+    Poisson : float
         Poisson coefficient for the element.
     A : float
         Element section area.
@@ -75,16 +71,14 @@ class ShaftElement:
 
     Examples
     --------
+    >>> from LaviRot.materials import steel
     >>> le = 0.25
     >>> i_d = 0
     >>> o_d = 0.05
-    >>> E = 211e9
-    >>> G_s = 81.2e9
-    >>> rho = 7810
-    >>> Euler_Bernoulli_Element = ShaftElement(le, i_d, o_d, E, G_s, rho)
+    >>> Euler_Bernoulli_Element = ShaftElement(le, i_d, o_d, steel)
     >>> Euler_Bernoulli_Element.phi
     0
-    >>> Timoshenko_Element = ShaftElement(le, i_d, o_d, E, G_s, rho,
+    >>> Timoshenko_Element = ShaftElement(le, i_d, o_d, steel,
     ...                                   rotary_inertia=True,
     ...                                   shear_effects=True)
     >>> Timoshenko_Element.phi
@@ -92,7 +86,7 @@ class ShaftElement:
     """
     #  TODO detail this class attributes inside the docstring
     #  TODO add __repr__ to the class
-    def __init__(self, L, i_d, o_d, E, G_s, rho,
+    def __init__(self, L, i_d, o_d, material,
                  n=None,
                  axial_force=0, torque=0,
                  shear_effects=False,
@@ -108,10 +102,11 @@ class ShaftElement:
         self.L = L
         self.i_d = i_d
         self.o_d = o_d
-        self.E = E
-        self.G_s = G_s
-        self.poisson = 0.5*(E/G_s) - 1
-        self.rho = rho
+        self.material = material
+        self.E = material.E
+        self.G_s = material.G_s
+        self.Poisson = material.Poisson
+        self.rho = material.rho
         self.A = np.pi*(o_d**2 - i_d**2)/4
         #  Ie is the second moment of area of the cross section about
         #  the neutral plane Ie = pi*r**2/4
@@ -124,14 +119,14 @@ class ShaftElement:
             r2 = r*r
             r12 = (1 + r2)**2
             #  kappa as per Hutchinson (2001)
-            #kappa = 6*r12*((1+self.poisson)/
+            # kappa = 6*r12*((1+self.poisson)/
             #           ((r12*(7 + 12*self.poisson + 4*self.poisson**2) +
             #             4*r2*(5 + 6*self.poisson + 2*self.poisson**2))))
             #  kappa as per Cowper (1996)
-            kappa = 6*r12*((1+self.poisson)/
-                       ((r12*(7 + 6*self.poisson) +
-                         r2*(20 + 12*self.poisson))))
-            phi = 12*E*self.Ie/(G_s*kappa*self.A*L**2)
+            kappa = 6*r12*((1+self.Poisson) /
+                           ((r12*(7 + 6*self.Poisson) +
+                           r2*(20 + 12*self.Poisson))))
+            phi = 12*self.E*self.Ie/(self.G_s*kappa*self.A*L**2)
 
         self.phi = phi
 
@@ -144,7 +139,8 @@ class ShaftElement:
 
         Examples
         --------
-        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> from LaviRot.materials import steel
+        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, steel,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.M()[:4, :4]
@@ -202,7 +198,8 @@ class ShaftElement:
 
         Examples
         --------
-        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> from LaviRot.materials import steel
+        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, steel,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.K()[:4, :4]/1e6
@@ -238,7 +235,8 @@ class ShaftElement:
 
         Examples
         --------
-        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> from LaviRot.materials import steel
+        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, steel,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.G()[:4, :4]
@@ -274,7 +272,7 @@ class ShaftElement:
 
     @classmethod
     def section(cls, L, ne,
-                si_d, so_d, E, Gs, rho,
+                si_d, so_d, material,
                 n=None,
                 shear_effects=True,
                 rotary_inertia=True,
@@ -295,8 +293,8 @@ class ShaftElement:
             Young's modulus.
         G_s : float
             Shear modulus.
-        rho : float
-            Density.
+        material : LaviRot.material
+            Shaft material.
         n : int, optional
             Element number (coincident with it's first node).
             If not given, it will be set when the rotor is assembled
@@ -323,14 +321,12 @@ class ShaftElement:
 
         Examples
         --------
-        >>> # shaft properties
-        >>> E = 211e9
-        >>> Gs = 81.2e9
-        >>> rho = 7810
+        >>> # shaft material
+        >>> from LaviRot.materials import steel
         >>> # shaft inner and outer diameters
         >>> si_d = 0
         >>> so_d = 0.01585
-        >>> sec = ShaftElement.section(247.65e-3, 4, 0, 15.8e-3, E, Gs, rho)
+        >>> sec = ShaftElement.section(247.65e-3, 4, 0, 15.8e-3, steel)
         >>> len(sec)
         4
         >>> sec[0].i_d
@@ -339,7 +335,7 @@ class ShaftElement:
 
         le = L / ne
 
-        elements = [cls(le, si_d, so_d, E, Gs, rho,
+        elements = [cls(le, si_d, so_d, material,
                         n,
                         shear_effects,
                         rotary_inertia,
@@ -463,8 +459,8 @@ class DiskElement(LumpedDiskElement):
     ----------
     n: int
         Node in which the disk will be inserted.
-    rho: float
-        Mass density.
+    material : LaviRot.Material
+         Shaft material.
     width: float
         The disk width.
     i_d: float
@@ -488,22 +484,24 @@ class DiskElement(LumpedDiskElement):
 
     Examples
     --------
-    >>> disk = DiskElement(0, 7810, 0.07, 0.05, 0.28)
+    >>> from LaviRot.materials import steel
+    >>> disk = DiskElement(0, steel, 0.07, 0.05, 0.28)
     >>> disk.Ip
     0.32956362089137037
     """
 
     #  TODO add __repr__ to the class
-    def __init__(self, n, rho, width, i_d, o_d):
+    def __init__(self, n, material, width, i_d, o_d):
         self.n = n
-        self.rho = rho
+        self.material = material
+        self.rho = material.rho
         self.width = width
         self.i_d = i_d
         self.o_d = o_d
-        self.m = 0.25 * rho * np.pi * width * (o_d**2 - i_d**2)
-        self.Id = (0.015625 * rho * np.pi * width*(o_d**4 - i_d**4)
+        self.m = 0.25 * self.rho * np.pi * width * (o_d**2 - i_d**2)
+        self.Id = (0.015625 * self.rho * np.pi * width*(o_d**4 - i_d**4)
                    + self.m*(width**2)/12)
-        self.Ip = 0.03125 * rho * np.pi * width * (o_d**4 - i_d**4)
+        self.Ip = 0.03125 * self.rho * np.pi * width * (o_d**4 - i_d**4)
 
         super().__init__(self.n, self.m, self.Id, self.Ip)
 

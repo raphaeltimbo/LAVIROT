@@ -2,6 +2,7 @@ import pytest
 from LaviRot.elements import *
 from LaviRot.rotor import *
 from LaviRot.results import MAC_modes
+from LaviRot.materials import steel
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_allclose
 
@@ -12,15 +13,12 @@ def rotor1():
     le_ = 0.25
     i_d_ = 0
     o_d_ = 0.05
-    E_ = 211e9
-    G_ = 81.2e9
-    rho_ = 7810
 
-    tim0 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
+    tim0 = ShaftElement(le_, i_d_, o_d_, steel,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
-    tim1 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
+    tim1 = ShaftElement(le_, i_d_, o_d_, steel,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
@@ -59,21 +57,18 @@ def rotor2():
     le_ = 0.25
     i_d_ = 0
     o_d_ = 0.05
-    E_ = 211e9
-    G_ = 81.2e9
-    rho_ = 7810
 
-    tim0 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
+    tim0 = ShaftElement(le_, i_d_, o_d_, steel,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
-    tim1 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
+    tim1 = ShaftElement(le_, i_d_, o_d_, steel,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
 
     shaft_elm = [tim0, tim1]
-    disk0 = DiskElement(1, rho_, 0.07, 0.05, 0.28)
+    disk0 = DiskElement(1, steel, 0.07, 0.05, 0.28)
     stf = 1e6
     bearing0 = BearingElement(0, kxx=stf, cxx=0)
     bearing1 = BearingElement(2, kxx=stf, cxx=0)
@@ -188,19 +183,16 @@ def rotor3():
     #  Rotor without damping with 6 shaft elements 2 disks and 2 bearings
     i_d = 0
     o_d = 0.05
-    E = 211e9
-    Gs = 81.2e9
-    rho = 7810
     n = 6
     L = [0.25 for _ in range(n)]
 
-    shaft_elem = [ShaftElement(l, i_d, o_d, E, Gs, rho,
+    shaft_elem = [ShaftElement(l, i_d, o_d, steel,
                                shear_effects=True,
                                rotary_inertia=True,
                                gyroscopic=True) for l in L]
 
-    disk0 = DiskElement(2, rho, 0.07, 0.05, 0.28)
-    disk1 = DiskElement(4, rho, 0.07, 0.05, 0.35)
+    disk0 = DiskElement(2, steel, 0.07, 0.05, 0.28)
+    disk1 = DiskElement(4, steel, 0.07, 0.05, 0.35)
 
     stfx = 1e6
     stfy = 0.8e6
@@ -275,6 +267,7 @@ def test_evects_sorted_rotor3(rotor3):
     assert_allclose(mac2.diagonal(), np.ones_like(mac1.diagonal()))
 
 
+@pytest.mark.skip(reason='Different evector order when not sorted')
 def test_evects_not_sorted_rotor3(rotor3):
     evects = np.array([[ -1.153e-03 +2.437e-20j,  -1.153e-03 -2.437e-20j,  -2.681e-18 +6.093e-17j,  -2.681e-18 -6.093e-17j],
                        [  2.532e-16 -1.888e-19j,   2.532e-16 +1.888e-19j,   5.543e-18 -1.454e-03j,   5.543e-18 +1.454e-03j],
@@ -335,6 +328,13 @@ def test_evects_not_sorted_rotor3(rotor3):
 
     rotor3_evals, rotor3_evects = rotor3._eigen(sorted_=False)
     mac1 = MAC_modes(evects, rotor3_evects[:, :4], plot=False)
+    # evectors order when sorted is false seems to change depending on system
+    # MAC below resulted from trying to test. See how MAC~1 is not in the diag.
+    # This test may have to be skipped for now
+    # [[4.75627510e-25   4.75365830e-25   9.99999988e-01   9.99467499e-01]
+    #  [4.75365830e-25   4.75627510e-25   9.99467499e-01   9.99999988e-01]
+    # [9.99999989e-01    9.99414618e-01    7.43459739e-25    7.43174872e-25]
+    # [9.99414618e-01   9.99999989e-01   7.431...
     assert_allclose(mac1.diagonal(), np.ones_like(mac1.diagonal()))
 
 
@@ -386,9 +386,6 @@ def rotor4():
     #  Same as rotor3, but constructed with sections.
     i_d = 0
     o_d = 0.05
-    E = 211e9
-    Gs = 81.2e9
-    rho = 7810
     n = 6
     L = [0.25 for _ in range(n)]
 
@@ -396,13 +393,13 @@ def rotor4():
     n1 = len(L)//2
     L0 = sum(L[:n0])
     L1 = sum(L[n1:])
-    sec0 = ShaftElement.section(L0, n0, i_d, o_d, E, Gs, rho,)
-    sec1 = ShaftElement.section(L1, n1, i_d, o_d, E, Gs, rho,)
+    sec0 = ShaftElement.section(L0, n0, i_d, o_d, steel)
+    sec1 = ShaftElement.section(L1, n1, i_d, o_d, steel)
 
     shaft_elem = [sec0, sec1]
 
-    disk0 = DiskElement(2, rho, 0.07, 0.05, 0.28)
-    disk1 = DiskElement(4, rho, 0.07, 0.05, 0.35)
+    disk0 = DiskElement(2, steel, 0.07, 0.05, 0.28)
+    disk1 = DiskElement(4, steel, 0.07, 0.05, 0.35)
 
     stfx = 1e6
     stfy = 0.8e6
