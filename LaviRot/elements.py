@@ -460,8 +460,8 @@ class DiskElement(LumpedDiskElement):
     ----------
     n: int
         Node in which the disk will be inserted.
-    rho: float
-        Mass density.
+    material : LaviRot.Material
+         Shaft material.
     width: float
         The disk width.
     i_d: float
@@ -491,16 +491,17 @@ class DiskElement(LumpedDiskElement):
     """
 
     #  TODO add __repr__ to the class
-    def __init__(self, n, rho, width, i_d, o_d):
+    def __init__(self, n, material, width, i_d, o_d):
         self.n = n
-        self.rho = rho
+        self.material = material
+        self.rho = material.rho
         self.width = width
         self.i_d = i_d
         self.o_d = o_d
-        self.m = 0.25 * rho * np.pi * width * (o_d**2 - i_d**2)
-        self.Id = (0.015625 * rho * np.pi * width*(o_d**4 - i_d**4)
+        self.m = 0.25 * self.rho * np.pi * width * (o_d**2 - i_d**2)
+        self.Id = (0.015625 * self.rho * np.pi * width*(o_d**4 - i_d**4)
                    + self.m*(width**2)/12)
-        self.Ip = 0.03125 * rho * np.pi * width * (o_d**4 - i_d**4)
+        self.Ip = 0.03125 * self.rho * np.pi * width * (o_d**4 - i_d**4)
 
         super().__init__(self.n, self.m, self.Id, self.Ip)
 
