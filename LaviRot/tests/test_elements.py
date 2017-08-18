@@ -5,14 +5,6 @@ import numpy as np
 from numpy.testing import assert_almost_equal, assert_allclose
 
 
-n_ = 1
-le_ = 0.25
-i_d_ = 0
-o_d_ = 0.05
-E_ = 211e9
-G_ = 81.2e9
-rho_ = 7810
-
 @pytest.fixture
 def eb():
     #  Euler-Bernoulli element
@@ -46,6 +38,7 @@ def test_mass_matrix_eb(eb):
                        [-0.02967,  0.     ,  0.     , -0.00171, -0.0502 ,  0.     ,  0.     ,  0.00228]])
     assert_allclose(eb.M(), M0e_eb, rtol=1e-3)
 
+
 def test_stiffness_matrix_eb(eb):
     K0e_eb = np.array([[ 4.97157,  0.     ,  0.     ,  0.62145, -4.97157,  0.     ,  0.     ,  0.62145],
                        [ 0.     ,  4.97157, -0.62145,  0.     ,  0.     , -4.97157, -0.62145,  0.     ],
@@ -56,6 +49,7 @@ def test_stiffness_matrix_eb(eb):
                        [ 0.     , -0.62145,  0.05179,  0.     ,  0.     ,  0.62145,  0.10357,  0.     ],
                        [ 0.62145,  0.     ,  0.     ,  0.05179, -0.62145,  0.     ,  0.     ,  0.10357]])
     assert_almost_equal(eb.K() / 1e7, K0e_eb, decimal=5)
+
 
 @pytest.fixture
 def tim():
