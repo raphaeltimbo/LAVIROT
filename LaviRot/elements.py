@@ -71,16 +71,14 @@ class ShaftElement:
 
     Examples
     --------
+    >>> from LaviRot.materials import steel
     >>> le = 0.25
     >>> i_d = 0
     >>> o_d = 0.05
-    >>> E = 211e9
-    >>> G_s = 81.2e9
-    >>> rho = 7810
-    >>> Euler_Bernoulli_Element = ShaftElement(le, i_d, o_d, E, G_s, rho)
+    >>> Euler_Bernoulli_Element = ShaftElement(le, i_d, o_d, steel)
     >>> Euler_Bernoulli_Element.phi
     0
-    >>> Timoshenko_Element = ShaftElement(le, i_d, o_d, E, G_s, rho,
+    >>> Timoshenko_Element = ShaftElement(le, i_d, o_d, steel,
     ...                                   rotary_inertia=True,
     ...                                   shear_effects=True)
     >>> Timoshenko_Element.phi
@@ -141,7 +139,8 @@ class ShaftElement:
 
         Examples
         --------
-        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> from LaviRot.materials import steel
+        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, steel,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.M()[:4, :4]
@@ -199,7 +198,8 @@ class ShaftElement:
 
         Examples
         --------
-        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> from LaviRot.materials import steel
+        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, steel,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.K()[:4, :4]/1e6
@@ -235,7 +235,8 @@ class ShaftElement:
 
         Examples
         --------
-        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, 211e9, 81.2e9, 7810,
+        >>> from LaviRot.materials import steel
+        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, steel,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
         >>> Timoshenko_Element.G()[:4, :4]
@@ -320,14 +321,12 @@ class ShaftElement:
 
         Examples
         --------
-        >>> # shaft properties
-        >>> E = 211e9
-        >>> Gs = 81.2e9
-        >>> rho = 7810
+        >>> # shaft material
+        >>> from LaviRot.materials import steel
         >>> # shaft inner and outer diameters
         >>> si_d = 0
         >>> so_d = 0.01585
-        >>> sec = ShaftElement.section(247.65e-3, 4, 0, 15.8e-3, E, Gs, rho)
+        >>> sec = ShaftElement.section(247.65e-3, 4, 0, 15.8e-3, steel)
         >>> len(sec)
         4
         >>> sec[0].i_d
@@ -485,7 +484,8 @@ class DiskElement(LumpedDiskElement):
 
     Examples
     --------
-    >>> disk = DiskElement(0, 7810, 0.07, 0.05, 0.28)
+    >>> from LaviRot.materials import steel
+    >>> disk = DiskElement(0, steel, 0.07, 0.05, 0.28)
     >>> disk.Ip
     0.32956362089137037
     """
