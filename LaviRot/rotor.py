@@ -6,6 +6,7 @@ import scipy.signal as signal
 import scipy.io as sio
 from collections import Iterable
 from LaviRot.elements import *
+from LaviRot.materials import steel
 
 
 __all__ = ['Rotor', 'rotor_example']
@@ -811,19 +812,16 @@ def rotor_example():
     #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
     i_d = 0
     o_d = 0.05
-    E = 211e9
-    Gs = 81.2e9
-    rho = 7810
     n = 6
     L = [0.25 for _ in range(n)]
 
-    shaft_elem = [ShaftElement(l, i_d, o_d, E, Gs, rho,
+    shaft_elem = [ShaftElement(l, i_d, o_d, steel,
                                shear_effects=True,
                                rotary_inertia=True,
                                gyroscopic=True) for l in L]
 
-    disk0 = DiskElement(2, rho, 0.07, 0.05, 0.28)
-    disk1 = DiskElement(4, rho, 0.07, 0.05, 0.35)
+    disk0 = DiskElement(2, steel, 0.07, 0.05, 0.28)
+    disk1 = DiskElement(4, steel, 0.07, 0.05, 0.35)
 
     stfx = 1e6
     stfy = 0.8e6

@@ -191,8 +191,8 @@ def rotor3():
                                rotary_inertia=True,
                                gyroscopic=True) for l in L]
 
-    disk0 = DiskElement(2, rho, 0.07, 0.05, 0.28)
-    disk1 = DiskElement(4, rho, 0.07, 0.05, 0.35)
+    disk0 = DiskElement(2, steel, 0.07, 0.05, 0.28)
+    disk1 = DiskElement(4, steel, 0.07, 0.05, 0.35)
 
     stfx = 1e6
     stfy = 0.8e6
@@ -393,13 +393,13 @@ def rotor4():
     n1 = len(L)//2
     L0 = sum(L[:n0])
     L1 = sum(L[n1:])
-    sec0 = ShaftElement.section(L0, n0, i_d, o_d, E, Gs, rho,)
-    sec1 = ShaftElement.section(L1, n1, i_d, o_d, E, Gs, rho,)
+    sec0 = ShaftElement.section(L0, n0, i_d, o_d, steel)
+    sec1 = ShaftElement.section(L1, n1, i_d, o_d, steel)
 
     shaft_elem = [sec0, sec1]
 
-    disk0 = DiskElement(2, rho, 0.07, 0.05, 0.28)
-    disk1 = DiskElement(4, rho, 0.07, 0.05, 0.35)
+    disk0 = DiskElement(2, steel, 0.07, 0.05, 0.28)
+    disk1 = DiskElement(4, steel, 0.07, 0.05, 0.35)
 
     stfx = 1e6
     stfy = 0.8e6
