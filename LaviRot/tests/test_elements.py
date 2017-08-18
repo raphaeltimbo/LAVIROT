@@ -114,7 +114,7 @@ def test_gyroscopic_matrix_tim(tim):
 
 @pytest.fixture
 def disk():
-    return DiskElement(0, rho_, 0.07, 0.05, 0.28)
+    return DiskElement(0, steel, 0.07, 0.05, 0.28)
 
 
 def test_mass_matrix_disk(disk):
