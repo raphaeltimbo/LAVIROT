@@ -25,7 +25,9 @@ class Material:
         self.E = E
         self.G_s = G_s
         self.Poisson = Poisson
-        if G_s is None:
+        if E is None:
+            self.E = G_s*(2*(1 + Poisson))
+        elif G_s is None:
             self.G_s = E/(2*(1 + Poisson))
         elif Poisson is None:
             self.Poisson = (E/(2*G_s)) - 1
