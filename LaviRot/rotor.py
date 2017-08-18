@@ -47,23 +47,21 @@ class Rotor(object):
     Examples
     --------
     >>> #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
+    >>> from LaviRot.materials import steel
     >>> z = 0
     >>> le = 0.25
     >>> i_d = 0
     >>> o_d = 0.05
-    >>> E = 211e9
-    >>> G = 81.2e9
-    >>> rho = 7810
-    >>> tim0 = ShaftElement(le, i_d, o_d, E, G, rho,
+    >>> tim0 = ShaftElement(le, i_d, o_d, steel,
     ...                    shear_effects=True,
     ...                    rotary_inertia=True,
     ...                    gyroscopic=True)
-    >>> tim1 = ShaftElement(le, i_d, o_d, E, G, rho,
+    >>> tim1 = ShaftElement(le, i_d, o_d, steel,
     ...                    shear_effects=True,
     ...                    rotary_inertia=True,
     ...                    gyroscopic=True)
     >>> shaft_elm = [tim0, tim1]
-    >>> disk0 = DiskElement(1, rho, 0.07, 0.05, 0.28)
+    >>> disk0 = DiskElement(1, steel, 0.07, 0.05, 0.28)
     >>> stf = 1e6
     >>> bearing0 = BearingElement(0, kxx=stf, cxx=0)
     >>> bearing1 = BearingElement(2, kxx=stf, cxx=0)
@@ -298,7 +296,7 @@ class Rotor(object):
         >>> np.round(rotor.A()[50:56, :2])
         array([[     0.,  11110.],
                [-11106.,     -0.],
-               [  -169.,      0.],
+               [  -169.,     -0.],
                [    -0.,   -169.],
                [    -0.,  10511.],
                [-10507.,     -0.]])
