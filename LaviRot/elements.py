@@ -53,7 +53,7 @@ class ShaftElement:
 
     Attributes
     ----------
-    poisson : float
+    Poisson : float
         Poisson coefficient for the element.
     A : float
         Element section area.
@@ -104,6 +104,7 @@ class ShaftElement:
         self.L = L
         self.i_d = i_d
         self.o_d = o_d
+        self.material = material
         self.E = material.E
         self.G_s = material.G_s
         self.Poisson = material.Poisson
@@ -120,14 +121,14 @@ class ShaftElement:
             r2 = r*r
             r12 = (1 + r2)**2
             #  kappa as per Hutchinson (2001)
-            #kappa = 6*r12*((1+self.poisson)/
+            # kappa = 6*r12*((1+self.poisson)/
             #           ((r12*(7 + 12*self.poisson + 4*self.poisson**2) +
             #             4*r2*(5 + 6*self.poisson + 2*self.poisson**2))))
             #  kappa as per Cowper (1996)
-            kappa = 6*r12*((1+self.poisson)/
-                       ((r12*(7 + 6*self.poisson) +
-                         r2*(20 + 12*self.poisson))))
-            phi = 12*E*self.Ie/(G_s*kappa*self.A*L**2)
+            kappa = 6*r12*((1+self.Poisson) /
+                           ((r12*(7 + 6*self.Poisson) +
+                           r2*(20 + 12*self.Poisson))))
+            phi = 12*self.E*self.Ie/(self.G_s*kappa*self.A*L**2)
 
         self.phi = phi
 

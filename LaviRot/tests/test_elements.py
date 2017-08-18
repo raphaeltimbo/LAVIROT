@@ -1,5 +1,6 @@
 import pytest
 from LaviRot.elements import *
+from LaviRot.materials import steel
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_allclose
 
@@ -18,10 +19,7 @@ def eb():
     le_ = 0.25
     i_d_ = 0
     o_d_ = 0.05
-    E_ = 211e9
-    G_ = 81.2e9
-    rho_ = 7810
-    return ShaftElement(le_, i_d_, o_d_, E_, G_, rho_)
+    return ShaftElement(le_, i_d_, o_d_, steel)
 
 
 def test_parameters_eb(eb):
@@ -32,7 +30,7 @@ def test_parameters_eb(eb):
     assert eb.E == 211e9
     assert eb.G_s == 81.2e9
     assert eb.rho == 7810
-    assert_almost_equal(eb.poisson, 0.29926108)
+    assert_almost_equal(eb.Poisson, 0.29926108)
     assert_almost_equal(eb.A, 0.00196349)
     assert_almost_equal(eb.Ie*1e7, 3.06796157)
 
@@ -66,17 +64,14 @@ def tim():
     le_ = 0.25
     i_d_ = 0
     o_d_ = 0.05
-    E_ = 211e9
-    G_ = 81.2e9
-    rho_ = 7810
-    return ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
+    return ShaftElement(le_, i_d_, o_d_, steel,
                         rotary_inertia=True,
                         shear_effects=True)
 
 
 def test_parameters_tim(tim):
     assert_almost_equal(tim.phi, 0.08795566)
-    assert_almost_equal(tim.poisson, 0.29926108)
+    assert_almost_equal(tim.Poisson, 0.29926108)
     assert_almost_equal(tim.A, 0.00196349)
     assert_almost_equal(tim.Ie*1e7, 3.06796157)
 
