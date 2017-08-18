@@ -65,4 +65,5 @@ class Material:
             f'\nPoisson coefficient     : {float(self.Poisson):{2}.{8}}')
 
 
-AISI4140 = Material(name='AISI4140', rho=785, E=203.2e9, G_s=80e9)
+steel = Material(name='Steel', rho=7810, E=211e9, G_s=81.2e9)
+AISI4140 = Material(name='AISI4140', rho=7850, E=203.2e9, G_s=80e9)

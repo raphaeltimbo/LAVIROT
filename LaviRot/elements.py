@@ -27,12 +27,8 @@ class ShaftElement:
         Inner diameter of the element.
     o_d : float
         Outer diameter of the element.
-    E : float
-        Young's modulus.
-    G_s : float
-        Shear modulus.
-    rho : float
-        Density.
+    material : LaviRot.material
+        Shaft material.
     n : int, optional
         Element number (coincident with it's first node).
         If not given, it will be set when the rotor is assembled
@@ -92,7 +88,7 @@ class ShaftElement:
     """
     #  TODO detail this class attributes inside the docstring
     #  TODO add __repr__ to the class
-    def __init__(self, L, i_d, o_d, E, G_s, rho,
+    def __init__(self, L, i_d, o_d, material,
                  n=None,
                  axial_force=0, torque=0,
                  shear_effects=False,
@@ -108,10 +104,10 @@ class ShaftElement:
         self.L = L
         self.i_d = i_d
         self.o_d = o_d
-        self.E = E
-        self.G_s = G_s
-        self.poisson = 0.5*(E/G_s) - 1
-        self.rho = rho
+        self.E = material.E
+        self.G_s = material.G_s
+        self.Poisson = material.Poisson
+        self.rho = material.rho
         self.A = np.pi*(o_d**2 - i_d**2)/4
         #  Ie is the second moment of area of the cross section about
         #  the neutral plane Ie = pi*r**2/4
