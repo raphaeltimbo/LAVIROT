@@ -21,6 +21,12 @@ class Material:
         Density.
     """
     def __init__(self, rho=None, E=None, G_s=None, Poisson=None):
+        if rho is None:
+            raise ValueError('Density (rho) not provided.')
+        if tuple(locals().values()).count(None) > 1:
+            raise ValueError('At least 2 arguments from E, G_s'
+                             'and Poisson should be provided ')
+
         self.rho = rho
         self.E = E
         self.G_s = G_s
