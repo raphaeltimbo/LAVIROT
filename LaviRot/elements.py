@@ -271,7 +271,7 @@ class ShaftElement:
 
     @classmethod
     def section(cls, L, ne,
-                si_d, so_d, E, Gs, rho,
+                si_d, so_d, material,
                 n=None,
                 shear_effects=True,
                 rotary_inertia=True,
@@ -292,8 +292,8 @@ class ShaftElement:
             Young's modulus.
         G_s : float
             Shear modulus.
-        rho : float
-            Density.
+        material : LaviRot.material
+            Shaft material.
         n : int, optional
             Element number (coincident with it's first node).
             If not given, it will be set when the rotor is assembled
@@ -336,7 +336,7 @@ class ShaftElement:
 
         le = L / ne
 
-        elements = [cls(le, si_d, so_d, E, Gs, rho,
+        elements = [cls(le, si_d, so_d, material,
                         n,
                         shear_effects,
                         rotary_inertia,
