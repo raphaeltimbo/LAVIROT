@@ -4,6 +4,10 @@ from LaviRot.materials import steel
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_allclose
 
+################################################################################
+# Shaft tests
+################################################################################
+
 
 @pytest.fixture
 def eb():
@@ -106,6 +110,10 @@ def test_gyroscopic_matrix_tim(tim):
     assert_almost_equal(tim.G() * 1e3, G0e_tim, decimal=5)
 
 
+################################################################################
+# Disk tests
+################################################################################
+
 @pytest.fixture
 def disk():
     return DiskElement(0, steel, 0.07, 0.05, 0.28)
@@ -127,8 +135,17 @@ def test_gyroscopic_matrix_disk(disk):
     assert_almost_equal(disk.G(), Gd1, decimal=5)
 
 
-# TODO add tests for bearing elements
+def test_errors():
+    with pytest.raises(TypeError) as ex:
+        DiskElement(1.0, steel, 0.07, 0.05, 0.28)
+    assert 'n should be int, not float' == str(ex.value)
 
+
+################################################################################
+# Bearing tests
+################################################################################
+
+# TODO add tests for bearing elements
 @pytest.fixture
 def bearing0():
     Kxx_bearing = np.array([8.5e+07, 1.1e+08, 1.3e+08, 1.6e+08, 1.8e+08,

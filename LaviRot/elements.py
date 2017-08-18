@@ -492,6 +492,8 @@ class DiskElement(LumpedDiskElement):
 
     #  TODO add __repr__ to the class
     def __init__(self, n, material, width, i_d, o_d):
+        if not isinstance(n, int):
+            raise TypeError(f'n should be int, not {n.__class__.__name__}')
         self.n = n
         self.material = material
         self.rho = material.rho
