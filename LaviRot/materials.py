@@ -4,7 +4,7 @@ This module defines the Material class and defines
 some of the most common materials used in rotors.
 """
 
-__all__ = ['Material']
+__all__ = ['Material', 'available_materials']
 
 
 class Material:
@@ -16,7 +16,6 @@ class Material:
 
     Parameters
     ----------
-
     name : str
         Material name.
     E : float
@@ -25,6 +24,13 @@ class Material:
         Shear modulus.
     rho : float
         Density.
+
+    Examples
+    --------
+    >>> AISI4140 = Material(name='AISI4140', rho=7850, E=203.2e9, G_s=80e9)
+    >>> AISI4140.Poisson
+    0.27
+
     """
     def __init__(self, name=None, rho=None, E=None, G_s=None, Poisson=None):
         if rho is None:
@@ -67,3 +73,5 @@ class Material:
 
 steel = Material(name='Steel', rho=7810, E=211e9, G_s=81.2e9)
 AISI4140 = Material(name='AISI4140', rho=7850, E=203.2e9, G_s=80e9)
+
+available_materials = ['steel', 'AISI4140']
