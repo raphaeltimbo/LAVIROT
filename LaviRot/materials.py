@@ -14,6 +14,8 @@ class Material:
     Density and at least at least 2 arguments from E, G_s and
     Poisson should be provided.
 
+    See available_materials for materials already provided.
+
     Parameters
     ----------
     name : str
@@ -32,6 +34,8 @@ class Material:
     0.27
 
     """
+    material_instances = []
+
     def __init__(self, name=None, rho=None, E=None, G_s=None, Poisson=None):
         if rho is None:
             raise ValueError('Density (rho) not provided.')
@@ -58,6 +62,8 @@ class Material:
 
         self.color = None  # this can be used in the plots
 
+        Material.material_instances.append(name)
+
     def __repr__(self):
         return f'{self.name}'
 
@@ -71,7 +77,11 @@ class Material:
             f'\nPoisson coefficient     : {float(self.Poisson):{2}.{8}}')
 
 
+#####################################################################
+# Available materials
+#####################################################################
+
 steel = Material(name='Steel', rho=7810, E=211e9, G_s=81.2e9)
 AISI4140 = Material(name='AISI4140', rho=7850, E=203.2e9, G_s=80e9)
 
-available_materials = ['steel', 'AISI4140']
+available_materials = Material.material_instances
