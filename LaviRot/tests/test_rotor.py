@@ -2,6 +2,7 @@ import pytest
 from LaviRot.elements import *
 from LaviRot.rotor import *
 from LaviRot.results import MAC_modes
+from LaviRot.materials import steel
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_allclose
 
@@ -12,15 +13,12 @@ def rotor1():
     le_ = 0.25
     i_d_ = 0
     o_d_ = 0.05
-    E_ = 211e9
-    G_ = 81.2e9
-    rho_ = 7810
 
-    tim0 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
+    tim0 = ShaftElement(le_, i_d_, o_d_, steel,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
-    tim1 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
+    tim1 = ShaftElement(le_, i_d_, o_d_, steel,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
@@ -59,21 +57,18 @@ def rotor2():
     le_ = 0.25
     i_d_ = 0
     o_d_ = 0.05
-    E_ = 211e9
-    G_ = 81.2e9
-    rho_ = 7810
 
-    tim0 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
+    tim0 = ShaftElement(le_, i_d_, o_d_, steel,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
-    tim1 = ShaftElement(le_, i_d_, o_d_, E_, G_, rho_,
+    tim1 = ShaftElement(le_, i_d_, o_d_, steel,
                         shear_effects=True,
                         rotary_inertia=True,
                         gyroscopic=True)
 
     shaft_elm = [tim0, tim1]
-    disk0 = DiskElement(1, rho_, 0.07, 0.05, 0.28)
+    disk0 = DiskElement(1, steel, 0.07, 0.05, 0.28)
     stf = 1e6
     bearing0 = BearingElement(0, kxx=stf, cxx=0)
     bearing1 = BearingElement(2, kxx=stf, cxx=0)
@@ -188,13 +183,10 @@ def rotor3():
     #  Rotor without damping with 6 shaft elements 2 disks and 2 bearings
     i_d = 0
     o_d = 0.05
-    E = 211e9
-    Gs = 81.2e9
-    rho = 7810
     n = 6
     L = [0.25 for _ in range(n)]
 
-    shaft_elem = [ShaftElement(l, i_d, o_d, E, Gs, rho,
+    shaft_elem = [ShaftElement(l, i_d, o_d, steel,
                                shear_effects=True,
                                rotary_inertia=True,
                                gyroscopic=True) for l in L]
@@ -394,9 +386,6 @@ def rotor4():
     #  Same as rotor3, but constructed with sections.
     i_d = 0
     o_d = 0.05
-    E = 211e9
-    Gs = 81.2e9
-    rho = 7810
     n = 6
     L = [0.25 for _ in range(n)]
 
