@@ -78,7 +78,7 @@ class Rotor(object):
         # Config attributes
         ####################################################
 
-        self.SPARSE = True
+        self.SPARSE = False
 
         ####################################################
 
