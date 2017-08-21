@@ -74,6 +74,14 @@ class Rotor(object):
         #  TODO consider speed as a rotor property. Setter should call __init__ again
         self._w = w
 
+        ####################################################
+        # Config attributes
+        ####################################################
+
+        self.SPARSE = True
+
+        ####################################################
+
         # flatten shaft_elements
         def flatten(l):
             for el in l:
@@ -352,7 +360,7 @@ class Rotor(object):
 
         return idx
 
-    def _eigen(self, w=None, sorted_=True, sparse=True):
+    def _eigen(self, w=None, sorted_=True):
         r"""This method will return the eigenvalues and eigenvectors of the
         state space matrix A, sorted by the index method which considers
         the imaginary part (wd) of the eigenvalues for sorting.
@@ -380,7 +388,7 @@ class Rotor(object):
         if w is None:
             w = self.w
 
-        if sparse is True:
+        if self.SPARSE is True:
             try:
                 evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM', v0=self._v0)
                 # store v0 as a linear combination of the previously
