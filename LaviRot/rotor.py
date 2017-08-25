@@ -78,7 +78,7 @@ class Rotor(object):
         # Config attributes
         ####################################################
 
-        self.SPARSE = False
+        self.SPARSE = True
 
         ####################################################
 
@@ -348,7 +348,7 @@ class Rotor(object):
         array([ 1,  3,  5,  7,  9, 11]...
         """
         # avoid float point errors when sorting
-        evals_truncated = np.around(eigenvalues, decimals=5)
+        evals_truncated = np.around(eigenvalues, decimals=10)
         a = np.imag(evals_truncated)  # First column
         b = np.absolute(evals_truncated)  # Second column
         ind = np.lexsort((b, a))  # Sort by imag, then by absolute
