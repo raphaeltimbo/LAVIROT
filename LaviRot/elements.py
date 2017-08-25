@@ -257,7 +257,7 @@ class ShaftElement:
             g3 = (4 + 5 * phi + 10 * phi**2) * L**2
             g4 = (-1 - 5 * phi + 5 * phi**2) * L**2
 
-            G = np.array([[  0,  g1,  g2,   0,   0,  g1,  g2,   0],
+            G = np.array([[  0, -g1,  g2,   0,   0,  g1,  g2,   0],
                           [ g1,   0,   0,  g2, -g1,   0,   0,  g2],
                           [-g2,   0,   0, -g3,  g2,   0,   0, -g4],
                           [  0, -g2,  g3,   0,   0,  g2,  g4,   0],
@@ -492,6 +492,8 @@ class DiskElement(LumpedDiskElement):
 
     #  TODO add __repr__ to the class
     def __init__(self, n, material, width, i_d, o_d):
+        if not isinstance(n, int):
+            raise TypeError(f'n should be int, not {n.__class__.__name__}')
         self.n = n
         self.material = material
         self.rho = material.rho

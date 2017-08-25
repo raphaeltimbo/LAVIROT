@@ -9,7 +9,6 @@ import matplotlib as mpl
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap
 from mpl_toolkits.mplot3d import Axes3D
@@ -25,15 +24,16 @@ __all__ = ["plot_rotor",
            "plot_time_response"]
 
 # set style and colors
-sns.set_style('white', rc={'axes.grid':True,
-                           'axes.linewidth': 0.1,
-                           'grid.color':'.9',
-                           'grid.linestyle': '--',
-                           'legend.frameon': True,
-                           'legend.framealpha': 0.2})
-sns.set_context('paper', rc={"lines.linewidth": 1})
-
-_orig_rc_params = mpl.rcParams.copy()
+plt.style.use('seaborn-white')
+plt.style.use({
+    'lines.linewidth': 2.5,
+    'axes.grid': True,
+    'axes.linewidth': 0.1,
+    'grid.color': '.9',
+    'grid.linestyle': '--',
+    'legend.frameon': True,
+    'legend.framealpha': 0.2
+    })
 
 c_pal = {'red': '#C93C3C',
          'blue': '#0760BA',

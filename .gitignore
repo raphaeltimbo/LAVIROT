@@ -112,3 +112,5 @@ imgs/
 /update_LaviRot.sh
 /debug.py
 /update_gh_page.sh
+/LaviRot/debug.py
+/docs/gallery/development/

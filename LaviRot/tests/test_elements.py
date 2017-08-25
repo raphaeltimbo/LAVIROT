@@ -4,14 +4,10 @@ from LaviRot.materials import steel
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_allclose
 
+################################################################################
+# Shaft tests
+################################################################################
 
-n_ = 1
-le_ = 0.25
-i_d_ = 0
-o_d_ = 0.05
-E_ = 211e9
-G_ = 81.2e9
-rho_ = 7810
 
 @pytest.fixture
 def eb():
@@ -46,6 +42,7 @@ def test_mass_matrix_eb(eb):
                        [-0.02967,  0.     ,  0.     , -0.00171, -0.0502 ,  0.     ,  0.     ,  0.00228]])
     assert_allclose(eb.M(), M0e_eb, rtol=1e-3)
 
+
 def test_stiffness_matrix_eb(eb):
     K0e_eb = np.array([[ 4.97157,  0.     ,  0.     ,  0.62145, -4.97157,  0.     ,  0.     ,  0.62145],
                        [ 0.     ,  4.97157, -0.62145,  0.     ,  0.     , -4.97157, -0.62145,  0.     ],
@@ -56,6 +53,7 @@ def test_stiffness_matrix_eb(eb):
                        [ 0.     , -0.62145,  0.05179,  0.     ,  0.     ,  0.62145,  0.10357,  0.     ],
                        [ 0.62145,  0.     ,  0.     ,  0.05179, -0.62145,  0.     ,  0.     ,  0.10357]])
     assert_almost_equal(eb.K() / 1e7, K0e_eb, decimal=5)
+
 
 @pytest.fixture
 def tim():
@@ -101,7 +99,7 @@ def test_stiffness_matrix_tim(tim):
 
 
 def test_gyroscopic_matrix_tim(tim):
-    G0e_tim = np.array([[ -0.     , -19.43344,  -0.22681,  -0.     ,  -0.     , -19.43344,  -0.22681,  -0.     ],
+    G0e_tim = np.array([[ -0.     ,  19.43344,  -0.22681,  -0.     ,  -0.     , -19.43344,  -0.22681,  -0.     ],
                         [-19.43344,  -0.     ,  -0.     ,  -0.22681,  19.43344,  -0.     ,  -0.     ,  -0.22681],
                         [  0.22681,  -0.     ,  -0.     ,   0.1524 ,  -0.22681,  -0.     ,  -0.     ,  -0.04727],
                         [ -0.     ,   0.22681,  -0.1524 ,  -0.     ,  -0.     ,  -0.22681,   0.04727,  -0.     ],
@@ -111,6 +109,10 @@ def test_gyroscopic_matrix_tim(tim):
                         [ -0.     ,   0.22681,   0.04727,  -0.     ,  -0.     ,  -0.22681,  -0.1524 ,  -0.     ]])
     assert_almost_equal(tim.G() * 1e3, G0e_tim, decimal=5)
 
+
+################################################################################
+# Disk tests
+################################################################################
 
 @pytest.fixture
 def disk():
@@ -133,8 +135,17 @@ def test_gyroscopic_matrix_disk(disk):
     assert_almost_equal(disk.G(), Gd1, decimal=5)
 
 
-# TODO add tests for bearing elements
+def test_errors():
+    with pytest.raises(TypeError) as ex:
+        DiskElement(1.0, steel, 0.07, 0.05, 0.28)
+    assert 'n should be int, not float' == str(ex.value)
 
+
+################################################################################
+# Bearing tests
+################################################################################
+
+# TODO add tests for bearing elements
 @pytest.fixture
 def bearing0():
     Kxx_bearing = np.array([8.5e+07, 1.1e+08, 1.3e+08, 1.6e+08, 1.8e+08,
