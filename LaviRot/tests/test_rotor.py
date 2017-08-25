@@ -345,39 +345,39 @@ def test_kappa_rotor3(rotor3):
     assert_allclose(rotor3.kappa(0, 0)['kappa'], -1.415311171090584e-08, rtol=1e-3, atol=1e-6)
 
     rotor3.w = 2000
-    assert_allclose(rotor3.kappa(0, 0)['Frequency'], 78.149731, rtol=1e-3)
-    assert_allclose(rotor3.kappa(0, 0)['Major axes'], 0.0012684572844586523, rtol=1e-3)
-    assert_allclose(rotor3.kappa(0, 0)['Minor axes'], 0.0006038839712968117, rtol=1e-3)
-    assert_allclose(rotor3.kappa(0, 0)['kappa'], -0.4760774987819437, rtol=1e-3)
+    assert_allclose(rotor3.kappa(0, 0)['Frequency'], 77.37957042, rtol=1e-3)
+    assert_allclose(rotor3.kappa(0, 0)['Major axes'], 0.0011885396330204021, rtol=1e-3)
+    assert_allclose(rotor3.kappa(0, 0)['Minor axes'], 0.0007308144427338161, rtol=1e-3)
+    assert_allclose(rotor3.kappa(0, 0)['kappa'], -0.6148843693807821, rtol=1e-3)
 
-    assert_allclose(rotor3.kappa(0, 1)['Frequency'], 88.08130950672094, rtol=1e-3)
-    assert_allclose(rotor3.kappa(0, 1)['Major axes'], 0.0009748776471415336, rtol=1e-3)
-    assert_allclose(rotor3.kappa(0, 1)['Minor axes'], 0.0009175930931051902, rtol=1e-3)
-    assert_allclose(rotor3.kappa(0, 1)['kappa'], 0.9412392373501342, rtol=1e-3)
+    assert_allclose(rotor3.kappa(0, 1)['Frequency'], 88.98733511566752, rtol=1e-3)
+    assert_allclose(rotor3.kappa(0, 1)['Major axes'], 0.0009947502339267566, rtol=1e-3)
+    assert_allclose(rotor3.kappa(0, 1)['Minor axes'], 0.0008412470069506472, rtol=1e-3)
+    assert_allclose(rotor3.kappa(0, 1)['kappa'], 0.8456866641084784, rtol=1e-3)
 
-    assert_allclose(rotor3.kappa(1, 1)['Frequency'], 88.08130950672094, rtol=1e-3)
-    assert_allclose(rotor3.kappa(1, 1)['Major axes'], 0.0018353712883928638, rtol=1e-3)
-    assert_allclose(rotor3.kappa(1, 1)['Minor axes'], 0.0015705146844725273, rtol=1e-3)
-    assert_allclose(rotor3.kappa(1, 1)['kappa'], 0.8556931746751595, rtol=1e-3)
+    assert_allclose(rotor3.kappa(1, 1)['Frequency'], 88.98733511566752, rtol=1e-3)
+    assert_allclose(rotor3.kappa(1, 1)['Major axes'], 0.0018877975750108973, rtol=1e-3)
+    assert_allclose(rotor3.kappa(1, 1)['Minor axes'], 0.0014343257484060105, rtol=1e-3)
+    assert_allclose(rotor3.kappa(1, 1)['kappa'], 0.7597878964314968, rtol=1e-3)
 
 
 def test_kappa_mode_rotor3(rotor3):
     rotor3.w = 2000
-    assert_allclose(rotor3.kappa_mode(0), [-0.4760774987819437,
-                                           -0.5530692751423727,
-                                           -0.5810044451669006,
-                                           -0.5850566835145273,
-                                           -0.5570616152127553,
-                                           -0.49445836271656823,
-                                           -0.3367646671198142], rtol=1e-3)
+    assert_allclose(rotor3.kappa_mode(0), [-0.614884,
+                                           -0.696056,
+                                           -0.723983,
+                                           -0.729245,
+                                           -0.708471,
+                                           -0.656976,
+                                           -0.513044], rtol=1e-3)
 
-    assert_allclose(rotor3.kappa_mode(1), [0.9412392373501342,
-                                           0.8556931746751595,
-                                           0.8312076693440857,
-                                           0.8335994875395676,
-                                           0.8684698141762651,
-                                           0.9403875416867278,
-                                           0.8964329651295495], rtol=1e-3)
+    assert_allclose(rotor3.kappa_mode(1), [0.845687,
+                                           0.759788,
+                                           0.734308,
+                                           0.737393,
+                                           0.778295,
+                                           0.860137,
+                                           0.948157], rtol=1e-3)
 
 
 @pytest.fixture
