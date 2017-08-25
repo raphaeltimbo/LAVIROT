@@ -35,6 +35,8 @@ plt.style.use({
     'legend.framealpha': 0.2
     })
 
+_orig_rc_params = mpl.rcParams.copy()
+
 c_pal = {'red': '#C93C3C',
          'blue': '#0760BA',
          'green': '#2ECC71',
