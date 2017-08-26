@@ -89,8 +89,8 @@ class ShaftElement:
     def __init__(self, L, i_d, o_d, material,
                  n=None,
                  axial_force=0, torque=0,
-                 shear_effects=False,
-                 rotary_inertia=False,
+                 shear_effects=True,
+                 rotary_inertia=True,
                  gyroscopic=True
                  ):
 
