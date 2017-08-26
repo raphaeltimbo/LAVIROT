@@ -4,6 +4,7 @@ import scipy.linalg as la
 import scipy.sparse.linalg as las
 import scipy.signal as signal
 import scipy.io as sio
+from copy import copy
 from collections import Iterable
 from LaviRot.elements import *
 from LaviRot.materials import steel
@@ -91,7 +92,10 @@ class Rotor(object):
                 else:
                     yield el
 
-        shaft_elements = [el for el in flatten(shaft_elements)]
+        # flatten and make a copy for shaft elements to avoid altering
+        # attributes for elements that might be used in different rotors
+        # e.g. altering shaft_element.n
+        shaft_elements = [copy(el) for el in flatten(shaft_elements)]
 
         # set n for each shaft element
         for i, sh in enumerate(shaft_elements):
