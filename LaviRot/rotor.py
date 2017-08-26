@@ -635,8 +635,6 @@ class Rotor(object):
 
     def orbit(self):
         pass
-    #  TODO make w a property. Make eigen an attribute.
-    #  TODO when w is changed, eigen is calculated and is available to methods.
     #  TODO static methods as auxiliary functions
 
     def _H(self):
