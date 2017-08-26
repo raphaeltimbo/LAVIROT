@@ -141,8 +141,9 @@ class Rotor(object):
 
     def _calc_system(self):
         self.evalues, self.evectors = self._eigen(self.w)
-        self.wn = (np.absolute(self.evalues))[:self.ndof//2]
-        self.wd = (np.imag(self.evalues))[:self.ndof//2]
+        wn_len = len(self.evalues) // 2
+        self.wn = (np.absolute(self.evalues))[:wn_len]
+        self.wd = (np.imag(self.evalues))[:wn_len]
         self.H = self._H()
 
     @property
