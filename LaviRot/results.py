@@ -84,7 +84,11 @@ def plot_rotor(rotor, ax=None):
     #  plot shaft centerline
     shaft_end = rotor.nodes_pos[-1]
     ax.plot([-.2 * shaft_end, 1.2 * shaft_end], [0, 0], 'k-.')
-    max_diameter = max([disk.o_d for disk in rotor.disk_elements])
+    try:
+        max_diameter = max([disk.o_d for disk in rotor.disk_elements])
+    except ValueError:
+        max_diameter = max([shaft.o_d for shaft in rotor.shaft_elements])
+
     ax.set_ylim(-1.2 * max_diameter, 1.2 * max_diameter)
     ax.axis('equal')
 

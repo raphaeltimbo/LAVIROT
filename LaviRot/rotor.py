@@ -70,7 +70,7 @@ class Rotor(object):
     215.3707...
     """
 
-    def __init__(self, shaft_elements, disk_elements, bearing_seal_elements, w=0):
+    def __init__(self, shaft_elements, disk_elements=None, bearing_seal_elements=None, w=0):
         #  TODO consider speed as a rotor property. Setter should call __init__ again
         self._w = w
 
@@ -97,6 +97,11 @@ class Rotor(object):
         for i, sh in enumerate(shaft_elements):
             if sh.n is None:
                 sh.n = i
+
+        if disk_elements is None:
+            disk_elements = []
+        if bearing_seal_elements is None:
+            bearing_seal_elements = []
 
         self.shaft_elements = shaft_elements
         self.bearing_seal_elements = bearing_seal_elements
