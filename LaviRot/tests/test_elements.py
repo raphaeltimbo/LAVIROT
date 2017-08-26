@@ -15,7 +15,8 @@ def eb():
     le_ = 0.25
     i_d_ = 0
     o_d_ = 0.05
-    return ShaftElement(le_, i_d_, o_d_, steel)
+    return ShaftElement(le_, i_d_, o_d_, steel,
+                        shear_effects=False, rotary_inertia=False)
 
 
 def test_parameters_eb(eb):
