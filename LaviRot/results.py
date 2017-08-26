@@ -293,7 +293,7 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True, ax=None):
     >>> np.round(camp[:, 0], 1) #  damped natural frequencies at the first rotor speed (0 rad/s)
     array([  82.7,   86.7,  254.5,  274.3,  679.5,  716.8])
     >>> np.round(camp[:, 10], 1) # damped natural frequencies at 40 rad/s
-    array([  82.7,   86.7,  254.3,  274.5,  676.5,  719.7])
+    array([  82.6,   86.7,  254.3,  274.5,  676.5,  719.7])
     """
     rotor_state_speed = rotor.w
 
