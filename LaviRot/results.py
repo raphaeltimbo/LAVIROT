@@ -115,7 +115,7 @@ def plot_rotor(rotor, ax=None):
     # plot disk elements
     for disk in rotor.disk_elements:
         zpos = rotor.nodes_pos[disk.n]
-        ypos = rotor.shaft_elements[disk.n].o_d
+        ypos = disk.i_d
         D = disk.o_d
         hw = disk.width / 2  # half width
 
