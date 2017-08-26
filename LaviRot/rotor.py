@@ -283,7 +283,7 @@ class Rotor(object):
         --------
         >>> rotor = rotor_example()
         >>> rotor.G()[:4, :4]
-        array([[ 0.        , -0.01943344, -0.00022681,  0.        ],
+        array([[ 0.        ,  0.01943344, -0.00022681,  0.        ],
                [-0.01943344,  0.        ,  0.        , -0.00022681],
                [ 0.00022681,  0.        ,  0.        ,  0.0001524 ],
                [ 0.        ,  0.00022681, -0.0001524 ,  0.        ]])
@@ -490,8 +490,8 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> # H matrix for the 0th node
         >>> rotor.H_kappa(0, 0) # doctest: +ELLIPSIS
-        array([[  2.46154806e-29,  -7.17353298e-18],
-               [ -7.17353298e-18,   2.11429917e-06]])
+        array([[  8.78547006e-30,  -4.30647963e-18],
+               [ -4.30647963e-18,   2.11429917e-06]])
 
 
         """
@@ -560,11 +560,10 @@ class Rotor(object):
         >>> # kappa for each node of the first natural frequency
         >>> # Major axes for node 0 and natural frequency (mode) 0.
         >>> rotor.kappa(0, 0)['Major axes'] # doctest: +ELLIPSIS
-        array(0.00145...)
+        0.00145...
         >>> # kappa for node 2 and natural frequency (mode) 3.
         >>> rotor.kappa(2, 3)['kappa'] # doctest: +ELLIPSIS
-        array(8.7006...e-13)
-
+        8.539...e-14
         """
         if wd:
             nat_freq = self.wd[w]
@@ -629,7 +628,7 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
         >>> rotor.kappa_mode(0) # doctest: +ELLIPSIS
-        [array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0)]
+        [-0.0, -0.0, -0.0, -0.0, -1.153...e-08, -0.0, -1.239...e-08]
         """
         kappa_mode = [self.kappa(node, w)['kappa'] for node in self.nodes]
         return kappa_mode
