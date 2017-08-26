@@ -4,6 +4,7 @@ import scipy.linalg as la
 import scipy.sparse.linalg as las
 import scipy.signal as signal
 import scipy.io as sio
+from copy import copy
 from collections import Iterable
 from LaviRot.elements import *
 from LaviRot.materials import steel
@@ -70,7 +71,7 @@ class Rotor(object):
     215.3707...
     """
 
-    def __init__(self, shaft_elements, disk_elements, bearing_seal_elements, w=0):
+    def __init__(self, shaft_elements, disk_elements=None, bearing_seal_elements=None, w=0):
         #  TODO consider speed as a rotor property. Setter should call __init__ again
         self._w = w
 
@@ -91,12 +92,20 @@ class Rotor(object):
                 else:
                     yield el
 
-        shaft_elements = [el for el in flatten(shaft_elements)]
+        # flatten and make a copy for shaft elements to avoid altering
+        # attributes for elements that might be used in different rotors
+        # e.g. altering shaft_element.n
+        shaft_elements = [copy(el) for el in flatten(shaft_elements)]
 
         # set n for each shaft element
         for i, sh in enumerate(shaft_elements):
             if sh.n is None:
                 sh.n = i
+
+        if disk_elements is None:
+            disk_elements = []
+        if bearing_seal_elements is None:
+            bearing_seal_elements = []
 
         self.shaft_elements = shaft_elements
         self.bearing_seal_elements = bearing_seal_elements
@@ -141,8 +150,9 @@ class Rotor(object):
 
     def _calc_system(self):
         self.evalues, self.evectors = self._eigen(self.w)
-        self.wn = (np.absolute(self.evalues))[:self.ndof//2]
-        self.wd = (np.imag(self.evalues))[:self.ndof//2]
+        wn_len = len(self.evalues) // 2
+        self.wn = (np.absolute(self.evalues))[:wn_len]
+        self.wd = (np.imag(self.evalues))[:wn_len]
         self.H = self._H()
 
     @property
@@ -273,7 +283,7 @@ class Rotor(object):
         --------
         >>> rotor = rotor_example()
         >>> rotor.G()[:4, :4]
-        array([[ 0.        , -0.01943344, -0.00022681,  0.        ],
+        array([[ 0.        ,  0.01943344, -0.00022681,  0.        ],
                [-0.01943344,  0.        ,  0.        , -0.00022681],
                [ 0.00022681,  0.        ,  0.        ,  0.0001524 ],
                [ 0.        ,  0.00022681, -0.0001524 ,  0.        ]])
@@ -480,8 +490,8 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> # H matrix for the 0th node
         >>> rotor.H_kappa(0, 0) # doctest: +ELLIPSIS
-        array([[  2.46154806e-29,  -7.17353298e-18],
-               [ -7.17353298e-18,   2.11429917e-06]])
+        array([[  8.78547006e-30,  -4.30647963e-18],
+               [ -4.30647963e-18,   2.11429917e-06]])
 
 
         """
@@ -550,11 +560,10 @@ class Rotor(object):
         >>> # kappa for each node of the first natural frequency
         >>> # Major axes for node 0 and natural frequency (mode) 0.
         >>> rotor.kappa(0, 0)['Major axes'] # doctest: +ELLIPSIS
-        array(0.00145...)
+        0.00145...
         >>> # kappa for node 2 and natural frequency (mode) 3.
         >>> rotor.kappa(2, 3)['kappa'] # doctest: +ELLIPSIS
-        array(8.7006...e-13)
-
+        8.539...e-14
         """
         if wd:
             nat_freq = self.wd[w]
@@ -619,15 +628,13 @@ class Rotor(object):
         >>> rotor = rotor_example()
         >>> # kappa for each node of the first natural frequency
         >>> rotor.kappa_mode(0) # doctest: +ELLIPSIS
-        [array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0)]
+        [-0.0, -0.0, -0.0, -0.0, -1.153...e-08, -0.0, -1.239...e-08]
         """
         kappa_mode = [self.kappa(node, w)['kappa'] for node in self.nodes]
         return kappa_mode
 
     def orbit(self):
         pass
-    #  TODO make w a property. Make eigen an attribute.
-    #  TODO when w is changed, eigen is calculated and is available to methods.
     #  TODO static methods as auxiliary functions
 
     def _H(self):

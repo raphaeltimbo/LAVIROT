@@ -35,6 +35,8 @@ plt.style.use({
     'legend.framealpha': 0.2
     })
 
+_orig_rc_params = mpl.rcParams.copy()
+
 c_pal = {'red': '#C93C3C',
          'blue': '#0760BA',
          'green': '#2ECC71',
@@ -82,7 +84,11 @@ def plot_rotor(rotor, ax=None):
     #  plot shaft centerline
     shaft_end = rotor.nodes_pos[-1]
     ax.plot([-.2 * shaft_end, 1.2 * shaft_end], [0, 0], 'k-.')
-    max_diameter = max([disk.o_d for disk in rotor.disk_elements])
+    try:
+        max_diameter = max([disk.o_d for disk in rotor.disk_elements])
+    except ValueError:
+        max_diameter = max([shaft.o_d for shaft in rotor.shaft_elements])
+
     ax.set_ylim(-1.2 * max_diameter, 1.2 * max_diameter)
     ax.axis('equal')
 
@@ -113,7 +119,7 @@ def plot_rotor(rotor, ax=None):
     # plot disk elements
     for disk in rotor.disk_elements:
         zpos = rotor.nodes_pos[disk.n]
-        ypos = rotor.shaft_elements[disk.n].o_d
+        ypos = disk.i_d
         D = disk.o_d
         hw = disk.width / 2  # half width
 
@@ -287,7 +293,7 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True, ax=None):
     >>> np.round(camp[:, 0], 1) #  damped natural frequencies at the first rotor speed (0 rad/s)
     array([  82.7,   86.7,  254.5,  274.3,  679.5,  716.8])
     >>> np.round(camp[:, 10], 1) # damped natural frequencies at 40 rad/s
-    array([  82.7,   86.7,  254.3,  274.5,  676.5,  719.7])
+    array([  82.6,   86.7,  254.3,  274.5,  676.5,  719.7])
     """
     rotor_state_speed = rotor.w
 

@@ -75,7 +75,8 @@ class ShaftElement:
     >>> le = 0.25
     >>> i_d = 0
     >>> o_d = 0.05
-    >>> Euler_Bernoulli_Element = ShaftElement(le, i_d, o_d, steel)
+    >>> Euler_Bernoulli_Element = ShaftElement(le, i_d, o_d, steel,
+    ...                                        shear_effects=False, rotary_inertia=False)
     >>> Euler_Bernoulli_Element.phi
     0
     >>> Timoshenko_Element = ShaftElement(le, i_d, o_d, steel,
@@ -89,8 +90,8 @@ class ShaftElement:
     def __init__(self, L, i_d, o_d, material,
                  n=None,
                  axial_force=0, torque=0,
-                 shear_effects=False,
-                 rotary_inertia=False,
+                 shear_effects=True,
+                 rotary_inertia=True,
                  gyroscopic=True
                  ):
 
@@ -236,11 +237,10 @@ class ShaftElement:
         Examples
         --------
         >>> from LaviRot.materials import steel
-        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, steel,
-        ...                                  rotary_inertia=True,
-        ...                                  shear_effects=True)
+        >>> # Timoshenko is the default shaft element
+        >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, steel)
         >>> Timoshenko_Element.G()[:4, :4]
-        array([[-0.        , -0.01943344, -0.00022681, -0.        ],
+        array([[-0.        ,  0.01943344, -0.00022681, -0.        ],
                [-0.01943344, -0.        , -0.        , -0.00022681],
                [ 0.00022681, -0.        , -0.        ,  0.0001524 ],
                [-0.        ,  0.00022681, -0.0001524 , -0.        ]])
