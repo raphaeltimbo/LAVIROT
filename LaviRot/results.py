@@ -488,3 +488,8 @@ def plot_time_response(rotor, F, t, dof, ax=None):
                  % (dof//4, obs_dof))
 
     return ax
+
+# TODO Change results to rotor methods
+# TODO Add root locus plot
+# TODO Add orbit plot
+# TODO Add mode shape plot
