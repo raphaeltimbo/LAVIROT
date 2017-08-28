@@ -297,8 +297,9 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True, ax=None):
     """
     rotor_state_speed = rotor.w
 
+    speed_rad = np.array(speed_rad)
     z = []  # will contain values for each whirl (0, 0.5, 1)
-    points_all = np.zeros([freqs, speed_rad.shape[0]])
+    points_all = np.zeros([freqs, len(speed_rad)])
 
     for idx, w0, w1 in(zip(range(len(speed_rad)),
                            speed_rad[:-1],
@@ -487,3 +488,8 @@ def plot_time_response(rotor, F, t, dof, ax=None):
                  % (dof//4, obs_dof))
 
     return ax
+
+# TODO Change results to rotor methods
+# TODO Add root locus plot
+# TODO Add orbit plot
+# TODO Add mode shape plot
