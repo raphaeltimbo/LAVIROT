@@ -198,7 +198,7 @@ def test_bearing_error1():
             ' the parameters dimension') in str(excinfo.value)
 
 
-def test_load_from_xltrc():
+def test_load_shaft_from_xltrc():
     file = 'data/xl_rotor.xls'
 
     with pytest.raises(ValueError) as excinfo:
@@ -222,3 +222,24 @@ def test_load_from_xltrc():
     assert_allclose(shaft[0].rho, 7833.4128)
     assert_allclose(shaft[0].E, 206842710000.0)
     assert_allclose(shaft[0].Poisson, 0.25)
+
+
+def test_load_bearing_from_xltrc():
+    file = 'data/xl_bearing.xls'
+
+    with pytest.raises(ValueError) as excinfo:
+        BearingElement.load_from_xltrc(0, file, units='invalid_units')
+    assert 'invalid units option' in str(excinfo.value)
+
+    bearing = BearingElement.load_from_xltrc(0, file, units='English')
+
+    K0 = np.array([[1.056079e+07, -6.877765e+02],
+                   [6.594875e+02,  6.551263e+07]])
+    C0 = np.array([[1.881813e+05, -1.512049e-01],
+                   [-9.357054e-02, 3.402098e+05]])
+
+    assert_allclose(bearing.w[0], 314.159265)
+
+    assert_allclose(bearing.K(0), K0, rtol=1e-3)
+    assert_allclose(bearing.C(0), C0, rtol=1e-3)
+

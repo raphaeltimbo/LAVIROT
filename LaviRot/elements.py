@@ -89,6 +89,7 @@ class ShaftElement:
     """
     #  TODO detail this class attributes inside the docstring
     #  TODO add __repr__ to the class
+    #  TODO add load from .xls -> sheet More
     def __init__(self, L, i_d, o_d, material,
                  n=None,
                  axial_force=0, torque=0,
