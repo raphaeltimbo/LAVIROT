@@ -707,6 +707,50 @@ class BearingElement:
 
         return C
 
+    @classmethod
+    def load_from_xltrc(cls, file, sheet='XLUseKCM', units='SI'):
+        """Load bearing from xltrc.
+
+        This method will construct a bearing loading the coefficients
+        from an xltrc file.
+
+        Parameters
+        ----------
+        file : str
+            File path name.
+        sheet : str
+            Bearing sheet name. Default is 'XLUseKCM'.
+        units : str
+            Units used in the xltrc file.
+            Can be 'SI' or 'English'
+
+        Returns
+        -------
+        bearing : lr.BearingElement
+            A bearing element.
+
+        Examples
+        --------
+        """
+        if units not in ['SI', 'English']:
+            raise ValueError(f'invalid units option: {units}')
+
+        df = pd.read_excel(file, sheetname=sheet)
+
+        df_bearing = pd.DataFrame(df.iloc[6:])
+        df_bearing = df_bearing.rename(columns=df.loc[4])
+        df_bearing = df_bearing.dropna(axis=0, thresh=2)
+
+        if units != 'SI':
+            for col in df_bearing.columns:
+                if col != 'Speed':
+                    df_bearing[col] = df_bearing[col] * 175.126835
+
+        df_bearing['Speed'] = df_bearing['Speed'] * 2 * np.pi / 60
+
+        # TODO pass arguments
+        pass
+
 
 class SealElement(BearingElement):
     pass
