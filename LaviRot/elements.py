@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import scipy.interpolate as interpolate
 from itertools import permutations
 
@@ -343,6 +344,29 @@ class ShaftElement:
                     for _ in range(ne)]
 
         return elements
+
+    @classmethod
+    def load_from_xltrc(cls, file, shaft_sheet='Model'):
+        """Load shaft from xltrc.
+
+        This method will construct a shaft loading the geometry
+        and materials from a xltrc file.
+
+        Parameters
+        ----------
+        file : str
+            File path name.
+        shaft_sheet : str
+            Shaft sheet name. Default is 'Model'.
+
+        Returns
+        -------
+        shaft : list
+            List with the shaft elements.
+
+        Examples
+        --------
+        """
 
         #  TODO stiffness Matrix due to an axial load
         #  TODO stiffness Matrix due to an axial torque
