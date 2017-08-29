@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import scipy.interpolate as interpolate
 from itertools import permutations
+from LaviRot.materials import Material
 
 
 __all__ = ["ShaftElement", "DiskElement", "BearingElement", "SealElement"]
@@ -367,6 +368,38 @@ class ShaftElement:
         Examples
         --------
         """
+        df = pd.read_excel(file, sheetname=shaft_sheet)
+
+        geometry = pd.DataFrame(df.iloc[19:])
+        geometry = geometry.rename(columns=df.loc[18])
+        geometry = geometry.dropna(axis=1, how='all')
+
+        material = df.iloc[3:13, 9:15]
+        material = material.rename(columns=df.iloc[0])
+        material = material.dropna(axis=0, how='all')
+
+        # change to SI units
+        material['Density   r'] = material['Density   r'] * 27679.904
+        material['Elastic Modulus E'] = material['Elastic Modulus E'] * 6894.757
+        material['Shear Modulus G'] = material['Shear Modulus G'] * 6894.757
+
+        materials = {}
+        for i, mat in material.iterrows():
+            materials[mat.Material] = Material(
+                name=f'Material {mat["Material"]}',
+                rho=mat['Density   r'],
+                E=mat['Elastic Modulus E'],
+                G_s=mat['Shear Modulus G']
+            )
+
+        # TODO implement for more than one layer
+        layer1 = geometry[geometry.laynum == 1]
+        shaft = [ShaftElement(
+            el.length, el.id_Left,
+            el.od_Left, materials[el.matnum])
+            for i, el in layer1.iterrows()]
+
+        return shaft
 
         #  TODO stiffness Matrix due to an axial load
         #  TODO stiffness Matrix due to an axial torque
