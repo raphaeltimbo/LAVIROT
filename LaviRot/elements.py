@@ -708,7 +708,7 @@ class BearingElement:
         return C
 
     @classmethod
-    def load_from_xltrc(cls, file, sheet='XLUseKCM', units='SI'):
+    def load_from_xltrc(cls, n, file, sheet='XLUseKCM', units='SI'):
         """Load bearing from xltrc.
 
         This method will construct a bearing loading the coefficients
@@ -716,6 +716,8 @@ class BearingElement:
 
         Parameters
         ----------
+        n: int
+            Node in which the bearing will be inserted.
         file : str
             File path name.
         sheet : str
@@ -732,6 +734,8 @@ class BearingElement:
         Examples
         --------
         """
+        # TODO Check .xls units to see if argument provided is consistent
+
         if units not in ['SI', 'English']:
             raise ValueError(f'invalid units option: {units}')
 
@@ -748,8 +752,18 @@ class BearingElement:
 
         df_bearing['Speed'] = df_bearing['Speed'] * 2 * np.pi / 60
 
-        # TODO pass arguments
-        pass
+        w = df_bearing.Speed.values
+        kxx = df_bearing.Kxx.values
+        kxy = df_bearing.Kxy.values
+        kyx = df_bearing.Kyx.values
+        kyy = df_bearing.Kyy.values
+        cxx = df_bearing.Cxx.values
+        cxy = df_bearing.Cxy.values
+        cyx = df_bearing.Cyx.values
+        cyy = df_bearing.Cyy.values
+
+        return cls(n=n, w=w, kxx=kxx, kxy=kxy, kyx=kyx, kyy=kyy,
+                   cxx=cxx, cxy=cxy, cyx=cyx, cyy=cyy)
 
 
 class SealElement(BearingElement):
