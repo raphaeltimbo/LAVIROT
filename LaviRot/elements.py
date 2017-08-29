@@ -385,9 +385,17 @@ class ShaftElement:
         material = material.dropna(axis=0, how='all')
 
         # change to SI units
-        material['Density   r'] = material['Density   r'] * 27679.904
-        material['Elastic Modulus E'] = material['Elastic Modulus E'] * 6894.757
-        material['Shear Modulus G'] = material['Shear Modulus G'] * 6894.757
+        if units != 'SI':
+            for dim in ['length', 'od_Left', 'id_Left',
+                        'od_Right', 'id_Right']:
+                geometry[dim] = geometry[dim] * 0.0254
+
+            geometry['axial'] = geometry['axial'] * 4.44822161
+
+            for prop in ['Elastic Modulus E', 'Shear Modulus G']:
+                material[prop] = material[prop] * 6894.757
+
+            material['Density   r'] = material['Density   r'] * 27679.904
 
         materials = {}
         for i, mat in material.iterrows():
