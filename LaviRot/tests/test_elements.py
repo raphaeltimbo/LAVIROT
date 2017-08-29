@@ -196,3 +196,12 @@ def test_bearing_error1():
         BearingElement(-1, kxx=kx, cxx=cx)
     assert ('w should be an array with'
             ' the parameters dimension') in str(excinfo.value)
+
+
+def test_load_from_xltrc():
+    file = 'data/xl_rotor.xls'
+    shaft = ShaftElement.load_from_xltrc(file)
+    assert len(shaft) == 57
+    assert_allclose(shaft[0].rho, 7833.4128)
+    assert_allclose(shaft[0].E, 206842710000.0)
+    assert_allclose(shaft[0].Poisson, 0.25)
