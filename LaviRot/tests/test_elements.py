@@ -200,6 +200,11 @@ def test_bearing_error1():
 
 def test_load_from_xltrc():
     file = 'data/xl_rotor.xls'
+
+    with pytest.raises(ValueError) as excinfo:
+        ShaftElement.load_from_xltrc(file, units='invalid_units')
+    assert 'invalid units option' in str(excinfo.value)
+
     shaft = ShaftElement.load_from_xltrc(file)
     assert len(shaft) == 57
     assert_allclose(shaft[0].rho, 7833.4128)
