@@ -850,7 +850,7 @@ class Rotor(object):
         ax.plot([-.2 * shaft_end, 1.2 * shaft_end], [0, 0], 'k-.')
         try:
             max_diameter = max([disk.o_d for disk in self.disk_elements])
-        except ValueError:
+        except (ValueError, AttributeError):
             max_diameter = max([shaft.o_d for shaft in self.shaft_elements])
 
         ax.set_ylim(-1.2 * max_diameter, 1.2 * max_diameter)
@@ -859,7 +859,7 @@ class Rotor(object):
         #  plot nodes
         for node, position in enumerate(self.nodes_pos):
             ax.plot(position, 0,
-                    zorder=2, ls='', marker='D', color=r_pal['node'], markersize=10, alpha=0.6)
+                    zorder=2, ls='', marker='D', color='#6caed6', markersize=10, alpha=0.6)
             ax.text(position, 0,
                     '%.0f' % node,
                     size='smaller',
@@ -873,7 +873,7 @@ class Rotor(object):
 
         # plot disk elements
         for disk in self.disk_elements:
-            position = self.nodes_pos[disk.n]
+            position = (self.nodes_pos[disk.n], self.nodes_o_d[disk.n])
             disk.patch(ax, position)
 
         # plot bearings

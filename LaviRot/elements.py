@@ -497,6 +497,7 @@ class LumpedDiskElement:
         self.m = m
         self.Id = Id
         self.Ip = Ip
+        self.color = '#bc625b'
 
     def M(self):
         """
@@ -561,6 +562,44 @@ class LumpedDiskElement:
                       [0, 0, -Ip,  0]])
 
         return G
+
+    def patch(self, ax, position):
+        """Lumped Disk element patch.
+
+        Patch that will be used to draw the disk element.
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        position : float
+            Position in which the patch will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
+        zpos, ypos = position
+        D = ypos * 1.5
+        hw = 0.1
+
+        #  node (x pos), outer diam. (y pos)
+        disk_points_u = [[zpos, ypos],  # upper
+                         [zpos + hw, ypos + D],
+                         [zpos - hw, ypos + D],
+                         [zpos, ypos]]
+        disk_points_l = [[zpos, -ypos],  # lower
+                         [zpos + hw, -(ypos + D)],
+                         [zpos - hw, -(ypos + D)],
+                         [zpos, -ypos]]
+        ax.add_patch(mpatches.Polygon(disk_points_u, facecolor=self.color))
+        ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=self.color))
+
+        ax.add_patch(mpatches.Circle(xy=(zpos, ypos + D),
+                                     radius=0.5, color=self.color))
+        ax.add_patch(mpatches.Circle(xy=(zpos, -(ypos + D)),
+                                     radius=0.5, color=self.color))
 
     @classmethod
     def load_from_xltrc(cls, n, file, units='SI'):
@@ -644,6 +683,8 @@ class DiskElement(LumpedDiskElement):
         ax : matplotlib axes
             Returns the axes object with the plot.
         """
+        if isinstance(position, tuple):
+            position = position[0]
         zpos = position
         ypos = self.i_d
         D = self.o_d
