@@ -144,6 +144,10 @@ class Rotor(object):
         # rotor characteristics
         self.L = np.sum([sh_el.L for sh_el in self.shaft_elements])
 
+        self.m_disks = np.sum([disk.m for disk in self.disk_elements])
+        self.m_shaft = np.sum([sh_el.m for sh_el in self.shaft_elements])
+        self.m = self.m_disks + self.m_shaft
+
         # values for evalues and evectors will be calculated by self._calc_system
         self.evalues = None
         self.evectors = None

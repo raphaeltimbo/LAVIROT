@@ -126,6 +126,8 @@ class ShaftElement:
         self.color = '#525252' # TODO Define color from material
         self.rho = material.rho
         self.A = np.pi*(o_d**2 - i_d**2)/4
+        self.volume = self.A * self.L
+        self.m = self.rho * self.volume
         #  Ie is the second moment of area of the cross section about
         #  the neutral plane Ie = pi*r**2/4
         self.Ie = np.pi*(o_d**4 - i_d**4)/64
