@@ -214,11 +214,7 @@ def test_load_shaft_from_xltrc():
 def test_load_bearing_from_xltrc():
     file = 'data/xl_bearing.xls'
 
-    with pytest.raises(ValueError) as excinfo:
-        BearingElement.load_from_xltrc(0, file, units='invalid_units')
-    assert 'invalid units option' in str(excinfo.value)
-
-    bearing = BearingElement.load_from_xltrc(0, file, units='English')
+    bearing = BearingElement.load_from_xltrc(0, file)
 
     K0 = np.array([[1.056079e+07, -6.877765e+02],
                    [6.594875e+02,  6.551263e+07]])
