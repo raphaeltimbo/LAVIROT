@@ -1,4 +1,5 @@
 import pytest
+import os
 from LaviRot.elements import *
 from LaviRot.materials import steel
 import numpy as np
@@ -198,6 +199,8 @@ def test_bearing_error1():
             ' the parameters dimension') in str(excinfo.value)
 
 
+@pytest.mark.skipif('TRAVIS' in os.environ or 'APPVEYOR' in os.environ,
+                    reason='Skip in travis')
 def test_load_shaft_from_xltrc():
     file = 'data/xl_rotor.xls'
 
@@ -211,6 +214,8 @@ def test_load_shaft_from_xltrc():
     assert_allclose(shaft[0].Poisson, 0.25)
 
 
+@pytest.mark.skipif('TRAVIS' in os.environ or 'APPVEYOR' in os.environ,
+                    reason='Skip in travis')
 def test_load_bearing_from_xltrc():
     file = 'data/xl_bearing.xls'
 
@@ -227,6 +232,8 @@ def test_load_bearing_from_xltrc():
     assert_allclose(bearing.C(0), C0, rtol=1e-3)
 
 
+@pytest.mark.skipif('TRAVIS' in os.environ or 'APPVEYOR' in os.environ,
+                    reason='Skip in travis')
 def test_load_lumped_disk_from_xltrc():
     file = 'data/xl_rotor.xls'
 
