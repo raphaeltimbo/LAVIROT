@@ -724,6 +724,7 @@ class BearingElement:
 
         self.n = n
         self.w = w
+        self.color = '#355d7a'
 
         for arg, val in args.items():
             if isinstance(val, (int, float)):
@@ -756,6 +757,33 @@ class BearingElement:
                       [cyx, cyy]])
 
         return C
+
+    def patch(self, ax, position):
+        """Bearing element patch.
+
+        Patch that will be used to draw the bearing element.
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        position : tuple
+            Position (z, y) in which the patch will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
+        zpos, ypos = position
+        h = -0.75 * ypos  # height
+
+        #  node (x pos), outer diam. (y pos)
+        bearing_points = [[zpos, ypos],  # upper
+                          [zpos + h / 2, ypos - h],
+                          [zpos - h / 2, ypos - h],
+                          [zpos, ypos]]
+        ax.add_patch(mpatches.Polygon(bearing_points, color=self.color))
 
     def plot_k_curve(self, w=None, ax=None,
                      kxx=True, kxy=True, kyx=True, kyy=True):
@@ -917,4 +945,34 @@ class BearingElement:
 
 
 class SealElement(BearingElement):
-    pass
+    def __init__(self, n,
+                 kxx, cxx,
+                 kyy=None, kxy=0, kyx=0,
+                 cyy=None, cxy=0, cyx=0,
+                 w=None):
+        super().__init__(n=n, w=w,
+                         kxx=kxx, kxy=kxy, kyx=kyx, kyy=kyy,
+                         cxx=cxx, cxy=cxy, cyx=cyx, cyy=cyy)
+
+        self.color = '#77ACA2'
+
+    def patch(self, ax, position):
+        zpos, ypos = position
+        hw = 0.05
+        # TODO adapt hw according to bal drum diameter
+
+        #  node (x pos), outer diam. (y pos)
+        seal_points_u = [[zpos, ypos*1.1],  # upper
+                         [zpos + hw, ypos*1.1],
+                         [zpos + hw, ypos*1.3],
+                         [zpos - hw, ypos*1.3],
+                         [zpos - hw, ypos*1.1],
+                         [zpos, ypos*1.1]]
+        seal_points_l = [[zpos, -ypos*1.1],  # lower
+                         [zpos + hw, -(ypos*1.1)],
+                         [zpos + hw, -(ypos*1.3)],
+                         [zpos - hw, -(ypos*1.3)],
+                         [zpos - hw, -(ypos*1.1)],
+                         [zpos, -ypos*1.1]]
+        ax.add_patch(mpatches.Polygon(seal_points_u, facecolor=self.color))
+        ax.add_patch(mpatches.Polygon(seal_points_l, facecolor=self.color))

@@ -904,42 +904,24 @@ class Rotor(object):
         # plot bearings
         for bearing in self.bearing_seal_elements:
             # name is used here because classes are not import to this module
-            if type(bearing).__name__ == 'BearingElement':
-                zpos = self.nodes_pos[bearing.n]
-                #  TODO this will need to be modified for tapppered elements
-                #  check if the bearing is in the last node
-                ypos = -self.nodes_o_d[bearing.n]
-                h = -0.75 * ypos  # height
+            position = (self.nodes_pos[bearing.n], -self.nodes_o_d[bearing.n])
+            bearing.patch(ax, position)
 
-                #  node (x pos), outer diam. (y pos)
-                bearing_points = [[zpos, ypos],  # upper
-                                  [zpos + h / 2, ypos - h],
-                                  [zpos - h / 2, ypos - h],
-                                  [zpos, ypos]]
-                ax.add_patch(mpatches.Polygon(bearing_points, color=r_pal['bearing']))
+            # if type(bearing).__name__ == 'BearingElement':
+            #     zpos = self.nodes_pos[bearing.n]
+            #     #  TODO this will need to be modified for tapppered elements
+            #     #  check if the bearing is in the last node
+            #     ypos = -self.nodes_o_d[bearing.n]
+            #     h = -0.75 * ypos  # height
+            #
+            #     #  node (x pos), outer diam. (y pos)
+            #     bearing_points = [[zpos, ypos],  # upper
+            #                       [zpos + h / 2, ypos - h],
+            #                       [zpos - h / 2, ypos - h],
+            #                       [zpos, ypos]]
+            #     ax.add_patch(mpatches.Polygon(bearing_points, color=r_pal['bearing']))
 
-            elif type(bearing).__name__ == 'SealElement':
-                zpos = self.nodes_pos[bearing.n]
-                #  check if the bearing is in the last node
-                ypos = self.nodes_o_d[bearing.n]
-                hw = 0.05
-                # TODO adapt hw according to bal drum diameter
-
-                #  node (x pos), outer diam. (y pos)
-                seal_points_u = [[zpos, ypos*1.1],  # upper
-                                 [zpos + hw, ypos*1.1],
-                                 [zpos + hw, ypos*1.3],
-                                 [zpos - hw, ypos*1.3],
-                                 [zpos - hw, ypos*1.1],
-                                 [zpos, ypos*1.1]]
-                seal_points_l = [[zpos, -ypos*1.1],  # lower
-                                 [zpos + hw, -(ypos*1.1)],
-                                 [zpos + hw, -(ypos*1.3)],
-                                 [zpos - hw, -(ypos*1.3)],
-                                 [zpos - hw, -(ypos*1.1)],
-                                 [zpos, -ypos*1.1]]
-                ax.add_patch(mpatches.Polygon(seal_points_u, facecolor=r_pal['seal']))
-                ax.add_patch(mpatches.Polygon(seal_points_l, facecolor=r_pal['seal']))
+            # elif type(bearing).__name__ == 'SealElement':
 
         # restore rc parameters after plotting
         mpl.rcParams.update(_orig_rc_params)
