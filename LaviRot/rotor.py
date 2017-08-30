@@ -147,6 +147,7 @@ class Rotor(object):
         self.m_disks = np.sum([disk.m for disk in self.disk_elements])
         self.m_shaft = np.sum([sh_el.m for sh_el in self.shaft_elements])
         self.m = self.m_disks + self.m_shaft
+        # TODO Add CG location
 
         # values for evalues and evectors will be calculated by self._calc_system
         self.evalues = None
