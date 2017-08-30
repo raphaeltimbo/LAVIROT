@@ -141,7 +141,10 @@ class Rotor(object):
         self.bearing_seal_elements = bearing_seal_elements
         self.disk_elements = disk_elements
 
-        # Values for evalues and evectors will be calculated by self._calc_system
+        # rotor characteristics
+        self.L = np.sum([sh_el.L for sh_el in self.shaft_elements])
+
+        # values for evalues and evectors will be calculated by self._calc_system
         self.evalues = None
         self.evectors = None
         self.wn = None
