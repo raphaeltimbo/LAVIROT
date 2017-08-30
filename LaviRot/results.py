@@ -241,33 +241,6 @@ def campbell(rotor, speed_rad, freqs=6, mult=[1], plot=True, ax=None):
     return ax
 
 
-def bearing_parameters(bearing):
-    fig, ax = plt.subplots(2, sharex=True)
-
-    w = np.linspace(0, 1.3*bearing.w[-1], 1000)
-
-    for a in ax:
-        a.ticklabel_format(style='sci',
-                           axis='both',
-                           scilimits=(0, 0))
-
-    ax[0].set_ylabel(r'Bearing Stiffness ($N/m$)')
-    ax[1].set_ylabel(r'Bearing Damping ($Ns/m$)')
-    ax[1].set_xlabel(r'Speed (rad/s)')
-
-    ax[0].plot(w, bearing.kxx(w))
-    ax[0].plot(w, bearing.kyy(w))
-    ax[0].plot(w, bearing.kxy(w))
-    ax[0].plot(w, bearing.kyx(w))
-
-    ax[1].plot(w, bearing.cxx(w))
-    ax[1].plot(w, bearing.cyy(w))
-    ax[1].plot(w, bearing.cxy(w))
-    ax[1].plot(w, bearing.cyx(w))
-
-    return fig
-
-
 # TODO critical speed map
 
 
