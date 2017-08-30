@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import scipy.interpolate as interpolate
+import matplotlib.pyplot as plt
 from itertools import permutations
 from LaviRot.materials import Material
 
@@ -655,6 +656,8 @@ class BearingElement:
                     )
             w = np.linspace(0, 10000, 4)
 
+        w = np.array(w, dtype=np.float)
+
         if kyy is None:
             kyy = kxx
         if cyy is None:
@@ -707,6 +710,56 @@ class BearingElement:
                       [cyx, cyy]])
 
         return C
+
+    def plot_k_curve(self, w=None, ax=None,
+                     kxx=True, kxy=True, kyx=True, kyy=True):
+        """Plot the k curve fit.
+
+        This method will plot the curve fit for the
+        given speed range.
+
+        Parameters
+        ----------
+        w : array, optional
+            Speeds for which the plot will be made.
+            If not provided, will use speed from bearing creation.
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        kxx : bool, optional
+            Whether or not kxx is plotted. Default is True.
+        kxy : bool, optional
+            Whether or not kxy is plotted. Default is True.
+        kyx : bool, optional
+            Whether or not kyx is plotted. Default is True.
+        kyy : bool, optional
+            Whether or not kyy is plotted. Default is True.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+
+        Examples
+        --------
+        """
+        if w is None:
+            w = self.w
+
+        if ax is None:
+            ax = plt.gca()
+
+        if kxx is True:
+            ax.plot(w, self.kxx(w), label='Kxx N/m')
+        if kyy is True:
+            ax.plot(w, self.kyy(w), label='Kyy N/m')
+        if kxy is True:
+            ax.plot(w, self.kxy(w), '--', label='Kxy N/m')
+        if kyx is True:
+            ax.plot(w, self.kyx(w), '--', label='Kyx N/m')
+
+        ax.legend()
+
+        return ax
 
     @classmethod
     def load_from_xltrc(cls, n, file, sheet='XLUseKCM', units='SI'):
