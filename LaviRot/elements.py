@@ -623,8 +623,47 @@ class DiskElement(LumpedDiskElement):
         self.Id = (0.015625 * self.rho * np.pi * width*(o_d**4 - i_d**4)
                    + self.m*(width**2)/12)
         self.Ip = 0.03125 * self.rho * np.pi * width * (o_d**4 - i_d**4)
+        self.color = '#bc625b'
 
         super().__init__(self.n, self.m, self.Id, self.Ip)
+
+    def patch(self, ax, position):
+        """Disk element patch.
+
+        Patch that will be used to draw the disk element.
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        position : float
+            Position in which the patch will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
+        zpos = position
+        ypos = self.i_d
+        D = self.o_d
+        hw = self.width / 2  # half width
+
+        #  node (x pos), outer diam. (y pos)
+        disk_points_u = [[zpos, ypos],  # upper
+                         [zpos + hw, ypos + 0.1 * D],
+                         [zpos + hw, ypos + 0.9 * D],
+                         [zpos - hw, ypos + 0.9 * D],
+                         [zpos - hw, ypos + 0.1 * D],
+                         [zpos, ypos]]
+        disk_points_l = [[zpos, -ypos],  # lower
+                         [zpos + hw, -(ypos + 0.1 * D)],
+                         [zpos + hw, -(ypos + 0.9 * D)],
+                         [zpos - hw, -(ypos + 0.9 * D)],
+                         [zpos - hw, -(ypos + 0.1 * D)],
+                         [zpos, -ypos]]
+        ax.add_patch(mpatches.Polygon(disk_points_u, facecolor=self.color))
+        ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=self.color))
 
 
 class BearingElement:
@@ -957,6 +996,22 @@ class SealElement(BearingElement):
         self.color = '#77ACA2'
 
     def patch(self, ax, position):
+        """Seal element patch.
+
+        Patch that will be used to draw the seal element.
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        position : tuple
+            Position in which the patch will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
         zpos, ypos = position
         hw = 0.05
         # TODO adapt hw according to bal drum diameter

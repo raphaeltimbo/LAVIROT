@@ -842,13 +842,6 @@ class Rotor(object):
         plt.rcParams['xtick.labelsize'] = 0
         plt.rcParams['ytick.labelsize'] = 0
 
-        #  define a color palette for the self
-        r_pal = {'shaft': '#525252',
-                 'node': '#6caed6',
-                 'disk': '#bc625b',
-                 'bearing': '#355d7a',
-                 'seal': '#77ACA2'}
-
         if ax is None:
             ax = plt.gca()
 
@@ -880,50 +873,14 @@ class Rotor(object):
 
         # plot disk elements
         for disk in self.disk_elements:
-            zpos = self.nodes_pos[disk.n]
-            ypos = disk.i_d
-            D = disk.o_d
-            hw = disk.width / 2  # half width
-
-            #  node (x pos), outer diam. (y pos)
-            disk_points_u = [[zpos, ypos],  # upper
-                             [zpos + hw, ypos + 0.1 * D],
-                             [zpos + hw, ypos + 0.9 * D],
-                             [zpos - hw, ypos + 0.9 * D],
-                             [zpos - hw, ypos + 0.1 * D],
-                             [zpos, ypos]]
-            disk_points_l = [[zpos, -ypos],  # lower
-                             [zpos + hw, -(ypos + 0.1 * D)],
-                             [zpos + hw, -(ypos + 0.9 * D)],
-                             [zpos - hw, -(ypos + 0.9 * D)],
-                             [zpos - hw, -(ypos + 0.1 * D)],
-                             [zpos, -ypos]]
-            ax.add_patch(mpatches.Polygon(disk_points_u, facecolor=r_pal['disk']))
-            ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=r_pal['disk']))
+            position = self.nodes_pos[disk.n]
+            disk.patch(ax, position)
 
         # plot bearings
         for bearing in self.bearing_seal_elements:
-            # name is used here because classes are not import to this module
             position = (self.nodes_pos[bearing.n], -self.nodes_o_d[bearing.n])
             bearing.patch(ax, position)
 
-            # if type(bearing).__name__ == 'BearingElement':
-            #     zpos = self.nodes_pos[bearing.n]
-            #     #  TODO this will need to be modified for tapppered elements
-            #     #  check if the bearing is in the last node
-            #     ypos = -self.nodes_o_d[bearing.n]
-            #     h = -0.75 * ypos  # height
-            #
-            #     #  node (x pos), outer diam. (y pos)
-            #     bearing_points = [[zpos, ypos],  # upper
-            #                       [zpos + h / 2, ypos - h],
-            #                       [zpos - h / 2, ypos - h],
-            #                       [zpos, ypos]]
-            #     ax.add_patch(mpatches.Polygon(bearing_points, color=r_pal['bearing']))
-
-            # elif type(bearing).__name__ == 'SealElement':
-
-        # restore rc parameters after plotting
         mpl.rcParams.update(_orig_rc_params)
 
         return ax
