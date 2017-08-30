@@ -576,7 +576,7 @@ class LumpedDiskElement:
         """
         zpos, ypos = position
         D = ypos * 1.5
-        hw = 0.1
+        hw = 0.005
 
         #  node (x pos), outer diam. (y pos)
         disk_points_u = [[zpos, ypos],  # upper
@@ -591,12 +591,32 @@ class LumpedDiskElement:
         ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=self.color))
 
         ax.add_patch(mpatches.Circle(xy=(zpos, ypos + D),
-                                     radius=0.5, color=self.color))
+                                     radius=0.01, color=self.color))
         ax.add_patch(mpatches.Circle(xy=(zpos, -(ypos + D)),
-                                     radius=0.5, color=self.color))
+                                     radius=0.01, color=self.color))
 
     @classmethod
     def load_from_xltrc(cls, file, sheet='More'):
+        """Load lumped masses from xltrc.
+
+        This method will construct a disks list with loaded data
+        from a xltrc file.
+
+        Parameters
+        ----------
+        file : str
+            File path name.
+        sheet : str
+            Masses sheet name. Default is 'More'.
+
+        Returns
+        -------
+        disks : list
+            List with the shaft elements.
+
+        Examples
+        --------
+        """
         df = pd.read_excel(file, sheetname=sheet)
 
         df_masses = pd.DataFrame(df.iloc[4:, :4])
@@ -609,7 +629,7 @@ class LumpedDiskElement:
             df_masses['Ip'] = df_masses['Ip'] * 0.00029263965342920005
             df_masses['It'] = df_masses['It'] * 0.00029263965342920005
 
-        disks = [cls(d.n, d.Mass, d.It, d.Ip)
+        disks = [cls(d.n-1, d.Mass, d.It, d.Ip)
                  for _, d in df_masses.iterrows()]
 
         return disks

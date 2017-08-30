@@ -229,7 +229,13 @@ def test_load_bearing_from_xltrc():
 
 def test_load_lumped_disk_from_xltrc():
     file = 'data/xl_rotor.xls'
-    pass
 
+    disks = LumpedDiskElement.load_from_xltrc(file)
+    disk1_M = np.array([[ 6.909992,  0.      ,  0.      ,  0.      ],
+                        [ 0.      ,  6.909992,  0.      ,  0.      ],
+                        [ 0.      ,  0.      ,  0.025   ,  0.      ],
+                        [ 0.      ,  0.      ,  0.      ,  0.025   ]])
+
+    assert_allclose(disks[1].M(), disk1_M, rtol=1e-4)
 
 
