@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import scipy.interpolate as interpolate
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+import matplotlib.patches as mpatches
 from itertools import permutations
 from LaviRot.materials import Material
 
@@ -9,6 +11,14 @@ from LaviRot.materials import Material
 __all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",
            "BearingElement", "SealElement"]
 
+
+c_pal = {'red': '#C93C3C',
+         'blue': '#0760BA',
+         'green': '#2ECC71',
+         'dark blue': '#07325E',
+         'purple': '#A349C6',
+         'grey': '#2D2D2D',
+         'green2': '#08A4AF'}
 
 class ShaftElement:
     r"""A shaft element.
@@ -112,6 +122,7 @@ class ShaftElement:
         self.E = material.E
         self.G_s = material.G_s
         self.Poisson = material.Poisson
+        self.color = '#525252' # TODO Define color from material
         self.rho = material.rho
         self.A = np.pi*(o_d**2 - i_d**2)/4
         #  Ie is the second moment of area of the cross section about
@@ -274,6 +285,35 @@ class ShaftElement:
             G = - self.rho * self.Ie * G / (15 * L * (1 + phi)**2)
 
         return G
+
+    def patch(self, ax, position):
+        """Shaft element patch.
+
+        Patch that will be used to draw the shaft element.
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        position : float
+            Position in which the patch will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
+        position_u = [position, self.i_d]  # upper
+        position_l = [position, -self.o_d]  # lower
+        width = self.L
+        height = self.o_d - self.i_d
+
+        #  plot the upper half of the shaft
+        ax.add_patch(mpatches.Rectangle(position_u, width, height,
+                                        facecolor=self.color, alpha=0.8))
+        #  plot the lower half of the shaft
+        ax.add_patch(mpatches.Rectangle(position_l, width, height, facecolor=self.color, alpha=0.8))
+
 
     @classmethod
     def section(cls, L, ne,

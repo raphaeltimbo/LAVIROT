@@ -875,17 +875,8 @@ class Rotor(object):
 
         # plot shaft elements
         for sh_elm in self.shaft_elements:
-            position_u = [self.nodes_pos[sh_elm.n], sh_elm.i_d]  # upper
-            position_l = [self.nodes_pos[sh_elm.n], -sh_elm.o_d]  # lower
-            width = sh_elm.L
-            height = sh_elm.o_d - sh_elm.i_d
-
-            #  plot the upper half of the shaft
-            ax.add_patch(mpatches.Rectangle(position_u, width, height,
-                                            facecolor=r_pal['shaft'], alpha=0.8))
-            #  plot the lower half of the shaft
-            ax.add_patch(mpatches.Rectangle(position_l, width, height,
-                                            facecolor=r_pal['shaft'], alpha=0.8))
+            position = self.nodes_pos[sh_elm.n]
+            sh_elm.patch(ax, position)
 
         # plot disk elements
         for disk in self.disk_elements:
