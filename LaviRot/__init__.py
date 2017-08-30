@@ -8,7 +8,6 @@
 from .materials import *
 from .elements import *
 from .rotor import *
-from .results import *
 
 # TODO add setup.py
 

@@ -1132,6 +1132,8 @@ class Rotor(object):
 
         return ax
 
+    # TODO add frequency response - see vtoolbox
+
     def save_mat(self, file_name):
         """
         Save matrices and rotor model to a .mat file.
