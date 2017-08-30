@@ -963,9 +963,6 @@ class Rotor(object):
 
         Parameters
         ----------
-        rotor: Rotor instance
-            Rotor instance that will be used for calculating the
-            Campbell diagram.
         speed_rad: array
             Array with the speed range in rad/s.
         freqs: int, optional
@@ -1079,6 +1076,59 @@ class Rotor(object):
 
         # restore rotor speed
         self.w = rotor_state_speed
+
+        return ax
+
+    def plot_time_response(self, F, t, dof, ax=None):
+        """Plot the time response.
+
+        This function will take a rotor object and plot its time response
+        given a force and a time.
+
+        Parameters
+        ----------
+        F : array
+            Force array (needs to have the same number of rows as time array).
+            Each column corresponds to a dof and each row to a time.
+        t : array
+            Time array.
+        dof : int
+            Degree of freedom that will be observed.
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+
+        Examples:
+        ---------
+        """
+        t_, yout, xout = self.time_response(F, t)
+
+        if ax is None:
+            ax = plt.gca()
+
+        ax.plot(t, yout[:, dof])
+
+        if dof % 4 == 0:
+            obs_dof = '$x$'
+            amp = 'm'
+        elif dof + 1 % 4 == 0:
+            obs_dof = '$y$'
+            amp = 'm'
+        elif dof + 2 % 4 == 0:
+            obs_dof = '$\alpha$'
+            amp = 'rad'
+        else:
+            obs_dof = '$\beta$'
+            amp = 'rad'
+
+        ax.set_xlabel('Time (s)')
+        ax.set_ylabel('Amplitude (%s)' % amp)
+        ax.set_title('Response for node %s and degree of freedom %s'
+                     % (dof//4, obs_dof))
 
         return ax
 
