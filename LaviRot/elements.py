@@ -1,6 +1,9 @@
 import numpy as np
+import pandas as pd
 import scipy.interpolate as interpolate
+import matplotlib.pyplot as plt
 from itertools import permutations
+from LaviRot.materials import Material
 
 
 __all__ = ["ShaftElement", "DiskElement", "BearingElement", "SealElement"]
@@ -87,6 +90,7 @@ class ShaftElement:
     """
     #  TODO detail this class attributes inside the docstring
     #  TODO add __repr__ to the class
+    #  TODO add load from .xls -> sheet More
     def __init__(self, L, i_d, o_d, material,
                  n=None,
                  axial_force=0, torque=0,
@@ -344,6 +348,75 @@ class ShaftElement:
 
         return elements
 
+    @classmethod
+    def load_from_xltrc(cls, file, shaft_sheet='Model', units='SI'):
+        """Load shaft from xltrc.
+
+        This method will construct a shaft loading the geometry
+        and materials from a xltrc file.
+
+        Parameters
+        ----------
+        file : str
+            File path name.
+        shaft_sheet : str
+            Shaft sheet name. Default is 'Model'.
+        units : str
+            Units used in the xltrc file.
+            Can be 'SI' or 'English'
+
+        Returns
+        -------
+        shaft : list
+            List with the shaft elements.
+
+        Examples
+        --------
+        """
+        if units not in ['SI', 'English']:
+            raise ValueError(f'invalid units option: {units}')
+
+        df = pd.read_excel(file, sheetname=shaft_sheet)
+
+        geometry = pd.DataFrame(df.iloc[19:])
+        geometry = geometry.rename(columns=df.loc[18])
+        geometry = geometry.dropna(axis=1, how='all')
+
+        material = df.iloc[3:13, 9:15]
+        material = material.rename(columns=df.iloc[0])
+        material = material.dropna(axis=0, how='all')
+
+        # change to SI units
+        if units != 'SI':
+            for dim in ['length', 'od_Left', 'id_Left',
+                        'od_Right', 'id_Right']:
+                geometry[dim] = geometry[dim] * 0.0254
+
+            geometry['axial'] = geometry['axial'] * 4.44822161
+
+            for prop in ['Elastic Modulus E', 'Shear Modulus G']:
+                material[prop] = material[prop] * 6894.757
+
+            material['Density   r'] = material['Density   r'] * 27679.904
+
+        materials = {}
+        for i, mat in material.iterrows():
+            materials[mat.Material] = Material(
+                name=f'Material {mat["Material"]}',
+                rho=mat['Density   r'],
+                E=mat['Elastic Modulus E'],
+                G_s=mat['Shear Modulus G']
+            )
+
+        # TODO implement for more than one layer
+        layer1 = geometry[geometry.laynum == 1]
+        shaft = [ShaftElement(
+            el.length, el.id_Left,
+            el.od_Left, materials[el.matnum])
+            for i, el in layer1.iterrows()]
+
+        return shaft
+
         #  TODO stiffness Matrix due to an axial load
         #  TODO stiffness Matrix due to an axial torque
         #  TODO add speed as an argument so that skew-symmetric stiffness matrix can be evaluated (default to None)
@@ -447,6 +520,11 @@ class LumpedDiskElement:
                       [0, 0, -Ip,  0]])
 
         return G
+
+    @classmethod
+    def load_from_xltrc(cls, n, file, units='SI'):
+        pass
+    #  TODO implement load disk from xl.
 
 
 class DiskElement(LumpedDiskElement):
@@ -583,6 +661,8 @@ class BearingElement:
                     )
             w = np.linspace(0, 10000, 4)
 
+        w = np.array(w, dtype=np.float)
+
         if kyy is None:
             kyy = kxx
         if cyy is None:
@@ -635,6 +715,164 @@ class BearingElement:
                       [cyx, cyy]])
 
         return C
+
+    def plot_k_curve(self, w=None, ax=None,
+                     kxx=True, kxy=True, kyx=True, kyy=True):
+        """Plot the k curve fit.
+
+        This method will plot the curve fit for the
+        given speed range.
+
+        Parameters
+        ----------
+        w : array, optional
+            Speeds for which the plot will be made.
+            If not provided, will use speed from bearing creation.
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        kxx : bool, optional
+            Whether or not kxx is plotted. Default is True.
+        kxy : bool, optional
+            Whether or not kxy is plotted. Default is True.
+        kyx : bool, optional
+            Whether or not kyx is plotted. Default is True.
+        kyy : bool, optional
+            Whether or not kyy is plotted. Default is True.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+
+        Examples
+        --------
+        """
+        if w is None:
+            w = self.w
+
+        if ax is None:
+            ax = plt.gca()
+
+        if kxx is True:
+            ax.plot(w, self.kxx(w), label='Kxx N/m')
+        if kyy is True:
+            ax.plot(w, self.kyy(w), label='Kyy N/m')
+        if kxy is True:
+            ax.plot(w, self.kxy(w), '--', label='Kxy N/m')
+        if kyx is True:
+            ax.plot(w, self.kyx(w), '--', label='Kyx N/m')
+
+        ax.legend()
+
+        return ax
+
+    def plot_c_curve(self, w=None, ax=None,
+                     cxx=True, cxy=True, cyx=True, cyy=True):
+        """Plot the k curve fit.
+
+        This method will plot the curve fit for the
+        given speed range.
+
+        Parameters
+        ----------
+        w : array, optional
+            Speeds for which the plot will be made.
+            If not provided, will use speed from bearing creation.
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        cxx : bool, optional
+            Whether or not cxx is plotted. Default is True.
+        cxy : bool, optional
+            Whether or not cxy is plotted. Default is True.
+        cyx : bool, optional
+            Whether or not cyx is plotted. Default is True.
+        cyy : bool, optional
+            Whether or not cyy is plotted. Default is True.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+
+        Examples
+        --------
+        """
+        if w is None:
+            w = self.w
+
+        if ax is None:
+            ax = plt.gca()
+
+        if cxx is True:
+            ax.plot(w, self.cxx(w), label='Cxx N.s/m')
+        if cyy is True:
+            ax.plot(w, self.cyy(w), label='Cyy N.s/m')
+        if cxy is True:
+            ax.plot(w, self.cxy(w), '--', label='Cxy N.s/m')
+        if cyx is True:
+            ax.plot(w, self.cyx(w), '--', label='Cyx N./m')
+
+        ax.legend()
+
+        return ax
+
+    @classmethod
+    def load_from_xltrc(cls, n, file, sheet='XLUseKCM', units='SI'):
+        """Load bearing from xltrc.
+
+        This method will construct a bearing loading the coefficients
+        from an xltrc file.
+
+        Parameters
+        ----------
+        n: int
+            Node in which the bearing will be inserted.
+        file : str
+            File path name.
+        sheet : str
+            Bearing sheet name. Default is 'XLUseKCM'.
+        units : str
+            Units used in the xltrc file.
+            Can be 'SI' or 'English'
+
+        Returns
+        -------
+        bearing : lr.BearingElement
+            A bearing element.
+
+        Examples
+        --------
+        """
+        # TODO Check .xls units to see if argument provided is consistent
+
+        if units not in ['SI', 'English']:
+            raise ValueError(f'invalid units option: {units}')
+
+        df = pd.read_excel(file, sheetname=sheet)
+
+        df_bearing = pd.DataFrame(df.iloc[6:])
+        df_bearing = df_bearing.rename(columns=df.loc[4])
+        df_bearing = df_bearing.dropna(axis=0, thresh=2)
+
+        if units != 'SI':
+            for col in df_bearing.columns:
+                if col != 'Speed':
+                    df_bearing[col] = df_bearing[col] * 175.126835
+
+        df_bearing['Speed'] = df_bearing['Speed'] * 2 * np.pi / 60
+
+        w = df_bearing.Speed.values
+        kxx = df_bearing.Kxx.values
+        kxy = df_bearing.Kxy.values
+        kyx = df_bearing.Kyx.values
+        kyy = df_bearing.Kyy.values
+        cxx = df_bearing.Cxx.values
+        cxy = df_bearing.Cxy.values
+        cyx = df_bearing.Cyx.values
+        cyy = df_bearing.Cyy.values
+
+        return cls(n=n, w=w, kxx=kxx, kxy=kxy, kyx=kyx, kyy=kyy,
+                   cxx=cxx, cxy=cxy, cyx=cyx, cyy=cyy)
 
 
 class SealElement(BearingElement):

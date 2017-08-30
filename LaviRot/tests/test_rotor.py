@@ -418,4 +418,5 @@ def test_evals_rotor3_rotor4(rotor3, rotor4):
 
 #  TODO implement more tests using a simple rotor with 2 elements and one disk
 #  TODO add test for damped case
+#  TODO add test to check wn from a rotor imported from xl
 
