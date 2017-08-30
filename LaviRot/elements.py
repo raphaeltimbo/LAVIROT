@@ -20,6 +20,7 @@ c_pal = {'red': '#C93C3C',
          'grey': '#2D2D2D',
          'green2': '#08A4AF'}
 
+
 class ShaftElement:
     r"""A shaft element.
 
@@ -146,6 +147,17 @@ class ShaftElement:
             phi = 12*self.E*self.Ie/(self.G_s*kappa*self.A*L**2)
 
         self.phi = phi
+
+    def __repr__(self):
+        return (
+            f'\nElem. N:    {self.n}'
+            f'\nLenght:     {self.L:{10}.{5}}'
+            f'\nInt. Diam.: {self.i_d:{10}.{5}}'
+            f'\nOut. Diam.: {self.o_d:{10}.{5}}'
+            f'\n{35*"-"}'
+            f'\n{self.material}'
+            f'\n'
+        )
 
     def M(self):
         r"""Mass matrix for an instance of a shaft element.
