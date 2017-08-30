@@ -521,6 +521,11 @@ class LumpedDiskElement:
 
         return G
 
+    @classmethod
+    def load_from_xltrc(cls, n, file, units='SI'):
+        pass
+    #  TODO implement load disk from xl.
+
 
 class DiskElement(LumpedDiskElement):
     #  TODO detail this class attributes inside the docstring
