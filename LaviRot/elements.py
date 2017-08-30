@@ -6,7 +6,8 @@ from itertools import permutations
 from LaviRot.materials import Material
 
 
-__all__ = ["ShaftElement", "DiskElement", "BearingElement", "SealElement"]
+__all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",
+           "BearingElement", "SealElement"]
 
 
 class ShaftElement:

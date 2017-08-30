@@ -167,11 +167,11 @@ class Rotor(object):
     @staticmethod
     def _dofs(element):
         """The first and last dof for a given element"""
-        if type(element) == ShaftElement:
+        if isinstance(element, ShaftElement):
             node = element.n
             n1 = 4 * node
             n2 = n1 + 8
-        if type(element) == DiskElement:
+        if isinstance(element, LumpedDiskElement):
             node = element.n
             n1 = 4 * node
             n2 = n1 + 4
