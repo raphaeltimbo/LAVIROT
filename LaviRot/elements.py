@@ -2,12 +2,23 @@ import numpy as np
 import pandas as pd
 import scipy.interpolate as interpolate
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+import matplotlib.patches as mpatches
 from itertools import permutations
 from LaviRot.materials import Material
 
 
-__all__ = ["ShaftElement", "DiskElement", "BearingElement", "SealElement"]
+__all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",
+           "BearingElement", "SealElement"]
 
+
+c_pal = {'red': '#C93C3C',
+         'blue': '#0760BA',
+         'green': '#2ECC71',
+         'dark blue': '#07325E',
+         'purple': '#A349C6',
+         'grey': '#2D2D2D',
+         'green2': '#08A4AF'}
 
 class ShaftElement:
     r"""A shaft element.
@@ -111,6 +122,7 @@ class ShaftElement:
         self.E = material.E
         self.G_s = material.G_s
         self.Poisson = material.Poisson
+        self.color = '#525252' # TODO Define color from material
         self.rho = material.rho
         self.A = np.pi*(o_d**2 - i_d**2)/4
         #  Ie is the second moment of area of the cross section about
@@ -274,6 +286,35 @@ class ShaftElement:
 
         return G
 
+    def patch(self, ax, position):
+        """Shaft element patch.
+
+        Patch that will be used to draw the shaft element.
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        position : float
+            Position in which the patch will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
+        position_u = [position, self.i_d]  # upper
+        position_l = [position, -self.o_d]  # lower
+        width = self.L
+        height = self.o_d - self.i_d
+
+        #  plot the upper half of the shaft
+        ax.add_patch(mpatches.Rectangle(position_u, width, height,
+                                        facecolor=self.color, alpha=0.8))
+        #  plot the lower half of the shaft
+        ax.add_patch(mpatches.Rectangle(position_l, width, height, facecolor=self.color, alpha=0.8))
+
+
     @classmethod
     def section(cls, L, ne,
                 si_d, so_d, material,
@@ -349,7 +390,7 @@ class ShaftElement:
         return elements
 
     @classmethod
-    def load_from_xltrc(cls, file, shaft_sheet='Model', units='SI'):
+    def load_from_xltrc(cls, file, shaft_sheet='Model'):
         """Load shaft from xltrc.
 
         This method will construct a shaft loading the geometry
@@ -361,9 +402,6 @@ class ShaftElement:
             File path name.
         shaft_sheet : str
             Shaft sheet name. Default is 'Model'.
-        units : str
-            Units used in the xltrc file.
-            Can be 'SI' or 'English'
 
         Returns
         -------
@@ -373,9 +411,6 @@ class ShaftElement:
         Examples
         --------
         """
-        if units not in ['SI', 'English']:
-            raise ValueError(f'invalid units option: {units}')
-
         df = pd.read_excel(file, sheetname=shaft_sheet)
 
         geometry = pd.DataFrame(df.iloc[19:])
@@ -387,7 +422,7 @@ class ShaftElement:
         material = material.dropna(axis=0, how='all')
 
         # change to SI units
-        if units != 'SI':
+        if df.iloc[1, 1] == 'inches':
             for dim in ['length', 'od_Left', 'id_Left',
                         'od_Right', 'id_Right']:
                 geometry[dim] = geometry[dim] * 0.0254
@@ -456,6 +491,7 @@ class LumpedDiskElement:
         self.m = m
         self.Id = Id
         self.Ip = Ip
+        self.color = '#bc625b'
 
     def M(self):
         """
@@ -521,10 +557,82 @@ class LumpedDiskElement:
 
         return G
 
+    def patch(self, ax, position):
+        """Lumped Disk element patch.
+
+        Patch that will be used to draw the disk element.
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        position : float
+            Position in which the patch will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
+        zpos, ypos = position
+        D = ypos * 1.5
+        hw = 0.005
+
+        #  node (x pos), outer diam. (y pos)
+        disk_points_u = [[zpos, ypos],  # upper
+                         [zpos + hw, ypos + D],
+                         [zpos - hw, ypos + D],
+                         [zpos, ypos]]
+        disk_points_l = [[zpos, -ypos],  # lower
+                         [zpos + hw, -(ypos + D)],
+                         [zpos - hw, -(ypos + D)],
+                         [zpos, -ypos]]
+        ax.add_patch(mpatches.Polygon(disk_points_u, facecolor=self.color))
+        ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=self.color))
+
+        ax.add_patch(mpatches.Circle(xy=(zpos, ypos + D),
+                                     radius=0.01, color=self.color))
+        ax.add_patch(mpatches.Circle(xy=(zpos, -(ypos + D)),
+                                     radius=0.01, color=self.color))
+
     @classmethod
-    def load_from_xltrc(cls, n, file, units='SI'):
-        pass
-    #  TODO implement load disk from xl.
+    def load_from_xltrc(cls, file, sheet='More'):
+        """Load lumped masses from xltrc.
+
+        This method will construct a disks list with loaded data
+        from a xltrc file.
+
+        Parameters
+        ----------
+        file : str
+            File path name.
+        sheet : str
+            Masses sheet name. Default is 'More'.
+
+        Returns
+        -------
+        disks : list
+            List with the shaft elements.
+
+        Examples
+        --------
+        """
+        df = pd.read_excel(file, sheetname=sheet)
+
+        df_masses = pd.DataFrame(df.iloc[4:, :4])
+        df_masses = df_masses.rename(columns=df.iloc[1, 1:4])
+        df_masses = df_masses.rename(columns={' Added Mass & Inertia': 'n'})
+
+        # convert to SI units
+        if df.iloc[2, 1] == 'lbm':
+            df_masses['Mass'] = df_masses['Mass'] * 0.45359237
+            df_masses['Ip'] = df_masses['Ip'] * 0.00029263965342920005
+            df_masses['It'] = df_masses['It'] * 0.00029263965342920005
+
+        disks = [cls(d.n-1, d.Mass, d.It, d.Ip)
+                 for _, d in df_masses.iterrows()]
+
+        return disks
 
 
 class DiskElement(LumpedDiskElement):
@@ -582,8 +690,49 @@ class DiskElement(LumpedDiskElement):
         self.Id = (0.015625 * self.rho * np.pi * width*(o_d**4 - i_d**4)
                    + self.m*(width**2)/12)
         self.Ip = 0.03125 * self.rho * np.pi * width * (o_d**4 - i_d**4)
+        self.color = '#bc625b'
 
         super().__init__(self.n, self.m, self.Id, self.Ip)
+
+    def patch(self, ax, position):
+        """Disk element patch.
+
+        Patch that will be used to draw the disk element.
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        position : float
+            Position in which the patch will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
+        if isinstance(position, tuple):
+            position = position[0]
+        zpos = position
+        ypos = self.i_d
+        D = self.o_d
+        hw = self.width / 2  # half width
+
+        #  node (x pos), outer diam. (y pos)
+        disk_points_u = [[zpos, ypos],  # upper
+                         [zpos + hw, ypos + 0.1 * D],
+                         [zpos + hw, ypos + 0.9 * D],
+                         [zpos - hw, ypos + 0.9 * D],
+                         [zpos - hw, ypos + 0.1 * D],
+                         [zpos, ypos]]
+        disk_points_l = [[zpos, -ypos],  # lower
+                         [zpos + hw, -(ypos + 0.1 * D)],
+                         [zpos + hw, -(ypos + 0.9 * D)],
+                         [zpos - hw, -(ypos + 0.9 * D)],
+                         [zpos - hw, -(ypos + 0.1 * D)],
+                         [zpos, -ypos]]
+        ax.add_patch(mpatches.Polygon(disk_points_u, facecolor=self.color))
+        ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=self.color))
 
 
 class BearingElement:
@@ -683,6 +832,7 @@ class BearingElement:
 
         self.n = n
         self.w = w
+        self.color = '#355d7a'
 
         for arg, val in args.items():
             if isinstance(val, (int, float)):
@@ -715,6 +865,33 @@ class BearingElement:
                       [cyx, cyy]])
 
         return C
+
+    def patch(self, ax, position):
+        """Bearing element patch.
+
+        Patch that will be used to draw the bearing element.
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        position : tuple
+            Position (z, y) in which the patch will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
+        zpos, ypos = position
+        h = -0.75 * ypos  # height
+
+        #  node (x pos), outer diam. (y pos)
+        bearing_points = [[zpos, ypos],  # upper
+                          [zpos + h / 2, ypos - h],
+                          [zpos - h / 2, ypos - h],
+                          [zpos, ypos]]
+        ax.add_patch(mpatches.Polygon(bearing_points, color=self.color))
 
     def plot_k_curve(self, w=None, ax=None,
                      kxx=True, kxy=True, kyx=True, kyy=True):
@@ -817,7 +994,7 @@ class BearingElement:
         return ax
 
     @classmethod
-    def load_from_xltrc(cls, n, file, sheet='XLUseKCM', units='SI'):
+    def load_from_xltrc(cls, n, file, sheet='XLUseKCM'):
         """Load bearing from xltrc.
 
         This method will construct a bearing loading the coefficients
@@ -831,9 +1008,6 @@ class BearingElement:
             File path name.
         sheet : str
             Bearing sheet name. Default is 'XLUseKCM'.
-        units : str
-            Units used in the xltrc file.
-            Can be 'SI' or 'English'
 
         Returns
         -------
@@ -845,16 +1019,13 @@ class BearingElement:
         """
         # TODO Check .xls units to see if argument provided is consistent
 
-        if units not in ['SI', 'English']:
-            raise ValueError(f'invalid units option: {units}')
-
         df = pd.read_excel(file, sheetname=sheet)
 
         df_bearing = pd.DataFrame(df.iloc[6:])
         df_bearing = df_bearing.rename(columns=df.loc[4])
         df_bearing = df_bearing.dropna(axis=0, thresh=2)
 
-        if units != 'SI':
+        if df.iloc[5, 1] == 'lb/in':
             for col in df_bearing.columns:
                 if col != 'Speed':
                     df_bearing[col] = df_bearing[col] * 175.126835
@@ -876,4 +1047,50 @@ class BearingElement:
 
 
 class SealElement(BearingElement):
-    pass
+    def __init__(self, n,
+                 kxx, cxx,
+                 kyy=None, kxy=0, kyx=0,
+                 cyy=None, cxy=0, cyx=0,
+                 w=None):
+        super().__init__(n=n, w=w,
+                         kxx=kxx, kxy=kxy, kyx=kyx, kyy=kyy,
+                         cxx=cxx, cxy=cxy, cyx=cyx, cyy=cyy)
+
+        self.color = '#77ACA2'
+
+    def patch(self, ax, position):
+        """Seal element patch.
+
+        Patch that will be used to draw the seal element.
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        position : tuple
+            Position in which the patch will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
+        zpos, ypos = position
+        hw = 0.05
+        # TODO adapt hw according to bal drum diameter
+
+        #  node (x pos), outer diam. (y pos)
+        seal_points_u = [[zpos, ypos*1.1],  # upper
+                         [zpos + hw, ypos*1.1],
+                         [zpos + hw, ypos*1.3],
+                         [zpos - hw, ypos*1.3],
+                         [zpos - hw, ypos*1.1],
+                         [zpos, ypos*1.1]]
+        seal_points_l = [[zpos, -ypos*1.1],  # lower
+                         [zpos + hw, -(ypos*1.1)],
+                         [zpos + hw, -(ypos*1.3)],
+                         [zpos - hw, -(ypos*1.3)],
+                         [zpos - hw, -(ypos*1.1)],
+                         [zpos, -ypos*1.1]]
+        ax.add_patch(mpatches.Polygon(seal_points_u, facecolor=self.color))
+        ax.add_patch(mpatches.Polygon(seal_points_l, facecolor=self.color))

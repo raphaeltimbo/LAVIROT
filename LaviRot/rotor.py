@@ -6,11 +6,41 @@ import scipy.signal as signal
 import scipy.io as sio
 from copy import copy
 from collections import Iterable
+
+import matplotlib as mpl
+import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
+from matplotlib.colors import ListedColormap
+from mpl_toolkits.mplot3d import Axes3D
+
 from LaviRot.elements import *
 from LaviRot.materials import steel
 
 
 __all__ = ['Rotor', 'rotor_example']
+
+# set style and colors
+plt.style.use('seaborn-white')
+plt.style.use({
+    'lines.linewidth': 2.5,
+    'axes.grid': True,
+    'axes.linewidth': 0.1,
+    'grid.color': '.9',
+    'grid.linestyle': '--',
+    'legend.frameon': True,
+    'legend.framealpha': 0.2
+    })
+
+_orig_rc_params = mpl.rcParams.copy()
+
+c_pal = {'red': '#C93C3C',
+         'blue': '#0760BA',
+         'green': '#2ECC71',
+         'dark blue': '#07325E',
+         'purple': '#A349C6',
+         'grey': '#2D2D2D',
+         'green2': '#08A4AF'}
 
 
 class Rotor(object):
@@ -167,11 +197,11 @@ class Rotor(object):
     @staticmethod
     def _dofs(element):
         """The first and last dof for a given element"""
-        if type(element) == ShaftElement:
+        if isinstance(element, ShaftElement):
             node = element.n
             n1 = 4 * node
             n2 = n1 + 8
-        if type(element) == DiskElement:
+        if isinstance(element, LumpedDiskElement):
             node = element.n
             n1 = 4 * node
             n2 = n1 + 4
@@ -789,6 +819,251 @@ class Rotor(object):
         else:
             return signal.lsim(self.H, F, t)
 
+    def plot_rotor(self, ax=None):
+        """ Plots a rotor object.
+
+        This function will take a rotor object and plot its shaft,
+        disks and bearing elements
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+
+        Examples:
+
+        """
+        plt.rcParams['figure.figsize'] = (10, 5)
+        plt.rcParams['xtick.labelsize'] = 0
+        plt.rcParams['ytick.labelsize'] = 0
+
+        if ax is None:
+            ax = plt.gca()
+
+        #  plot shaft centerline
+        shaft_end = self.nodes_pos[-1]
+        ax.plot([-.2 * shaft_end, 1.2 * shaft_end], [0, 0], 'k-.')
+        try:
+            max_diameter = max([disk.o_d for disk in self.disk_elements])
+        except (ValueError, AttributeError):
+            max_diameter = max([shaft.o_d for shaft in self.shaft_elements])
+
+        ax.set_ylim(-1.2 * max_diameter, 1.2 * max_diameter)
+        ax.axis('equal')
+
+        #  plot nodes
+        for node, position in enumerate(self.nodes_pos):
+            ax.plot(position, 0,
+                    zorder=2, ls='', marker='D', color='#6caed6', markersize=10, alpha=0.6)
+            ax.text(position, 0,
+                    '%.0f' % node,
+                    size='smaller',
+                    horizontalalignment='center',
+                    verticalalignment='center')
+
+        # plot shaft elements
+        for sh_elm in self.shaft_elements:
+            position = self.nodes_pos[sh_elm.n]
+            sh_elm.patch(ax, position)
+
+        # plot disk elements
+        for disk in self.disk_elements:
+            position = (self.nodes_pos[disk.n], self.nodes_o_d[disk.n])
+            disk.patch(ax, position)
+
+        # plot bearings
+        for bearing in self.bearing_seal_elements:
+            position = (self.nodes_pos[bearing.n], -self.nodes_o_d[bearing.n])
+            bearing.patch(ax, position)
+
+        mpl.rcParams.update(_orig_rc_params)
+
+        return ax
+
+    def campbell(self, speed_rad, freqs=6, mult=[1], plot=True, ax=None):
+        r"""Calculates the Campbell diagram.
+
+        This function will calculate the damped natural frequencies
+        for a speed range.
+
+        Parameters
+        ----------
+        speed_rad: array
+            Array with the speed range in rad/s.
+        freqs: int, optional
+            Number of frequencies that will be calculated.
+            Default is 6.
+        mult: list, optional
+            List withe the harmonics to be plotted.
+            The default is to plot 1x.
+        plot: bool, optional
+            If the campbell will be plotted.
+            If plot=False, points for the Campbell will be returned.
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+
+        Returns
+        -------
+        points: array
+            Array with the natural frequencies corresponding to each speed
+             of the speed_rad array. It will be returned if plot=False.
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+
+        Examples
+        --------
+        >>> rotor1 = rotor_example()
+        >>> speed = np.linspace(0, 400, 101)
+        >>> camp = campbell(rotor1, speed, plot=False)
+        >>> np.round(camp[:, 0], 1) #  damped natural frequencies at the first rotor speed (0 rad/s)
+        array([  82.7,   86.7,  254.5,  274.3,  679.5,  716.8])
+        >>> np.round(camp[:, 10], 1) # damped natural frequencies at 40 rad/s
+        array([  82.6,   86.7,  254.3,  274.5,  676.5,  719.7])
+        """
+        rotor_state_speed = self.w
+
+        speed_rad = np.array(speed_rad)
+        z = []  # will contain values for each whirl (0, 0.5, 1)
+        points_all = np.zeros([freqs, len(speed_rad)])
+
+        for idx, w0, w1 in(zip(range(len(speed_rad)),
+                               speed_rad[:-1],
+                               speed_rad[1:])):
+            # define shaft speed
+            # check rotor state to avoid recalculating eigenvalues
+            if not self.w == w0:
+                self.w = w0
+
+            # define x as the current speed and y as each wd
+            x_w0 = np.full_like(range(freqs), w0)
+            y_wd0 = self.wd[:freqs]
+
+            # generate points for the first speed
+            points0 = np.array([x_w0, y_wd0]).T.reshape(-1, 1, 2)
+            points_all[:, idx] += y_wd0  # TODO verificar teste
+
+            # go to the next speed
+            self.w = w1
+            x_w1 = np.full_like(range(freqs), w1)
+            y_wd1 = self.wd[:freqs]
+            points1 = np.array([x_w1, y_wd1]).T.reshape(-1, 1, 2)
+
+            new_segment = np.concatenate([points0, points1], axis=1)
+
+            if w0 == speed_rad[0]:
+                segments = new_segment
+            else:
+                segments = np.concatenate([segments, new_segment])
+
+            whirl_w = [whirl(self.kappa_mode(wd)) for wd in range(freqs)]
+            z.append([whirl_to_cmap(i) for i in whirl_w])
+
+        if plot is False:
+            return points_all
+
+        z = np.array(z).flatten()
+
+        cmap = ListedColormap([c_pal['blue'],
+                               c_pal['grey'],
+                               c_pal['red']])
+
+        if ax is None:
+            ax = plt.gca()
+        lines_2 = LineCollection(segments, array=z, cmap=cmap)
+        ax.add_collection(lines_2)
+
+        # plot harmonics in hertz
+        for m in mult:
+            ax.plot(speed_rad, m * speed_rad,
+                    color=c_pal['green2'],
+                    linestyle='dashed')
+
+        # axis limits
+        ax.set_xlim(0, max(speed_rad))
+        ax.set_ylim(0, max(max(mult) * speed_rad))
+
+        # legend and title
+        ax.set_xlabel(r'Rotor speed ($rad/s$)')
+        ax.set_ylabel(r'Damped natural frequencies ($rad/s$)')
+
+        forward_label = mpl.lines.Line2D([], [],
+                                         color=c_pal['blue'],
+                                         label='Forward')
+        backwardlabel = mpl.lines.Line2D([], [],
+                                         color=c_pal['red'],
+                                         label='Backward')
+        mixedlabel = mpl.lines.Line2D([], [],
+                                      color=c_pal['grey'],
+                                      label='Mixed')
+
+        ax.legend(handles=[forward_label, backwardlabel, mixedlabel],
+                  loc=2)
+
+        # restore rotor speed
+        self.w = rotor_state_speed
+
+        return ax
+
+    def plot_time_response(self, F, t, dof, ax=None):
+        """Plot the time response.
+
+        This function will take a rotor object and plot its time response
+        given a force and a time.
+
+        Parameters
+        ----------
+        F : array
+            Force array (needs to have the same number of rows as time array).
+            Each column corresponds to a dof and each row to a time.
+        t : array
+            Time array.
+        dof : int
+            Degree of freedom that will be observed.
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+
+        Examples:
+        ---------
+        """
+        t_, yout, xout = self.time_response(F, t)
+
+        if ax is None:
+            ax = plt.gca()
+
+        ax.plot(t, yout[:, dof])
+
+        if dof % 4 == 0:
+            obs_dof = '$x$'
+            amp = 'm'
+        elif dof + 1 % 4 == 0:
+            obs_dof = '$y$'
+            amp = 'm'
+        elif dof + 2 % 4 == 0:
+            obs_dof = '$\alpha$'
+            amp = 'rad'
+        else:
+            obs_dof = '$\beta$'
+            amp = 'rad'
+
+        ax.set_xlabel('Time (s)')
+        ax.set_ylabel('Amplitude (%s)' % amp)
+        ax.set_title('Response for node %s and degree of freedom %s'
+                     % (dof//4, obs_dof))
+
+        return ax
+
+    # TODO add frequency response - see vtoolbox
+
     def save_mat(self, file_name):
         """
         Save matrices and rotor model to a .mat file.
@@ -842,4 +1117,72 @@ def rotor_example():
     bearing1 = BearingElement(6, kxx=stfx, kyy=stfy, cxx=0)
 
     return Rotor(shaft_elem, [disk0, disk1], [bearing0, bearing1])
+
+
+def MAC(u, v):
+    """MAC for two vectors"""
+    H = lambda a: a.T.conj()
+    return np.absolute((H(u) @ v)**2 / ((H(u) @ u)*(H(v) @ v)))
+
+
+def MAC_modes(U, V, n=None, plot=True):
+    """MAC for multiple vectors"""
+    # n is the number of modes to be evaluated
+    if n is None:
+        n = U.shape[1]
+    macs = np.zeros((n, n))
+    for u in enumerate(U.T[:n]):
+        for v in enumerate(V.T[:n]):
+            macs[u[0], v[0]] = MAC(u[1], v[1])
+
+    if not plot:
+        return macs
+
+    xpos, ypos = np.meshgrid(range(n), range(n))
+    xpos, ypos = 0.5 + xpos.flatten(), 0.5 + ypos.flatten()
+    zpos = np.zeros_like(xpos)
+    dx = 0.75 * np.ones_like(xpos)
+    dy = 0.75 * np.ones_like(xpos)
+    dz = macs.T.flatten()
+
+    fig = plt.figure(figsize=(12, 8))
+    #fig.suptitle('MAC - %s vs %s' % (U.name, V.name), fontsize=12)
+    ax = fig.add_subplot(111, projection='3d')
+    ax.bar3d(xpos, ypos, zpos, dx, dy, dz,
+             color=plt.cm.viridis(dz), alpha=0.7)
+    ax.set_xticks(range(1, n + 1))
+    ax.set_yticks(range(1, n + 1))
+    #ax.set_xlabel('%s  modes' % U.name)
+    #ax.set_ylabel('%s  modes' % V.name)
+
+    sm = plt.cm.ScalarMappable(cmap=plt.cm.viridis,
+                               norm=plt.Normalize(vmin=0, vmax=1))
+    # fake up the array of the scalar mappable
+    sm._A = []
+    cbar = fig.colorbar(sm, shrink=0.5, aspect=10)
+    cbar.set_label('MAC')
+
+    return macs
+
+
+def whirl(kappa_mode):
+    """Evaluates the whirl of a mode"""
+    if all(kappa >= -1e-3 for kappa in kappa_mode):
+        whirldir = 'Forward'
+    elif all(kappa <= 1e-3 for kappa in kappa_mode):
+        whirldir = 'Backward'
+    else:
+        whirldir = 'Mixed'
+    return whirldir
+
+
+def whirl_to_cmap(whirl):
+    """Maps the whirl to a value"""
+    if whirl == 'Forward':
+        return 0
+    elif whirl == 'Backward':
+        return 1
+    else:
+        return 0.5
+
 
