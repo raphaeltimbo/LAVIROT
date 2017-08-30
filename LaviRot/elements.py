@@ -390,7 +390,7 @@ class ShaftElement:
         return elements
 
     @classmethod
-    def load_from_xltrc(cls, file, shaft_sheet='Model', units='SI'):
+    def load_from_xltrc(cls, file, shaft_sheet='Model'):
         """Load shaft from xltrc.
 
         This method will construct a shaft loading the geometry
@@ -402,9 +402,6 @@ class ShaftElement:
             File path name.
         shaft_sheet : str
             Shaft sheet name. Default is 'Model'.
-        units : str
-            Units used in the xltrc file.
-            Can be 'SI' or 'English'
 
         Returns
         -------
@@ -414,9 +411,6 @@ class ShaftElement:
         Examples
         --------
         """
-        if units not in ['SI', 'English']:
-            raise ValueError(f'invalid units option: {units}')
-
         df = pd.read_excel(file, sheetname=shaft_sheet)
 
         geometry = pd.DataFrame(df.iloc[19:])
@@ -428,7 +422,7 @@ class ShaftElement:
         material = material.dropna(axis=0, how='all')
 
         # change to SI units
-        if units != 'SI':
+        if df.iloc[1, 1] == 'inches':
             for dim in ['length', 'od_Left', 'id_Left',
                         'od_Right', 'id_Right']:
                 geometry[dim] = geometry[dim] * 0.0254

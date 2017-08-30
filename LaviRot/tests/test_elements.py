@@ -201,20 +201,7 @@ def test_bearing_error1():
 def test_load_shaft_from_xltrc():
     file = 'data/xl_rotor.xls'
 
-    with pytest.raises(ValueError) as excinfo:
-        ShaftElement.load_from_xltrc(file, units='invalid_units')
-    assert 'invalid units option' in str(excinfo.value)
-
-    shaft = ShaftElement.load_from_xltrc(file, units='SI')
-    assert len(shaft) == 57
-    assert_allclose(shaft[0].L, 1.3976377952755907)
-    assert_allclose(shaft[0].i_d, 5.551)
-    assert_allclose(shaft[0].o_d, 5.945)
-    assert_allclose(shaft[0].rho, 0.283)
-    assert_allclose(shaft[0].E, 30000000.0)
-    assert_allclose(shaft[0].Poisson, 0.25)
-
-    shaft = ShaftElement.load_from_xltrc(file, units='English')
+    shaft = ShaftElement.load_from_xltrc(file)
     assert len(shaft) == 57
     assert_allclose(shaft[0].L, 0.0355)
     assert_allclose(shaft[0].i_d, 0.1409954)
@@ -242,4 +229,11 @@ def test_load_bearing_from_xltrc():
 
     assert_allclose(bearing.K(0), K0, rtol=1e-3)
     assert_allclose(bearing.C(0), C0, rtol=1e-3)
+
+
+def test_load_lumped_disk_from_xltrc():
+    file = 'data/xl_rotor.xls'
+    pass
+
+
 
