@@ -602,9 +602,23 @@ class LumpedDiskElement:
                                      radius=0.5, color=self.color))
 
     @classmethod
-    def load_from_xltrc(cls, n, file, units='SI'):
-        pass
-    #  TODO implement load disk from xl.
+    def load_from_xltrc(cls, file, sheet='More'):
+        df = pd.read_excel(file, sheetname=sheet)
+
+        df_masses = pd.DataFrame(df.iloc[4:, :4])
+        df_masses = df_masses.rename(columns=df.iloc[1, 1:4])
+        df_masses = df_masses.rename(columns={' Added Mass & Inertia': 'n'})
+
+        # convert to SI units
+        if df.iloc[2, 1] == 'lbm':
+            df_masses['Mass'] = df_masses['Mass'] * 0.45359237
+            df_masses['Ip'] = df_masses['Ip'] * 0.00029263965342920005
+            df_masses['It'] = df_masses['It'] * 0.00029263965342920005
+
+        disks = [cls(d.n, d.Mass, d.It, d.Ip)
+                 for _, d in df_masses.iterrows()]
+
+        return disks
 
 
 class DiskElement(LumpedDiskElement):
