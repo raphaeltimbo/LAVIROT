@@ -761,6 +761,56 @@ class BearingElement:
 
         return ax
 
+    def plot_c_curve(self, w=None, ax=None,
+                     cxx=True, cxy=True, cyx=True, cyy=True):
+        """Plot the k curve fit.
+
+        This method will plot the curve fit for the
+        given speed range.
+
+        Parameters
+        ----------
+        w : array, optional
+            Speeds for which the plot will be made.
+            If not provided, will use speed from bearing creation.
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+        cxx : bool, optional
+            Whether or not cxx is plotted. Default is True.
+        cxy : bool, optional
+            Whether or not cxy is plotted. Default is True.
+        cyx : bool, optional
+            Whether or not cyx is plotted. Default is True.
+        cyy : bool, optional
+            Whether or not cyy is plotted. Default is True.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+
+        Examples
+        --------
+        """
+        if w is None:
+            w = self.w
+
+        if ax is None:
+            ax = plt.gca()
+
+        if cxx is True:
+            ax.plot(w, self.cxx(w), label='Cxx N.s/m')
+        if cyy is True:
+            ax.plot(w, self.cyy(w), label='Cyy N.s/m')
+        if cxy is True:
+            ax.plot(w, self.cxy(w), '--', label='Cxy N.s/m')
+        if cyx is True:
+            ax.plot(w, self.cyx(w), '--', label='Cyx N./m')
+
+        ax.legend()
+
+        return ax
+
     @classmethod
     def load_from_xltrc(cls, n, file, sheet='XLUseKCM', units='SI'):
         """Load bearing from xltrc.
