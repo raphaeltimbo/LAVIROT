@@ -6,11 +6,41 @@ import scipy.signal as signal
 import scipy.io as sio
 from copy import copy
 from collections import Iterable
+
+import matplotlib as mpl
+import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
+from matplotlib.colors import ListedColormap
+from mpl_toolkits.mplot3d import Axes3D
+
 from LaviRot.elements import *
 from LaviRot.materials import steel
 
 
 __all__ = ['Rotor', 'rotor_example']
+
+# set style and colors
+plt.style.use('seaborn-white')
+plt.style.use({
+    'lines.linewidth': 2.5,
+    'axes.grid': True,
+    'axes.linewidth': 0.1,
+    'grid.color': '.9',
+    'grid.linestyle': '--',
+    'legend.frameon': True,
+    'legend.framealpha': 0.2
+    })
+
+_orig_rc_params = mpl.rcParams.copy()
+
+c_pal = {'red': '#C93C3C',
+         'blue': '#0760BA',
+         'green': '#2ECC71',
+         'dark blue': '#07325E',
+         'purple': '#A349C6',
+         'grey': '#2D2D2D',
+         'green2': '#08A4AF'}
 
 
 class Rotor(object):
@@ -788,6 +818,142 @@ class Rotor(object):
             return signal.lsim(self.H, F, t, ic)
         else:
             return signal.lsim(self.H, F, t)
+
+    def plot_rotor(self, ax=None):
+        """ Plots a rotor object.
+
+        This function will take a rotor object and plot its shaft,
+        disks and bearing elements
+
+        Parameters
+        ----------
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+
+        Examples:
+
+        """
+        plt.rcParams['figure.figsize'] = (10, 5)
+        plt.rcParams['xtick.labelsize'] = 0
+        plt.rcParams['ytick.labelsize'] = 0
+
+        #  define a color palette for the self
+        r_pal = {'shaft': '#525252',
+                 'node': '#6caed6',
+                 'disk': '#bc625b',
+                 'bearing': '#355d7a',
+                 'seal': '#77ACA2'}
+
+        if ax is None:
+            ax = plt.gca()
+
+        #  plot shaft centerline
+        shaft_end = self.nodes_pos[-1]
+        ax.plot([-.2 * shaft_end, 1.2 * shaft_end], [0, 0], 'k-.')
+        try:
+            max_diameter = max([disk.o_d for disk in self.disk_elements])
+        except ValueError:
+            max_diameter = max([shaft.o_d for shaft in self.shaft_elements])
+
+        ax.set_ylim(-1.2 * max_diameter, 1.2 * max_diameter)
+        ax.axis('equal')
+
+        #  plot nodes
+        for node, position in enumerate(self.nodes_pos):
+            ax.plot(position, 0,
+                    zorder=2, ls='', marker='D', color=r_pal['node'], markersize=10, alpha=0.6)
+            ax.text(position, 0,
+                    '%.0f' % node,
+                    size='smaller',
+                    horizontalalignment='center',
+                    verticalalignment='center')
+
+        # plot shaft elements
+        for sh_elm in self.shaft_elements:
+            position_u = [self.nodes_pos[sh_elm.n], sh_elm.i_d]  # upper
+            position_l = [self.nodes_pos[sh_elm.n], -sh_elm.o_d]  # lower
+            width = sh_elm.L
+            height = sh_elm.o_d - sh_elm.i_d
+
+            #  plot the upper half of the shaft
+            ax.add_patch(mpatches.Rectangle(position_u, width, height,
+                                            facecolor=r_pal['shaft'], alpha=0.8))
+            #  plot the lower half of the shaft
+            ax.add_patch(mpatches.Rectangle(position_l, width, height,
+                                            facecolor=r_pal['shaft'], alpha=0.8))
+
+        # plot disk elements
+        for disk in self.disk_elements:
+            zpos = self.nodes_pos[disk.n]
+            ypos = disk.i_d
+            D = disk.o_d
+            hw = disk.width / 2  # half width
+
+            #  node (x pos), outer diam. (y pos)
+            disk_points_u = [[zpos, ypos],  # upper
+                             [zpos + hw, ypos + 0.1 * D],
+                             [zpos + hw, ypos + 0.9 * D],
+                             [zpos - hw, ypos + 0.9 * D],
+                             [zpos - hw, ypos + 0.1 * D],
+                             [zpos, ypos]]
+            disk_points_l = [[zpos, -ypos],  # lower
+                             [zpos + hw, -(ypos + 0.1 * D)],
+                             [zpos + hw, -(ypos + 0.9 * D)],
+                             [zpos - hw, -(ypos + 0.9 * D)],
+                             [zpos - hw, -(ypos + 0.1 * D)],
+                             [zpos, -ypos]]
+            ax.add_patch(mpatches.Polygon(disk_points_u, facecolor=r_pal['disk']))
+            ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=r_pal['disk']))
+
+        # plot bearings
+        for bearing in self.bearing_seal_elements:
+            # name is used here because classes are not import to this module
+            if type(bearing).__name__ == 'BearingElement':
+                zpos = self.nodes_pos[bearing.n]
+                #  TODO this will need to be modified for tapppered elements
+                #  check if the bearing is in the last node
+                ypos = -self.nodes_o_d[bearing.n]
+                h = -0.75 * ypos  # height
+
+                #  node (x pos), outer diam. (y pos)
+                bearing_points = [[zpos, ypos],  # upper
+                                  [zpos + h / 2, ypos - h],
+                                  [zpos - h / 2, ypos - h],
+                                  [zpos, ypos]]
+                ax.add_patch(mpatches.Polygon(bearing_points, color=r_pal['bearing']))
+
+            elif type(bearing).__name__ == 'SealElement':
+                zpos = self.nodes_pos[bearing.n]
+                #  check if the bearing is in the last node
+                ypos = self.nodes_o_d[bearing.n]
+                hw = 0.05
+                # TODO adapt hw according to bal drum diameter
+
+                #  node (x pos), outer diam. (y pos)
+                seal_points_u = [[zpos, ypos*1.1],  # upper
+                                 [zpos + hw, ypos*1.1],
+                                 [zpos + hw, ypos*1.3],
+                                 [zpos - hw, ypos*1.3],
+                                 [zpos - hw, ypos*1.1],
+                                 [zpos, ypos*1.1]]
+                seal_points_l = [[zpos, -ypos*1.1],  # lower
+                                 [zpos + hw, -(ypos*1.1)],
+                                 [zpos + hw, -(ypos*1.3)],
+                                 [zpos - hw, -(ypos*1.3)],
+                                 [zpos - hw, -(ypos*1.1)],
+                                 [zpos, -ypos*1.1]]
+                ax.add_patch(mpatches.Polygon(seal_points_u, facecolor=r_pal['seal']))
+                ax.add_patch(mpatches.Polygon(seal_points_l, facecolor=r_pal['seal']))
+
+        # restore rc parameters after plotting
+        mpl.rcParams.update(_orig_rc_params)
+
+        return ax
 
     def save_mat(self, file_name):
         """
