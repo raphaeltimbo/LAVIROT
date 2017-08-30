@@ -955,6 +955,133 @@ class Rotor(object):
 
         return ax
 
+    def campbell(self, speed_rad, freqs=6, mult=[1], plot=True, ax=None):
+        r"""Calculates the Campbell diagram.
+
+        This function will calculate the damped natural frequencies
+        for a speed range.
+
+        Parameters
+        ----------
+        rotor: Rotor instance
+            Rotor instance that will be used for calculating the
+            Campbell diagram.
+        speed_rad: array
+            Array with the speed range in rad/s.
+        freqs: int, optional
+            Number of frequencies that will be calculated.
+            Default is 6.
+        mult: list, optional
+            List withe the harmonics to be plotted.
+            The default is to plot 1x.
+        plot: bool, optional
+            If the campbell will be plotted.
+            If plot=False, points for the Campbell will be returned.
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+
+        Returns
+        -------
+        points: array
+            Array with the natural frequencies corresponding to each speed
+             of the speed_rad array. It will be returned if plot=False.
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+
+        Examples
+        --------
+        >>> rotor1 = rotor_example()
+        >>> speed = np.linspace(0, 400, 101)
+        >>> camp = campbell(rotor1, speed, plot=False)
+        >>> np.round(camp[:, 0], 1) #  damped natural frequencies at the first rotor speed (0 rad/s)
+        array([  82.7,   86.7,  254.5,  274.3,  679.5,  716.8])
+        >>> np.round(camp[:, 10], 1) # damped natural frequencies at 40 rad/s
+        array([  82.6,   86.7,  254.3,  274.5,  676.5,  719.7])
+        """
+        rotor_state_speed = self.w
+
+        speed_rad = np.array(speed_rad)
+        z = []  # will contain values for each whirl (0, 0.5, 1)
+        points_all = np.zeros([freqs, len(speed_rad)])
+
+        for idx, w0, w1 in(zip(range(len(speed_rad)),
+                               speed_rad[:-1],
+                               speed_rad[1:])):
+            # define shaft speed
+            # check rotor state to avoid recalculating eigenvalues
+            if not self.w == w0:
+                self.w = w0
+
+            # define x as the current speed and y as each wd
+            x_w0 = np.full_like(range(freqs), w0)
+            y_wd0 = self.wd[:freqs]
+
+            # generate points for the first speed
+            points0 = np.array([x_w0, y_wd0]).T.reshape(-1, 1, 2)
+            points_all[:, idx] += y_wd0  # TODO verificar teste
+
+            # go to the next speed
+            self.w = w1
+            x_w1 = np.full_like(range(freqs), w1)
+            y_wd1 = self.wd[:freqs]
+            points1 = np.array([x_w1, y_wd1]).T.reshape(-1, 1, 2)
+
+            new_segment = np.concatenate([points0, points1], axis=1)
+
+            if w0 == speed_rad[0]:
+                segments = new_segment
+            else:
+                segments = np.concatenate([segments, new_segment])
+
+            whirl_w = [whirl(self.kappa_mode(wd)) for wd in range(freqs)]
+            z.append([whirl_to_cmap(i) for i in whirl_w])
+
+        if plot is False:
+            return points_all
+
+        z = np.array(z).flatten()
+
+        cmap = ListedColormap([c_pal['blue'],
+                               c_pal['grey'],
+                               c_pal['red']])
+
+        if ax is None:
+            ax = plt.gca()
+        lines_2 = LineCollection(segments, array=z, cmap=cmap)
+        ax.add_collection(lines_2)
+
+        # plot harmonics in hertz
+        for m in mult:
+            ax.plot(speed_rad, m * speed_rad,
+                    color=c_pal['green2'],
+                    linestyle='dashed')
+
+        # axis limits
+        ax.set_xlim(0, max(speed_rad))
+        ax.set_ylim(0, max(max(mult) * speed_rad))
+
+        # legend and title
+        ax.set_xlabel(r'Rotor speed ($rad/s$)')
+        ax.set_ylabel(r'Damped natural frequencies ($rad/s$)')
+
+        forward_label = mpl.lines.Line2D([], [],
+                                         color=c_pal['blue'],
+                                         label='Forward')
+        backwardlabel = mpl.lines.Line2D([], [],
+                                         color=c_pal['red'],
+                                         label='Backward')
+        mixedlabel = mpl.lines.Line2D([], [],
+                                      color=c_pal['grey'],
+                                      label='Mixed')
+
+        ax.legend(handles=[forward_label, backwardlabel, mixedlabel],
+                  loc=2)
+
+        # restore rotor speed
+        self.w = rotor_state_speed
+
+        return ax
+
     def save_mat(self, file_name):
         """
         Save matrices and rotor model to a .mat file.
