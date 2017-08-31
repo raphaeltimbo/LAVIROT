@@ -51,14 +51,20 @@ class Rotor(object):
 
     Parameters
     ----------
-    shaft_elements: list
+    shaft_elements : list
         List with the shaft elements
-    disk_elements: list
+    disk_elements : list
         List with the disk elements
-    bearing_elements: list
+    bearing_seal_elements : list
         List with the bearing elements
-    w: float, optional
+    w : float, optional
         Rotor speed. Defaults to 0.
+    sparse : bool, optional
+        If sparse, eigenvalues will be calculated with arpack.
+        Default is True.
+    n_eigen : int, optional
+        Number of eigenvalues calculated by arpack.
+        Default is 12.
 
     Returns
     -------
@@ -102,7 +108,7 @@ class Rotor(object):
     """
 
     def __init__(self, shaft_elements, disk_elements=None, bearing_seal_elements=None, w=0,
-                 sparse=True):
+                 sparse=True, n_eigen=12):
         #  TODO consider speed as a rotor property. Setter should call __init__ again
         self._w = w
 
@@ -111,6 +117,7 @@ class Rotor(object):
         ####################################################
 
         self.sparse = sparse
+        self.n_eigen = n_eigen
 
         ####################################################
 
@@ -440,7 +447,9 @@ class Rotor(object):
 
         if self.sparse is True:
             try:
-                evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM', v0=self._v0)
+                evalues, evectors = las.eigs(self.A(w), k=self.n_eigen,
+                                             sigma=0, ncv=24, which='LM',
+                                             v0=self._v0)
                 # store v0 as a linear combination of the previously
                 # calculated eigenvectors to use in the next call to eigs
                 self._v0 = np.real(sum(evectors.T))
