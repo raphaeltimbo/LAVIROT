@@ -101,7 +101,8 @@ class Rotor(object):
     215.3707...
     """
 
-    def __init__(self, shaft_elements, disk_elements=None, bearing_seal_elements=None, w=0):
+    def __init__(self, shaft_elements, disk_elements=None, bearing_seal_elements=None, w=0,
+                 sparse=True):
         #  TODO consider speed as a rotor property. Setter should call __init__ again
         self._w = w
 
@@ -109,7 +110,7 @@ class Rotor(object):
         # Config attributes
         ####################################################
 
-        self.SPARSE = True
+        self.sparse = sparse
 
         ####################################################
 
@@ -437,7 +438,7 @@ class Rotor(object):
         if w is None:
             w = self.w
 
-        if self.SPARSE is True:
+        if self.sparse is True:
             try:
                 evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM', v0=self._v0)
                 # store v0 as a linear combination of the previously
