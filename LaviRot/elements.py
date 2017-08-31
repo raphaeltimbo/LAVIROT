@@ -457,12 +457,10 @@ class ShaftElement:
                 G_s=mat['Shear Modulus G']
             )
 
-        # TODO implement for more than one layer
-        layer1 = geometry[geometry.laynum == 1]
         shaft = [ShaftElement(
-            el.length, el.id_Left,
-            el.od_Left, materials[el.matnum])
-            for i, el in layer1.iterrows()]
+            el.length, el.id_Left, el.od_Left,
+            materials[el.matnum], n=el.elemnum-1)
+            for i, el in geometry.iterrows()]
 
         return shaft
 

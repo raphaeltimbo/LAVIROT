@@ -160,7 +160,7 @@ class Rotor(object):
         #  TODO check when disk diameter in no consistent with shaft diameter
         #  TODO add error for elements added to the same n (node)
         # number of dofs
-        self.ndof = 4 * len(shaft_elements) + 4
+        self.ndof = 4 * max([el.n for el in shaft_elements]) + 8
 
         #  nodes axial position
         nodes_pos = [0]
@@ -204,6 +204,7 @@ class Rotor(object):
 
     @staticmethod
     def _dofs(element):
+        # TODO This part should be inside each element
         """The first and last dof for a given element"""
         if isinstance(element, ShaftElement):
             node = element.n

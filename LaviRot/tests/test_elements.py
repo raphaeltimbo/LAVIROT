@@ -205,7 +205,7 @@ def test_load_shaft_from_xltrc():
     file = 'data/xl_rotor.xls'
 
     shaft = ShaftElement.load_from_xltrc(file)
-    assert len(shaft) == 57
+    assert len(shaft) == 93
     assert_allclose(shaft[0].L, 0.0355)
     assert_allclose(shaft[0].i_d, 0.1409954)
     assert_allclose(shaft[0].o_d, 0.151003)
