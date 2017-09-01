@@ -457,13 +457,15 @@ class ShaftElement:
 
             material['Density   r'] = material['Density   r'] * 27679.904
 
+        colors = ['#636363', '#969696', '#bdbdbd', '#d9d9d9']
         materials = {}
         for i, mat in material.iterrows():
             materials[mat.Material] = Material(
                 name=f'Material {mat["Material"]}',
                 rho=mat['Density   r'],
                 E=mat['Elastic Modulus E'],
-                G_s=mat['Shear Modulus G']
+                G_s=mat['Shear Modulus G'],
+                color=colors[mat['Material']]
             )
 
         shaft = [ShaftElement(
