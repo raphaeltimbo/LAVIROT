@@ -928,7 +928,7 @@ class Rotor(object):
         Examples:
 
         """
-        plt.rcParams['figure.figsize'] = (10, 5)
+        plt.rcParams['figure.figsize'] = (12, 6)
         plt.rcParams['xtick.labelsize'] = 0
         plt.rcParams['ytick.labelsize'] = 0
 

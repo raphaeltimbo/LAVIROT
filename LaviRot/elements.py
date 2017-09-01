@@ -333,9 +333,12 @@ class ShaftElement:
 
         #  plot the upper half of the shaft
         ax.add_patch(mpatches.Rectangle(position_u, width, height,
-                                        facecolor=self.color, alpha=0.8))
+                                        linestyle='--', linewidth=0.5,
+                                        ec='k', fc=self.color, alpha=0.8))
         #  plot the lower half of the shaft
-        ax.add_patch(mpatches.Rectangle(position_l, width, height, facecolor=self.color, alpha=0.8))
+        ax.add_patch(mpatches.Rectangle(position_l, width, height,
+                                        linestyle='--', linewidth=0.5,
+                                        ec='k', fc=self.color, alpha=0.8))
 
 
     @classmethod
