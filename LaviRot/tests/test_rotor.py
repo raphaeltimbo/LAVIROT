@@ -1,3 +1,4 @@
+import os
 import pytest
 from LaviRot.elements import *
 from LaviRot.rotor import *
@@ -5,6 +6,8 @@ from LaviRot.rotor import MAC_modes
 from LaviRot.materials import steel
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_allclose
+
+test_dir = os.path.dirname(__file__)
 
 
 @pytest.fixture
@@ -428,8 +431,8 @@ def test_evals_rotor3_rotor4(rotor3, rotor4):
 
 @pytest.fixture()
 def rotor5():
-    rotor_file = 'data/xl_rotor.xls'
-    bearing_file = 'data/xl_bearing.xls'
+    rotor_file = os.path.join(test_dir, 'data/xl_rotor.xls')
+    bearing_file = os.path.join(test_dir, 'data/xl_bearing.xls')
 
     shaft = ShaftElement.load_from_xltrc(rotor_file)
 

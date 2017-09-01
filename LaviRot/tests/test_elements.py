@@ -9,6 +9,8 @@ from numpy.testing import assert_almost_equal, assert_allclose
 # Shaft tests
 ################################################################################
 
+test_dir = os.path.dirname(__file__)
+
 
 @pytest.fixture
 def eb():
@@ -199,10 +201,8 @@ def test_bearing_error1():
             ' the parameters dimension') in str(excinfo.value)
 
 
-@pytest.mark.skipif('TRAVIS' in os.environ or 'APPVEYOR' in os.environ,
-                    reason='Skip in travis')
 def test_load_shaft_from_xltrc():
-    file = 'data/xl_rotor.xls'
+    file = os.path.join(test_dir, 'data/xl_rotor.xls')
 
     shaft = ShaftElement.load_from_xltrc(file)
     assert len(shaft) == 93
@@ -214,10 +214,8 @@ def test_load_shaft_from_xltrc():
     assert_allclose(shaft[0].Poisson, 0.25)
 
 
-@pytest.mark.skipif('TRAVIS' in os.environ or 'APPVEYOR' in os.environ,
-                    reason='Skip in travis')
 def test_load_bearing_from_xltrc():
-    file = 'data/xl_bearing.xls'
+    file = os.path.join(test_dir, 'data/xl_bearing.xls')
 
     bearing = BearingElement.load_from_xltrc(0, file)
 
@@ -232,10 +230,8 @@ def test_load_bearing_from_xltrc():
     assert_allclose(bearing.C(0), C0, rtol=1e-3)
 
 
-@pytest.mark.skipif('TRAVIS' in os.environ or 'APPVEYOR' in os.environ,
-                    reason='Skip in travis')
 def test_load_lumped_disk_from_xltrc():
-    file = 'data/xl_rotor.xls'
+    file = os.path.join(test_dir, 'data/xl_rotor.xls')
 
     disks = LumpedDiskElement.load_from_xltrc(file)
     disk1_M = np.array([[ 6.909992,  0.      ,  0.      ,  0.      ],
