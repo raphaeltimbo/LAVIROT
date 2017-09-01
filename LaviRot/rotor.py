@@ -907,7 +907,7 @@ class Rotor(object):
         else:
             return signal.lsim(self.H, F, t)
 
-    def plot_rotor(self, ax=None):
+    def plot_rotor(self, nodes=1, ax=None):
         """ Plots a rotor object.
 
         This function will take a rotor object and plot its shaft,
@@ -915,6 +915,8 @@ class Rotor(object):
 
         Parameters
         ----------
+        nodes : int, optional
+            Increment that will be used to plot nodes label.
         ax : matplotlib axes, optional
             Axes in which the plot will be drawn.
 
@@ -926,7 +928,7 @@ class Rotor(object):
         Examples:
 
         """
-        plt.rcParams['figure.figsize'] = (10, 5)
+        plt.rcParams['figure.figsize'] = (12, 6)
         plt.rcParams['xtick.labelsize'] = 0
         plt.rcParams['ytick.labelsize'] = 0
 
@@ -945,11 +947,11 @@ class Rotor(object):
         ax.axis('equal')
 
         #  plot nodes
-        for node, position in enumerate(self.nodes_pos):
+        for node, position in enumerate(self.nodes_pos[::nodes]):
             ax.plot(position, 0,
                     zorder=2, ls='', marker='D', color='#6caed6', markersize=10, alpha=0.6)
             ax.text(position, 0,
-                    '%.0f' % node,
+                    f'{node*nodes}',
                     size='smaller',
                     horizontalalignment='center',
                     verticalalignment='center')
