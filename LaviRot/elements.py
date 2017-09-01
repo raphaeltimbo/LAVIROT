@@ -119,6 +119,9 @@ class ShaftElement:
         self.L = L
         self.i_d = i_d
         self.o_d = o_d
+        # right diameters
+        self.i_d_r = i_d
+        self.o_d_r = o_d
         self.material = material
         self.E = material.E
         self.G_s = material.G_s
@@ -151,6 +154,12 @@ class ShaftElement:
         self.phi = phi
 
     def __repr__(self):
+        return f'{self.__class__.__name__}' \
+               f'(L={self.L:{0}.{5}}, i_d={self.i_d:{0}.{5}}, ' \
+               f'o_d={self.o_d:{0}.{5}}, material={self.material!r}, ' \
+               f'n={self.n})'
+
+    def __str__(self):
         return (
             f'\nElem. N:    {self.n}'
             f'\nLenght:     {self.L:{10}.{5}}'
@@ -698,6 +707,9 @@ class DiskElement(LumpedDiskElement):
         self.width = width
         self.i_d = i_d
         self.o_d = o_d
+        # right diameters
+        self.i_d_r = i_d
+        self.o_d_r = o_d
         self.m = 0.25 * self.rho * np.pi * width * (o_d**2 - i_d**2)
         self.Id = (0.015625 * self.rho * np.pi * width*(o_d**4 - i_d**4)
                    + self.m*(width**2)/12)

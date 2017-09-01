@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import pandas as pd
 import scipy.linalg as la
 import scipy.sparse.linalg as las
 import scipy.signal as signal
@@ -149,8 +150,85 @@ class Rotor(object):
         self.bearing_seal_elements = bearing_seal_elements
         self.disk_elements = disk_elements
 
-        # rotor characteristics
-        self.L = np.sum([sh_el.L for sh_el in self.shaft_elements])
+        ####################################################
+        # Rotor summary
+        ####################################################
+        columns = ['type', 'n', 'L', 'node_pos', 'node_pos_r', 'i_d', 'o_d',
+                   'i_d_r', 'o_d_r', 'material', 'rho', 'volume', 'm']
+        summary_shaft = {k: [] for k in columns}
+
+        # shaft
+        for sh in self.shaft_elements:
+            for col in columns:
+                if col in ['node_pos', 'node_pos_r']:
+                    summary_shaft[col].append(0)
+                elif col == 'type':
+                    summary_shaft['type'].append(sh.__class__.__name__)
+                elif col == 'material':
+                    summary_shaft[col].append(sh.material.name)
+                else:
+                    summary_shaft[col].append(getattr(sh, col))
+
+        df_shaft = pd.DataFrame(summary_shaft, columns=columns)
+
+        for i in range(len(df_shaft)):
+            if i == 0:
+                df_shaft.loc[i, 'node_pos_r'] = (df_shaft.loc[i, 'node_pos']
+                                                 + df_shaft.loc[i, 'L'])
+                continue
+            if df_shaft.loc[i, 'n'] == df_shaft.loc[i - 1, 'n']:
+                df_shaft.loc[i, 'node_pos'] = df_shaft.loc[i - 1, 'node_pos']
+            else:
+                df_shaft.loc[i, 'node_pos'] = (df_shaft.loc[i - 1, 'node_pos_r'])
+                df_shaft.loc[i, 'node_pos_r'] = (df_shaft.loc[i, 'node_pos']
+                                                 + df_shaft.loc[i, 'L'])
+
+        # disks
+        summary_disks = {k: [] for k in columns}
+
+        for disk in self.disk_elements:
+            if isinstance(disk, LumpedDiskElement):
+                for col in columns:
+                    if col in ['node_pos', 'node_pos_r']:
+                        summary_disks[col].append(
+                            df_shaft[df_shaft.n == disk.n].node_pos.iloc[0])
+                    elif col == 'type':
+                        summary_disks['type'].append(disk.__class__.__name__)
+                    elif col == 'material':
+                        summary_disks[col].append('-')
+                    elif col in ['L', 'i_d', 'o_d', 'i_d_r', 'o_d_r', 'rho', 'volume']:
+                        summary_disks[col].append(0)
+                    else:
+                        summary_disks[col].append(getattr(disk, col))
+            else:
+                for col in columns:
+                    if col in ['node_pos', 'node_pos_r']:
+                        summary_disks[col].append(
+                            df_shaft[df_shaft.n == disk.n].node_pos.iloc[0])
+                    elif col == 'type':
+                        summary_disks['type'].append(disk.__class__.__name__)
+                    elif col == 'material':
+                        summary_disks[col].append(disk.material.name)
+                    else:
+                        summary_disks[col].append(getattr(disk, col))
+
+        df_disks = pd.DataFrame(summary_disks, columns=columns)
+
+        df = pd.concat([df_shaft, df_disks])
+        df = df.sort_values(by='n')
+        df = df.reset_index(drop=True)
+        # TODO Add inertia to df
+        # TODO Add Axial cg location to df
+
+        self.df = df
+
+        # nodes axial position and diameter
+        nodes_pos = df_shaft.groupby(by='n')['node_pos'].max().values
+        nodes_pos = np.hstack([nodes_pos, nodes_pos[-1] + df_shaft.L.iloc[-1]])
+
+        self.nodes_pos = nodes_pos
+        self.nodes = list(range(len(self.nodes_pos)))
+        self.L = nodes_pos[-1]
 
         self.m_disks = np.sum([disk.m for disk in self.disk_elements])
         self.m_shaft = np.sum([sh_el.m for sh_el in self.shaft_elements])
@@ -169,15 +247,6 @@ class Rotor(object):
         #  TODO add error for elements added to the same n (node)
         # number of dofs
         self.ndof = 4 * max([el.n for el in shaft_elements]) + 8
-
-        #  nodes axial position
-        nodes_pos = [0]
-        length = 0
-        for sh in shaft_elements:
-            length += sh.L
-            nodes_pos.append(length)
-        self.nodes_pos = nodes_pos
-        self.nodes = [i for i in range(len(self.nodes_pos))]
 
         #  TODO for tappered elements i_d and o_d will be a list with two elements
         #  diameter at node position
@@ -938,7 +1007,7 @@ class Rotor(object):
         --------
         >>> rotor1 = rotor_example()
         >>> speed = np.linspace(0, 400, 101)
-        >>> camp = campbell(rotor1, speed, plot=False)
+        >>> camp = rotor1.campbell(speed, plot=False)
         >>> np.round(camp[:, 0], 1) #  damped natural frequencies at the first rotor speed (0 rad/s)
         array([  82.7,   86.7,  254.5,  274.3,  679.5,  716.8])
         >>> np.round(camp[:, 10], 1) # damped natural frequencies at 40 rad/s
