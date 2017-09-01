@@ -1,3 +1,4 @@
+import os
 import pytest
 from LaviRot.elements import *
 from LaviRot.rotor import *
@@ -5,6 +6,8 @@ from LaviRot.rotor import MAC_modes
 from LaviRot.materials import steel
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_allclose
+
+test_dir = os.path.dirname(__file__)
 
 
 @pytest.fixture
@@ -25,6 +28,16 @@ def rotor1():
 
     shaft_elm = [tim0, tim1]
     return Rotor(shaft_elm, [], [])
+
+
+def test_rotor_attributes(rotor1):
+    assert len(rotor1.nodes) == 3
+    assert len(rotor1.nodes_i_d) == 3
+    assert len(rotor1.nodes_o_d) == 3
+    assert rotor1.L == 0.5
+    assert rotor1.m_disks == 0
+    assert rotor1.m_shaft == 7.6674495701675891
+    assert rotor1.m == 7.6674495701675891
 
 
 def test_index_eigenvalues_rotor1(rotor1):
@@ -414,6 +427,32 @@ def test_evals_rotor3_rotor4(rotor3, rotor4):
     rotor4_evals, rotor4_evects = rotor4._eigen()
 
     assert_allclose(rotor3_evals, rotor4_evals, rtol=1e-3)
+
+
+@pytest.fixture()
+def rotor5():
+    rotor_file = os.path.join(test_dir, 'data/xl_rotor.xls')
+    bearing_file = os.path.join(test_dir, 'data/xl_bearing.xls')
+
+    shaft = ShaftElement.load_from_xltrc(rotor_file)
+
+    bearing0 = BearingElement.load_from_xltrc(8, bearing_file)
+    bearing1 = BearingElement.load_from_xltrc(49, bearing_file)
+    bearings = [bearing0, bearing1]
+
+    disks = LumpedDiskElement.load_from_xltrc(rotor_file)
+
+    return Rotor(shaft, disks, bearings)
+
+
+def test_loaded_rotor(rotor5):
+    assert len(rotor5.nodes) == 58
+    assert len(rotor5.nodes_i_d) == 58
+    assert len(rotor5.nodes_o_d) == 58
+    assert rotor5.m_disks == 56.789932462458424
+    assert rotor5.m_shaft == 190.08045208234347
+    assert rotor5.m == 246.87038454480188
+    assert rotor5.L == 1.65325
 
 
 #  TODO implement more tests using a simple rotor with 2 elements and one disk

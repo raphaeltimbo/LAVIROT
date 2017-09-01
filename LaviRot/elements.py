@@ -20,6 +20,7 @@ c_pal = {'red': '#C93C3C',
          'grey': '#2D2D2D',
          'green2': '#08A4AF'}
 
+
 class ShaftElement:
     r"""A shaft element.
 
@@ -118,6 +119,9 @@ class ShaftElement:
         self.L = L
         self.i_d = i_d
         self.o_d = o_d
+        # right diameters
+        self.i_d_r = i_d
+        self.o_d_r = o_d
         self.material = material
         self.E = material.E
         self.G_s = material.G_s
@@ -125,6 +129,8 @@ class ShaftElement:
         self.color = '#525252' # TODO Define color from material
         self.rho = material.rho
         self.A = np.pi*(o_d**2 - i_d**2)/4
+        self.volume = self.A * self.L
+        self.m = self.rho * self.volume
         #  Ie is the second moment of area of the cross section about
         #  the neutral plane Ie = pi*r**2/4
         self.Ie = np.pi*(o_d**4 - i_d**4)/64
@@ -146,6 +152,23 @@ class ShaftElement:
             phi = 12*self.E*self.Ie/(self.G_s*kappa*self.A*L**2)
 
         self.phi = phi
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}' \
+               f'(L={self.L:{0}.{5}}, i_d={self.i_d:{0}.{5}}, ' \
+               f'o_d={self.o_d:{0}.{5}}, material={self.material!r}, ' \
+               f'n={self.n})'
+
+    def __str__(self):
+        return (
+            f'\nElem. N:    {self.n}'
+            f'\nLenght:     {self.L:{10}.{5}}'
+            f'\nInt. Diam.: {self.i_d:{10}.{5}}'
+            f'\nOut. Diam.: {self.o_d:{10}.{5}}'
+            f'\n{35*"-"}'
+            f'\n{self.material}'
+            f'\n'
+        )
 
     def M(self):
         r"""Mass matrix for an instance of a shaft element.
@@ -443,12 +466,10 @@ class ShaftElement:
                 G_s=mat['Shear Modulus G']
             )
 
-        # TODO implement for more than one layer
-        layer1 = geometry[geometry.laynum == 1]
         shaft = [ShaftElement(
-            el.length, el.id_Left,
-            el.od_Left, materials[el.matnum])
-            for i, el in layer1.iterrows()]
+            el.length, el.id_Left, el.od_Left,
+            materials[el.matnum], n=el.elemnum-1)
+            for i, el in geometry.iterrows()]
 
         return shaft
 
@@ -686,6 +707,9 @@ class DiskElement(LumpedDiskElement):
         self.width = width
         self.i_d = i_d
         self.o_d = o_d
+        # right diameters
+        self.i_d_r = i_d
+        self.o_d_r = o_d
         self.m = 0.25 * self.rho * np.pi * width * (o_d**2 - i_d**2)
         self.Id = (0.015625 * self.rho * np.pi * width*(o_d**4 - i_d**4)
                    + self.m*(width**2)/12)

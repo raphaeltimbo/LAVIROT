@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import pandas as pd
 import scipy.linalg as la
 import scipy.sparse.linalg as las
 import scipy.signal as signal
@@ -51,14 +52,20 @@ class Rotor(object):
 
     Parameters
     ----------
-    shaft_elements: list
+    shaft_elements : list
         List with the shaft elements
-    disk_elements: list
+    disk_elements : list
         List with the disk elements
-    bearing_elements: list
+    bearing_seal_elements : list
         List with the bearing elements
-    w: float, optional
+    w : float, optional
         Rotor speed. Defaults to 0.
+    sparse : bool, optional
+        If sparse, eigenvalues will be calculated with arpack.
+        Default is True.
+    n_eigen : int, optional
+        Number of eigenvalues calculated by arpack.
+        Default is 12.
 
     Returns
     -------
@@ -101,7 +108,8 @@ class Rotor(object):
     215.3707...
     """
 
-    def __init__(self, shaft_elements, disk_elements=None, bearing_seal_elements=None, w=0):
+    def __init__(self, shaft_elements, disk_elements=None, bearing_seal_elements=None, w=0,
+                 sparse=True, n_eigen=12):
         #  TODO consider speed as a rotor property. Setter should call __init__ again
         self._w = w
 
@@ -109,7 +117,8 @@ class Rotor(object):
         # Config attributes
         ####################################################
 
-        self.SPARSE = True
+        self.sparse = sparse
+        self.n_eigen = n_eigen
 
         ####################################################
 
@@ -141,7 +150,101 @@ class Rotor(object):
         self.bearing_seal_elements = bearing_seal_elements
         self.disk_elements = disk_elements
 
-        # Values for evalues and evectors will be calculated by self._calc_system
+        ####################################################
+        # Rotor summary
+        ####################################################
+        columns = ['type', 'n', 'L', 'node_pos', 'node_pos_r', 'i_d', 'o_d',
+                   'i_d_r', 'o_d_r', 'material', 'rho', 'volume', 'm']
+        summary_shaft = {k: [] for k in columns}
+
+        # shaft
+        for sh in self.shaft_elements:
+            for col in columns:
+                if col in ['node_pos', 'node_pos_r']:
+                    summary_shaft[col].append(0)
+                elif col == 'type':
+                    summary_shaft['type'].append(sh.__class__.__name__)
+                elif col == 'material':
+                    summary_shaft[col].append(sh.material.name)
+                else:
+                    summary_shaft[col].append(getattr(sh, col))
+
+        df_shaft = pd.DataFrame(summary_shaft, columns=columns)
+
+        for i in range(len(df_shaft)):
+            if i == 0:
+                df_shaft.loc[i, 'node_pos_r'] = (df_shaft.loc[i, 'node_pos']
+                                                 + df_shaft.loc[i, 'L'])
+                continue
+            if df_shaft.loc[i, 'n'] == df_shaft.loc[i - 1, 'n']:
+                df_shaft.loc[i, 'node_pos'] = df_shaft.loc[i - 1, 'node_pos']
+                df_shaft.loc[i, 'node_pos_r'] = df_shaft.loc[i - 1, 'node_pos_r']
+            else:
+                df_shaft.loc[i, 'node_pos'] = (df_shaft.loc[i - 1, 'node_pos_r'])
+                df_shaft.loc[i, 'node_pos_r'] = (df_shaft.loc[i, 'node_pos']
+                                                 + df_shaft.loc[i, 'L'])
+
+        # disks
+        summary_disks = {k: [] for k in columns}
+
+        for disk in self.disk_elements:
+            if isinstance(disk, LumpedDiskElement):
+                for col in columns:
+                    if col in ['node_pos', 'node_pos_r']:
+                        summary_disks[col].append(
+                            df_shaft[df_shaft.n == disk.n].node_pos.iloc[0])
+                    elif col == 'type':
+                        summary_disks['type'].append(disk.__class__.__name__)
+                    elif col == 'material':
+                        summary_disks[col].append('-')
+                    elif col in ['L', 'i_d', 'o_d', 'i_d_r', 'o_d_r', 'rho', 'volume']:
+                        summary_disks[col].append(0)
+                    else:
+                        summary_disks[col].append(getattr(disk, col))
+            else:
+                for col in columns:
+                    if col in ['node_pos', 'node_pos_r']:
+                        summary_disks[col].append(
+                            df_shaft[df_shaft.n == disk.n].node_pos.iloc[0])
+                    elif col == 'type':
+                        summary_disks['type'].append(disk.__class__.__name__)
+                    elif col == 'material':
+                        summary_disks[col].append(disk.material.name)
+                    else:
+                        summary_disks[col].append(getattr(disk, col))
+
+        df_disks = pd.DataFrame(summary_disks, columns=columns)
+
+        df = pd.concat([df_shaft, df_disks])
+        df = df.sort_values(by='n')
+        df = df.reset_index(drop=True)
+        # TODO Add inertia to df
+        # TODO Add Axial cg location to df
+
+        self.df = df
+
+        # nodes axial position and diameter
+        nodes_pos = list(df_shaft.groupby(by='n')['node_pos'].max())
+        nodes_pos.append(df_shaft['node_pos_r'].iloc[-1])
+        self.nodes_pos = nodes_pos
+
+        nodes_i_d = list(df_shaft.groupby('n')['i_d'].min())
+        nodes_i_d.append(df_shaft['i_d'].iloc[-1])
+        self.nodes_i_d = nodes_i_d
+
+        nodes_o_d = list(df_shaft.groupby('n')['o_d'].min())
+        nodes_o_d.append(df_shaft['o_d'].iloc[-1])
+        self.nodes_o_d = nodes_o_d
+
+        self.nodes = list(range(len(self.nodes_pos)))
+        self.L = nodes_pos[-1]
+
+        self.m_disks = np.sum([disk.m for disk in self.disk_elements])
+        self.m_shaft = np.sum([sh_el.m for sh_el in self.shaft_elements])
+        self.m = self.m_disks + self.m_shaft
+        # TODO Add CG location
+
+        # values for evalues and evectors will be calculated by self._calc_system
         self.evalues = None
         self.evectors = None
         self.wn = None
@@ -152,28 +255,10 @@ class Rotor(object):
         #  TODO check when disk diameter in no consistent with shaft diameter
         #  TODO add error for elements added to the same n (node)
         # number of dofs
-        self.ndof = 4 * len(shaft_elements) + 4
-
-        #  nodes axial position
-        nodes_pos = [0]
-        length = 0
-        for sh in shaft_elements:
-            length += sh.L
-            nodes_pos.append(length)
-        self.nodes_pos = nodes_pos
-        self.nodes = [i for i in range(len(self.nodes_pos))]
+        self.ndof = 4 * max([el.n for el in shaft_elements]) + 8
 
         #  TODO for tappered elements i_d and o_d will be a list with two elements
         #  diameter at node position
-        nodes_i_d = [s.i_d for s in self.shaft_elements]
-        # append i_d for last node
-        nodes_i_d.append(self.shaft_elements[-1].i_d)
-        self.nodes_i_d = nodes_i_d
-
-        nodes_o_d = [s.o_d for s in self.shaft_elements]
-        # append o_d for last node
-        nodes_o_d.append(self.shaft_elements[-1].o_d)
-        self.nodes_o_d = nodes_o_d
 
         # call self._calc_system() to calculate current evalues and evectors
         self._calc_system()
@@ -196,6 +281,7 @@ class Rotor(object):
 
     @staticmethod
     def _dofs(element):
+        # TODO This part should be inside each element
         """The first and last dof for a given element"""
         if isinstance(element, ShaftElement):
             node = element.n
@@ -428,9 +514,11 @@ class Rotor(object):
         if w is None:
             w = self.w
 
-        if self.SPARSE is True:
+        if self.sparse is True:
             try:
-                evalues, evectors = las.eigs(self.A(w), k=12, sigma=0, ncv=24, which='LM', v0=self._v0)
+                evalues, evectors = las.eigs(self.A(w), k=self.n_eigen,
+                                             sigma=0, ncv=24, which='LM',
+                                             v0=self._v0)
                 # store v0 as a linear combination of the previously
                 # calculated eigenvectors to use in the next call to eigs
                 self._v0 = np.real(sum(evectors.T))
@@ -919,7 +1007,7 @@ class Rotor(object):
         --------
         >>> rotor1 = rotor_example()
         >>> speed = np.linspace(0, 400, 101)
-        >>> camp = campbell(rotor1, speed, plot=False)
+        >>> camp = rotor1.campbell(speed, plot=False)
         >>> np.round(camp[:, 0], 1) #  damped natural frequencies at the first rotor speed (0 rad/s)
         array([  82.7,   86.7,  254.5,  274.3,  679.5,  716.8])
         >>> np.round(camp[:, 10], 1) # damped natural frequencies at 40 rad/s
