@@ -920,7 +920,7 @@ class BearingElement:
                           [zpos + h / 2, ypos - h],
                           [zpos - h / 2, ypos - h],
                           [zpos, ypos]]
-        ax.add_patch(mpatches.Polygon(bearing_points, color=self.color))
+        ax.add_patch(mpatches.Polygon(bearing_points, color=self.color, picker=True))
 
     def plot_k_curve(self, w=None, ax=None,
                      kxx=True, kxy=True, kyx=True, kyy=True):
