@@ -178,6 +178,7 @@ class Rotor(object):
                 continue
             if df_shaft.loc[i, 'n'] == df_shaft.loc[i - 1, 'n']:
                 df_shaft.loc[i, 'node_pos'] = df_shaft.loc[i - 1, 'node_pos']
+                df_shaft.loc[i, 'node_pos_r'] = df_shaft.loc[i - 1, 'node_pos_r']
             else:
                 df_shaft.loc[i, 'node_pos'] = (df_shaft.loc[i - 1, 'node_pos_r'])
                 df_shaft.loc[i, 'node_pos_r'] = (df_shaft.loc[i, 'node_pos']
@@ -223,10 +224,18 @@ class Rotor(object):
         self.df = df
 
         # nodes axial position and diameter
-        nodes_pos = df_shaft.groupby(by='n')['node_pos'].max().values
-        nodes_pos = np.hstack([nodes_pos, nodes_pos[-1] + df_shaft.L.iloc[-1]])
-
+        nodes_pos = list(df_shaft.groupby(by='n')['node_pos'].max())
+        nodes_pos.append(df_shaft['node_pos_r'].iloc[-1])
         self.nodes_pos = nodes_pos
+
+        nodes_i_d = list(df_shaft.groupby('n')['i_d'].min())
+        nodes_i_d.append(df_shaft['i_d'].iloc[-1])
+        self.nodes_i_d = nodes_i_d
+
+        nodes_o_d = list(df_shaft.groupby('n')['o_d'].min())
+        nodes_o_d.append(df_shaft['o_d'].iloc[-1])
+        self.nodes_o_d = nodes_o_d
+
         self.nodes = list(range(len(self.nodes_pos)))
         self.L = nodes_pos[-1]
 
@@ -250,15 +259,6 @@ class Rotor(object):
 
         #  TODO for tappered elements i_d and o_d will be a list with two elements
         #  diameter at node position
-        nodes_i_d = [s.i_d for s in self.shaft_elements]
-        # append i_d for last node
-        nodes_i_d.append(self.shaft_elements[-1].i_d)
-        self.nodes_i_d = nodes_i_d
-
-        nodes_o_d = [s.o_d for s in self.shaft_elements]
-        # append o_d for last node
-        nodes_o_d.append(self.shaft_elements[-1].o_d)
-        self.nodes_o_d = nodes_o_d
 
         # call self._calc_system() to calculate current evalues and evectors
         self._calc_system()
