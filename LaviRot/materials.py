@@ -36,7 +36,8 @@ class Material:
     """
     material_instances = []
 
-    def __init__(self, name=None, rho=None, E=None, G_s=None, Poisson=None):
+    def __init__(self, name=None, rho=None, E=None, G_s=None, Poisson=None,
+                 color='#525252'):
         if rho is None:
             raise ValueError('Density (rho) not provided.')
 
@@ -60,7 +61,7 @@ class Material:
         elif Poisson is None:
             self.Poisson = (E/(2*G_s)) - 1
 
-        self.color = None  # this can be used in the plots
+        self.color = color  # this can be used in the plots
 
         Material.material_instances.append(name)
 

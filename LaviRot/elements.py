@@ -126,7 +126,7 @@ class ShaftElement:
         self.E = material.E
         self.G_s = material.G_s
         self.Poisson = material.Poisson
-        self.color = '#525252' # TODO Define color from material
+        self.color = material.color
         self.rho = material.rho
         self.A = np.pi*(o_d**2 - i_d**2)/4
         self.volume = self.A * self.L
