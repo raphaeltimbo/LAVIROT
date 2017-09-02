@@ -1168,10 +1168,13 @@ class Rotor(object):
         ax.set_ylabel('Critical Speed (rad/s)')
 
         bearing0 = bearings_elements[0]
+
         ax.plot(bearing0.kxx(bearing0.w), bearing0.w,
-                marker='.', color='k', lw=0, label='kxx')
+                marker='o', color='k', alpha=0.25,
+                markersize=5, lw=0, label='kxx')
         ax.plot(bearing0.kyy(bearing0.w), bearing0.w,
-                marker='2', color='k', lw=0, label='kyy')
+                marker='s', color='k', alpha=0.25,
+                markersize=5, lw=0, label='kyy')
         ax.legend()
 
         return ax
