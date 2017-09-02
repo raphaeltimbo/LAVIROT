@@ -193,6 +193,7 @@ def test_bearing_interpol_cyy(bearing0):
 
 @pytest.fixture
 def bearing1():
+    # using lists
     Kxx_bearing = [8.5e+07, 1.1e+08, 1.3e+08, 1.6e+08, 1.8e+08,
                    2.0e+08, 2.3e+08, 2.5e+08, 2.6e+08]
     Kyy_bearing = np.array([9.2e+07, 1.1e+08, 1.4e+08, 1.6e+08, 1.9e+08,
