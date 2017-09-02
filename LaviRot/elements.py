@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import matplotlib.patches as mpatches
 from itertools import permutations
+from collections import Iterable
 from LaviRot.materials import Material
 
 
@@ -819,6 +820,23 @@ class BearingElement:
                  kyy=None, kxy=0, kyx=0,
                  cyy=None, cxy=0, cyx=0,
                  w=None):
+
+        # TODO try to simplify the rest of the function putting
+        # TODO everything in this for loop
+        args = locals()
+        for k, v in args.items():
+            if isinstance(v, Iterable):
+                args[k] = np.array(v)
+
+        kxx = args['kxx']
+        cxx = args['cxx']
+        kyy = args['kyy']
+        kxy = args['kxy']
+        kyx = args['kyx']
+        cyy = args['cyy']
+        cxy = args['cxy']
+        cyx = args['cyx']
+        w = args['w']
 
         # check for args consistency
         if w is not None:

@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap
 from mpl_toolkits.mplot3d import Axes3D
+from cycler import cycler
 
 from LaviRot.elements import *
 from LaviRot.materials import steel
@@ -42,6 +43,9 @@ c_pal = {'red': '#C93C3C',
          'purple': '#A349C6',
          'grey': '#2D2D2D',
          'green2': '#08A4AF'}
+
+seaborn_colors = ['#4c72b0', '#55a868', '#c44e52',
+                  '#8172b2', '#ccb974', '#64b5cd']
 
 
 class Rotor(object):
@@ -109,7 +113,7 @@ class Rotor(object):
     """
 
     def __init__(self, shaft_elements, disk_elements=None, bearing_seal_elements=None, w=0,
-                 sparse=True, n_eigen=12):
+                 sparse=True, n_eigen=12, min_w=None, max_w=None, rated_w=None):
         #  TODO consider speed as a rotor property. Setter should call __init__ again
         self._w = w
 
@@ -119,6 +123,10 @@ class Rotor(object):
 
         self.sparse = sparse
         self.n_eigen = n_eigen
+        # operational speeds
+        self.min_w = min_w
+        self.max_w = max_w
+        self.rated_w = rated_w
 
         ####################################################
 
@@ -486,7 +494,7 @@ class Rotor(object):
 
         return idx
 
-    def _eigen(self, w=None, sorted_=True):
+    def _eigen(self, w=None, sorted_=True, A=None):
         r"""This method will return the eigenvalues and eigenvectors of the
         state space matrix A, sorted by the index method which considers
         the imaginary part (wd) of the eigenvalues for sorting.
@@ -513,19 +521,21 @@ class Rotor(object):
         """
         if w is None:
             w = self.w
+        if A is None:
+            A = self.A(w)
 
         if self.sparse is True:
             try:
-                evalues, evectors = las.eigs(self.A(w), k=self.n_eigen,
+                evalues, evectors = las.eigs(A, k=self.n_eigen,
                                              sigma=0, ncv=24, which='LM',
                                              v0=self._v0)
                 # store v0 as a linear combination of the previously
                 # calculated eigenvectors to use in the next call to eigs
                 self._v0 = np.real(sum(evectors.T))
             except las.ArpackError:
-                evalues, evectors = la.eig(self.A(w))
+                evalues, evectors = la.eig(A)
         else:
-            evalues, evectors = la.eig(self.A(w))
+            evalues, evectors = la.eig(A)
 
         if sorted_ is False:
             return evalues, evectors
@@ -1096,6 +1106,67 @@ class Rotor(object):
 
         # restore rotor speed
         self.w = rotor_state_speed
+
+        return ax
+
+    def plot_ucs(self, stiffness_range=None, num=20, ax=None):
+        """Plot undamped critical speed map.
+
+        This method will plot the undamped critical speed map for a given range
+        of stiffness values. If the range is not provided, the bearing
+        stiffness at rated speed will be used to create a range.
+
+        Parameters
+        ----------
+        stiffness_range : tuple, optional
+            Tuple with (start, end) for stiffness range.
+        num : int
+            Number of steps in the range.
+            Default is 20.
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
+        if ax is None:
+            ax = plt.gca()
+
+        if stiffness_range is None:
+            if self.rated_w is not None:
+                k = self.bearing_seal_elements[0].kxx(self.rated_w)
+                k = int(np.log10(k))
+                stiffness_range = (k - 3, k + 3)
+            else:
+                stiffness_range = (6, 11)
+
+        stiffness_log = np.logspace(*stiffness_range, num=num)
+        rotor_wn = np.zeros((4, len(stiffness_log)))
+
+        bearings_elements = []  # exclude the seals
+        for bearing in self.bearing_seal_elements:
+            if type(bearing) == BearingElement:
+                bearings_elements.append(bearing)
+
+        for i, k in enumerate(stiffness_log):
+            bearings = [BearingElement(b.n, kxx=k, cxx=0) for b in bearings_elements]
+            rotor = self.__class__(self.shaft_elements, self.disk_elements,
+                                   bearings, n_eigen=16)
+            rotor_wn[:, i] = rotor.wn[:8:2]
+
+        ax.set_prop_cycle(cycler('color', seaborn_colors))
+        ax.loglog(stiffness_log, rotor_wn.T)
+        ax.set_xlabel('Bearing Stiffness (N/m)')
+        ax.set_ylabel('Critical Speed (rad/s)')
+
+        bearing0 = bearings_elements[0]
+        ax.plot(bearing0.kxx(bearing0.w), bearing0.w,
+                marker='.', color='k', lw=0, label='kxx')
+        ax.plot(bearing0.kyy(bearing0.w), bearing0.w,
+                marker='2', color='k', lw=0, label='kyy')
+        ax.legend()
 
         return ax
 
