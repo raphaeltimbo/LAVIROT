@@ -19,7 +19,7 @@ from LaviRot.elements import *
 from LaviRot.materials import steel
 
 
-__all__ = ['Rotor', 'rotor_example']
+__all__ = ['Rotor', 'rotor_example', 'plot_example']
 
 # set style and colors
 plt.style.use('seaborn-white')
@@ -971,9 +971,15 @@ class Rotor(object):
             position = (self.nodes_pos[bearing.n], -self.nodes_o_d[bearing.n])
             bearing.patch(ax, position)
 
+        drs = []
+        for patch in ax.patches:
+            dr = DrawInfo(patch)
+            dr.connect()
+            drs.append(dr)
+
         mpl.rcParams.update(_orig_rc_params)
 
-        return ax
+        return ax, drs
 
     def campbell(self, speed_rad, freqs=6, mult=[1], plot=True, ax=None):
         r"""Calculates the Campbell diagram.
@@ -1276,3 +1282,116 @@ def whirl_to_cmap(whirl):
         return 0.5
 
 
+class DrawInfo:
+    def __init__(self, patch):
+        self.patch = patch
+        self.press = None
+        self.patch_alpha = None
+        self.cidpress = None
+        self.cidrelease = None
+
+    def connect(self):
+        """Connect to events."""
+        self.cidpress = self.patch.figure.canvas.mpl_connect(
+            'button_press_event', self.on_press
+        )
+        self.cidrelease = self.patch.figure.canvas.mpl_connect(
+            'button_release_event', self.on_release
+        )
+
+    def on_press(self, event):
+        """On press see if the mouse is over."""
+        if event.inaxes != self.patch.axes:
+            return
+
+        contains, attrd = self.patch.contains(event)
+        if not contains:
+            return
+        x0, y0 = self.patch.xy
+        self.press = x0, y0, event.xdata, event.ydata
+
+        # change alpha on press
+        self.patch_alpha = self.patch.get_alpha()
+        self.patch.set_alpha = 0.3
+        self.patch.figure.canvas.draw()
+
+    def on_release(self, event):
+        """On release set the alpha back"""
+        self.press = None
+        self.patch.set_alpha(self.patch_alpha)
+        self.patch.figure.canvas.draw()
+
+    def disconnect(self):
+        """Disconnect all the stored connection ids."""
+        self.patch.figure.canvas.mpl_disconnect(self.cidpress)
+        self.patch.figure.canvas.mpl_disconnect(self.cidrelease)
+
+
+class DraggableRectangle:
+    def __init__(self, rect):
+        self.rect = rect
+        self.press = None
+
+    def connect(self):
+        'connect to all the events we need'
+        self.cidpress = self.rect.figure.canvas.mpl_connect(
+            'button_press_event', self.on_press)
+        self.cidrelease = self.rect.figure.canvas.mpl_connect(
+            'button_release_event', self.on_release)
+        self.cidmotion = self.rect.figure.canvas.mpl_connect(
+            'motion_notify_event', self.on_motion)
+
+    def on_press(self, event):
+        'on button press we will see if the mouse is over us and store some data'
+        if event.inaxes != self.rect.axes: return
+
+        contains, attrd = self.rect.contains(event)
+        if not contains: return
+        print('event contains', self.rect.xy)
+        x0, y0 = self.rect.xy
+        self.press = x0, y0, event.xdata, event.ydata
+        dx, dy = 1, 1
+        self.rect.set_x(x0+dx)
+        self.rect.set_y(y0+dy)
+        self.rect.set_alpha(0.2)
+        self.rect.figure.canvas.draw()
+
+    def on_motion(self, event):
+        'on motion we will move the rect if the mouse is over us'
+        if self.press is None: return
+        if event.inaxes != self.rect.axes: return
+        x0, y0, xpress, ypress = self.press
+        dx = event.xdata - xpress
+        dy = event.ydata - ypress
+        #print('x0=%f, xpress=%f, event.xdata=%f, dx=%f, x0+dx=%f' %
+        #      (x0, xpress, event.xdata, dx, x0+dx))
+        self.rect.set_x(x0+dx)
+        self.rect.set_y(y0+dy)
+
+        self.rect.figure.canvas.draw()
+
+
+    def on_release(self, event):
+        'on release we reset the press data'
+        self.press = None
+        self.rect.figure.canvas.draw()
+
+    def disconnect(self):
+        'disconnect all the stored connection ids'
+        self.rect.figure.canvas.mpl_disconnect(self.cidpress)
+        self.rect.figure.canvas.mpl_disconnect(self.cidrelease)
+        self.rect.figure.canvas.mpl_disconnect(self.cidmotion)
+
+def plot_example(ax=None):
+    # fig = plt.figure()
+    if ax is None:
+        ax = plt.gca()
+    # ax = fig.add_subplot(111)
+    rects = ax.bar(range(10), 20 * np.random.rand(10))
+    drs = []
+    for rect in ax.patches:
+        dr = DraggableRectangle(rect)
+        dr.connect()
+        drs.append(dr)
+
+    return ax, drs
