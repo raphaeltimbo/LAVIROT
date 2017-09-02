@@ -486,7 +486,7 @@ class Rotor(object):
 
         return idx
 
-    def _eigen(self, w=None, sorted_=True):
+    def _eigen(self, w=None, sorted_=True, A=None):
         r"""This method will return the eigenvalues and eigenvectors of the
         state space matrix A, sorted by the index method which considers
         the imaginary part (wd) of the eigenvalues for sorting.
@@ -513,19 +513,21 @@ class Rotor(object):
         """
         if w is None:
             w = self.w
+        if A is None:
+            A = self.A(w)
 
         if self.sparse is True:
             try:
-                evalues, evectors = las.eigs(self.A(w), k=self.n_eigen,
+                evalues, evectors = las.eigs(A, k=self.n_eigen,
                                              sigma=0, ncv=24, which='LM',
                                              v0=self._v0)
                 # store v0 as a linear combination of the previously
                 # calculated eigenvectors to use in the next call to eigs
                 self._v0 = np.real(sum(evectors.T))
             except las.ArpackError:
-                evalues, evectors = la.eig(self.A(w))
+                evalues, evectors = la.eig(A)
         else:
-            evalues, evectors = la.eig(self.A(w))
+            evalues, evectors = la.eig(A)
 
         if sorted_ is False:
             return evalues, evectors
