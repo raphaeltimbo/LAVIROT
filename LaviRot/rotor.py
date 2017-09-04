@@ -1107,8 +1107,13 @@ class Rotor(object):
                                       color=c_pal['grey'],
                                       label='Mixed')
 
-        ax.legend(handles=[forward_label, backwardlabel, mixedlabel],
-                  loc=2)
+        # add legend manually so that the user can add additional
+        # legend in the returned axes.
+        # See multiple legends on the same axes:
+        # https://matplotlib.org/users/legend_guide.html
+        legend = plt.legend(handles=[forward_label, backwardlabel, mixedlabel],
+                            loc=2)
+        ax.add_artist(legend)
 
         # restore rotor speed
         self.w = rotor_state_speed
