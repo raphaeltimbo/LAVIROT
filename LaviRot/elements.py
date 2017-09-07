@@ -32,7 +32,9 @@ class Element:
 
         A pandas series with the element properties as variables.
         """
-        return pd.Series(self.__dict__)
+        attributes = self.__dict__
+        attributes['type'] = self.__class__.__name__
+        return pd.Series(attributes)
 
 
 class ShaftElement(Element):
@@ -516,7 +518,7 @@ class ShaftElement(Element):
         #  TODO add tappered element. Modify shaft element to accept i_d and o_d as a list with to entries.
 
 
-class LumpedDiskElement:
+class LumpedDiskElement(Element):
     """A lumped disk element.
 
      This class will create a lumped disk element.
@@ -795,7 +797,7 @@ class DiskElement(LumpedDiskElement):
         ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=self.color))
 
 
-class BearingElement:
+class BearingElement(Element):
     #  TODO detail this class attributes inside the docstring
     """A bearing element.
 
