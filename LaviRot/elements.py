@@ -547,6 +547,9 @@ class LumpedDiskElement(Element):
      """
     def __init__(self, n, m, Id, Ip):
         self.n = n
+        self.n_l = n
+        self.n_r = n
+
         self.m = m
         self.Id = Id
         self.Ip = Ip
