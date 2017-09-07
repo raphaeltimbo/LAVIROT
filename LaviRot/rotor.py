@@ -287,12 +287,13 @@ class Rotor(object):
         self._w = value
         self._calc_system()
 
-    @staticmethod
-    def _dofs(element):
+    def _dofs(self, element):
         # TODO This part should be inside each element
         """The first and last dof for a given element"""
         node = element.n
         n1 = 4 * node
+        if node > len(self.nodes):
+            raise ValueError(f'Trying to set element on node ({node}) outside the shaft')
 
         if isinstance(element, ShaftElement):
             n2 = n1 + 8
