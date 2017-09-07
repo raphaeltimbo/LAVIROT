@@ -67,8 +67,34 @@ def test_mass_matrix_rotor1(rotor1):
     assert_almost_equal(rotor1.M(), Mr1, decimal=3)
 
 
-def test_element_outside_shaft():
-    pass
+def test_raise_if_element_outside_shaft():
+    le_ = 0.25
+    i_d_ = 0
+    o_d_ = 0.05
+
+    tim0 = ShaftElement(le_, i_d_, o_d_, steel,
+                        shear_effects=True,
+                        rotary_inertia=True,
+                        gyroscopic=True)
+    tim1 = ShaftElement(le_, i_d_, o_d_, steel,
+                        shear_effects=True,
+                        rotary_inertia=True,
+                        gyroscopic=True)
+
+    shaft_elm = [tim0, tim1]
+    disk0 = DiskElement(3, steel, 0.07, 0.05, 0.28)
+    stf = 1e6
+    bearing0 = BearingElement(0, kxx=stf, cxx=0)
+    bearing1 = BearingElement(3, kxx=stf, cxx=0)
+    bearings = [bearing0, bearing1]
+
+    with pytest.raises(ValueError) as excinfo:
+        Rotor(shaft_elm, [disk0])
+    assert 'Trying to set disk or bearing outside shaft' == str(excinfo.value)
+
+    with pytest.raises(ValueError) as excinfo:
+        Rotor(shaft_elm, bearing_seal_elements=bearings)
+    assert 'Trying to set disk or bearing outside shaft' == str(excinfo.value)
 
 
 @pytest.fixture
