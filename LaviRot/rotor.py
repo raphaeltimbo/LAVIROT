@@ -291,18 +291,16 @@ class Rotor(object):
     def _dofs(element):
         # TODO This part should be inside each element
         """The first and last dof for a given element"""
+        node = element.n
+        n1 = 4 * node
+
         if isinstance(element, ShaftElement):
-            node = element.n
-            n1 = 4 * node
             n2 = n1 + 8
         if isinstance(element, LumpedDiskElement):
-            node = element.n
-            n1 = 4 * node
             n2 = n1 + 4
         if isinstance(element, BearingElement):
-            node = element.n
-            n1 = 4 * node
             n2 = n1 + 2
+
         # TODO implement this for bearing with more dofs
         return n1, n2
 
