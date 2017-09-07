@@ -740,14 +740,21 @@ class DiskElement(LumpedDiskElement):
         if not isinstance(n, int):
             raise TypeError(f'n should be int, not {n.__class__.__name__}')
         self.n = n
+        self.n_l = n
+        self.n_r = n
+
         self.material = material
         self.rho = material.rho
         self.width = width
+
+        # diameters
         self.i_d = i_d
         self.o_d = o_d
-        # right diameters
+        self.i_d_l = i_d
+        self.o_d_l = o_d
         self.i_d_r = i_d
         self.o_d_r = o_d
+
         self.m = 0.25 * self.rho * np.pi * width * (o_d**2 - i_d**2)
         self.Id = (0.015625 * self.rho * np.pi * width*(o_d**4 - i_d**4)
                    + self.m*(width**2)/12)
@@ -910,6 +917,9 @@ class BearingElement(Element):
                 'cyy': cyy, 'cxy': cxy, 'cyx': cyx}
 
         self.n = n
+        self.n_l = n
+        self.n_r = n
+
         self.w = w
         self.color = '#355d7a'
 
