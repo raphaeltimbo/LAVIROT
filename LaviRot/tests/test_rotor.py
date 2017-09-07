@@ -64,6 +64,10 @@ def test_mass_matrix_rotor1(rotor1):
     assert_almost_equal(rotor1.M(), Mr1, decimal=3)
 
 
+def test_element_outside_shaft():
+    pass
+
+
 @pytest.fixture
 def rotor2():
     #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings

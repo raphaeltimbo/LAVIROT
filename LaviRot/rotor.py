@@ -196,6 +196,9 @@ class Rotor(object):
         summary_disks = {k: [] for k in columns}
 
         for disk in self.disk_elements:
+            if disk.n > df_shaft['n'].max() + 1:
+                raise ValueError(f'Trying to set element on node '
+                                 f'({disk.n}) outside shaft')
             if isinstance(disk, LumpedDiskElement):
                 for col in columns:
                     if col in ['node_pos', 'node_pos_r']:
@@ -220,6 +223,18 @@ class Rotor(object):
                         summary_disks[col].append(disk.material.name)
                     else:
                         summary_disks[col].append(getattr(disk, col))
+
+         # bearings
+        summary_bearings = {k: [] for k in columns}
+
+        for bearing in self.bearing_seal_elements:
+            if bearing.n > df_shaft['n'].max() + 1:
+                raise ValueError(f'Trying to set element on node '
+                                 f'({bearing.n}) outside shaft')
+            for col in columns:
+                if col in ['node_pos', 'node_pos_r']:
+                    summary_bearings[col].append(
+                        df_shaft[df_shaft.n == bearing.n].node_pos.iloc[0])
 
         df_disks = pd.DataFrame(summary_disks, columns=columns)
 
@@ -292,8 +307,6 @@ class Rotor(object):
         """The first and last dof for a given element"""
         node = element.n
         n1 = 4 * node
-        if node >= len(self.nodes):
-            raise ValueError(f'Trying to set element on node ({node}) outside the shaft')
 
         if isinstance(element, ShaftElement):
             n2 = n1 + 8
