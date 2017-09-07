@@ -38,6 +38,9 @@ def test_rotor_attributes(rotor1):
     assert rotor1.m_disks == 0
     assert rotor1.m_shaft == 7.6674495701675891
     assert rotor1.m == 7.6674495701675891
+    assert rotor1.nodes_pos[0] == 0
+    assert rotor1.nodes_pos[1] == 0.25
+    assert rotor1.nodes_pos[-1] == 0.5
 
 
 def test_index_eigenvalues_rotor1(rotor1):

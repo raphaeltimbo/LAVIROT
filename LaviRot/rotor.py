@@ -166,89 +166,31 @@ class Rotor(object):
         ####################################################
         columns = ['type', 'n', 'L', 'node_pos', 'node_pos_r', 'i_d', 'o_d',
                    'i_d_r', 'o_d_r', 'material', 'rho', 'volume', 'm']
-        summary_shaft = {k: [] for k in columns}
 
+        df_shaft = pd.DataFrame([el.summary() for el in self.shaft_elements])
+        df_disks = pd.DataFrame([el.summary() for el in self.disk_elements])
 
-        # shaft
-        for sh in self.shaft_elements:
-            for col in columns:
-                if col in ['node_pos', 'node_pos_r']:
-                    summary_shaft[col].append(0)
-                elif col == 'type':
-                    summary_shaft['type'].append(sh.__class__.__name__)
-                elif col == 'material':
-                    summary_shaft[col].append(sh.material.name)
-                else:
-                    summary_shaft[col].append(getattr(sh, col))
-
-        df_shaft = pd.DataFrame(summary_shaft, columns=columns)
+        nodes_pos_l = np.zeros(len(df_shaft.n_l))
+        nodes_pos_r = np.zeros(len(df_shaft.n_l))
 
         for i in range(len(df_shaft)):
             if i == 0:
-                df_shaft.loc[i, 'node_pos_r'] = (df_shaft.loc[i, 'node_pos']
-                                                 + df_shaft.loc[i, 'L'])
+                nodes_pos_r[i] = (nodes_pos_r[i] + df_shaft.loc[i, 'L'])
                 continue
-            if df_shaft.loc[i, 'n'] == df_shaft.loc[i - 1, 'n']:
-                df_shaft.loc[i, 'node_pos'] = df_shaft.loc[i - 1, 'node_pos']
-                df_shaft.loc[i, 'node_pos_r'] = df_shaft.loc[i - 1, 'node_pos_r']
+            if df_shaft.loc[i, 'n_l'] == df_shaft.loc[i - 1, 'n_l']:
+                nodes_pos_l[i] = nodes_pos_l[i - 1]
+                nodes_pos_r[i] = nodes_pos_r[i - 1]
             else:
-                df_shaft.loc[i, 'node_pos'] = (df_shaft.loc[i - 1, 'node_pos_r'])
-                df_shaft.loc[i, 'node_pos_r'] = (df_shaft.loc[i, 'node_pos']
-                                                 + df_shaft.loc[i, 'L'])
+                nodes_pos_l[i] = nodes_pos_r[i - 1]
+                nodes_pos_r[i] = nodes_pos_l[i] + df_shaft.loc[i, 'L']
 
-        # disks
-        summary_disks = {k: [] for k in columns}
-
-        for disk in self.disk_elements:
-            if disk.n > df_shaft['n'].max() + 1:
-                raise ValueError(f'Trying to set element on node '
-                                 f'({disk.n}) outside shaft')
-            if isinstance(disk, LumpedDiskElement):
-                for col in columns:
-                    if col in ['node_pos', 'node_pos_r']:
-                        summary_disks[col].append(
-                            df_shaft[df_shaft.n == disk.n].node_pos.iloc[0])
-                    elif col == 'type':
-                        summary_disks['type'].append(disk.__class__.__name__)
-                    elif col == 'material':
-                        summary_disks[col].append('-')
-                    elif col in ['L', 'i_d', 'o_d', 'i_d_r', 'o_d_r', 'rho', 'volume']:
-                        summary_disks[col].append(0)
-                    else:
-                        summary_disks[col].append(getattr(disk, col))
-            else:
-                for col in columns:
-                    if col in ['node_pos', 'node_pos_r']:
-                        summary_disks[col].append(
-                            df_shaft[df_shaft.n == disk.n].node_pos.iloc[0])
-                    elif col == 'type':
-                        summary_disks['type'].append(disk.__class__.__name__)
-                    elif col == 'material':
-                        summary_disks[col].append(disk.material.name)
-                    else:
-                        summary_disks[col].append(getattr(disk, col))
-
-        df = pd.DataFrame([el.summary() for el in self.elements])
-
-        df = df[['type', 'n_l', 'L', 'node_pos', 'node_pos_r', 'i_d', 'o_d',
-                 'i_d_r', 'o_d_r', 'material', 'rho', 'volume', 'm']]
+        df_shaft['nodes_pos_l'] = nodes_pos_l
+        df_shaft['nodes_pos_r'] = nodes_pos_r
         # bearings
         # TODO add bearings to summary
-        # summary_bearings = {k: [] for k in columns}
-        #
-        # for bearing in self.bearing_seal_elements:
-        #     if bearing.n > df_shaft['n'].max() + 1:
-        #         raise ValueError(f'Trying to set element on node '
-        #                          f'({bearing.n}) outside shaft')
-        #     for col in columns:
-        #         if col in ['node_pos', 'node_pos_r']:
-        #             summary_bearings[col].append(
-        #                 df_shaft[df_shaft.n == bearing.n].node_pos.iloc[0])
-
-        df_disks = pd.DataFrame(summary_disks, columns=columns)
 
         df = pd.concat([df_shaft, df_disks])
-        df = df.sort_values(by='n')
+        df = df.sort_values(by='n_l')
         df = df.reset_index(drop=True)
         # TODO Add inertia to df
         # TODO Add Axial cg location to df
@@ -256,15 +198,15 @@ class Rotor(object):
         self.df = df
 
         # nodes axial position and diameter
-        nodes_pos = list(df_shaft.groupby(by='n')['node_pos'].max())
-        nodes_pos.append(df_shaft['node_pos_r'].iloc[-1])
+        nodes_pos = list(df_shaft.groupby('n_l')['nodes_pos_l'].max())
+        nodes_pos.append(df_shaft['nodes_pos_r'].iloc[-1])
         self.nodes_pos = nodes_pos
 
-        nodes_i_d = list(df_shaft.groupby('n')['i_d'].min())
+        nodes_i_d = list(df_shaft.groupby('n_l')['i_d'].min())
         nodes_i_d.append(df_shaft['i_d'].iloc[-1])
         self.nodes_i_d = nodes_i_d
 
-        nodes_o_d = list(df_shaft.groupby('n')['o_d'].min())
+        nodes_o_d = list(df_shaft.groupby('n_l')['o_d'].min())
         nodes_o_d.append(df_shaft['o_d'].iloc[-1])
         self.nodes_o_d = nodes_o_d
 
