@@ -168,6 +168,7 @@ class Rotor(object):
                    'i_d_r', 'o_d_r', 'material', 'rho', 'volume', 'm']
         summary_shaft = {k: [] for k in columns}
 
+
         # shaft
         for sh in self.shaft_elements:
             for col in columns:
@@ -227,6 +228,10 @@ class Rotor(object):
                     else:
                         summary_disks[col].append(getattr(disk, col))
 
+        df = pd.DataFrame([el.summary() for el in self.elements])
+
+        df = df[['type', 'n_l', 'L', 'node_pos', 'node_pos_r', 'i_d', 'o_d',
+                 'i_d_r', 'o_d_r', 'material', 'rho', 'volume', 'm']]
         # bearings
         # TODO add bearings to summary
         # summary_bearings = {k: [] for k in columns}

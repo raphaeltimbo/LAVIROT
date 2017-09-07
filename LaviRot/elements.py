@@ -138,11 +138,15 @@ class ShaftElement(Element):
             self.n_r = n + 1
 
         self.L = L
+
+        # diameters
         self.i_d = i_d
         self.o_d = o_d
-        # right diameters
+        self.i_d_l = i_d
+        self.o_d_l = o_d
         self.i_d_r = i_d
         self.o_d_r = o_d
+
         self.material = material
         self.E = material.E
         self.G_s = material.G_s
