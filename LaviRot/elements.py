@@ -442,7 +442,7 @@ class ShaftElement:
 
         geometry = pd.DataFrame(df.iloc[19:])
         geometry = geometry.rename(columns=df.loc[18])
-        geometry = geometry.dropna(axis=1, how='all')
+        geometry = geometry.dropna(thresh=3)
 
         material = df.iloc[3:13, 9:15]
         material = material.rename(columns=df.iloc[0])
@@ -461,7 +461,8 @@ class ShaftElement:
 
             material['Density   r'] = material['Density   r'] * 27679.904
 
-        colors = ['#636363', '#969696', '#bdbdbd', '#d9d9d9']
+        colors = ['#636363', '#969696', '#bdbdbd', '#d9d9d9',
+                  '#636363', '#969696', '#bdbdbd', '#d9d9d9']
         materials = {}
         for i, mat in material.iterrows():
             materials[mat.Material] = Material(
