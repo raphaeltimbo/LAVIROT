@@ -292,7 +292,7 @@ class Rotor(object):
         """The first and last dof for a given element"""
         node = element.n
         n1 = 4 * node
-        if node > len(self.nodes):
+        if node >= len(self.nodes):
             raise ValueError(f'Trying to set element on node ({node}) outside the shaft')
 
         if isinstance(element, ShaftElement):
