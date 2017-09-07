@@ -157,6 +157,9 @@ class Rotor(object):
         self.shaft_elements = shaft_elements
         self.bearing_seal_elements = bearing_seal_elements
         self.disk_elements = disk_elements
+        self.elements = [el for el in flatten([self.shaft_elements,
+                                               self.disk_elements,
+                                               self.bearing_seal_elements])]
 
         ####################################################
         # Rotor summary
