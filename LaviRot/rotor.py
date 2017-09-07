@@ -169,6 +169,7 @@ class Rotor(object):
 
         df_shaft = pd.DataFrame([el.summary() for el in self.shaft_elements])
         df_disks = pd.DataFrame([el.summary() for el in self.disk_elements])
+        df_bearings = pd.DataFrame([el.summary() for el in self.bearing_seal_elements])
 
         nodes_pos_l = np.zeros(len(df_shaft.n_l))
         nodes_pos_r = np.zeros(len(df_shaft.n_l))
@@ -189,11 +190,15 @@ class Rotor(object):
         # bearings
         # TODO add bearings to summary
 
-        df = pd.concat([df_shaft, df_disks])
+        df = pd.concat([df_shaft, df_disks, df_bearings])
         df = df.sort_values(by='n_l')
         df = df.reset_index(drop=True)
         # TODO Add inertia to df
         # TODO Add Axial cg location to df
+
+        # check consistence for disks and bearings location
+        if df.n_l.max() > df[df.type == 'ShaftElement'].n_r.max():
+            raise ValueError('Trying to set disk or bearing outside shaft')
 
         self.df = df
 
