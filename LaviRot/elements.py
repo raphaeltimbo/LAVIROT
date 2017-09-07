@@ -22,7 +22,20 @@ c_pal = {'red': '#C93C3C',
          'green2': '#08A4AF'}
 
 
-class ShaftElement:
+class Element:
+    """Element class."""
+    def __init__(self):
+        pass
+
+    def summary(self):
+        """A summary for the element.
+
+        A pandas series with the element properties as variables.
+        """
+        return pd.Series(self.__dict__)
+
+
+class ShaftElement(Element):
     r"""A shaft element.
 
     This class will create a shaft element that may take into
@@ -117,8 +130,10 @@ class ShaftElement:
         self.gyroscopic = gyroscopic
 
         self._n = n
-        self.n0 = None
-        self.n1 = None
+        self.n_l = n
+        self.n_r = None
+        if n is not None:
+            self.n_r = n + 1
 
         self.L = L
         self.i_d = i_d
@@ -164,9 +179,9 @@ class ShaftElement:
     @n.setter
     def n(self, value):
         self._n = value
-        self.n0 = value
+        self.n_l = value
         if value is not None:
-            self.n1 = value + 1
+            self.n_r = value + 1
 
     def __repr__(self):
         return f'{self.__class__.__name__}' \
