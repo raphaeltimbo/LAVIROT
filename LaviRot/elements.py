@@ -22,7 +22,22 @@ c_pal = {'red': '#C93C3C',
          'green2': '#08A4AF'}
 
 
-class ShaftElement:
+class Element:
+    """Element class."""
+    def __init__(self):
+        pass
+
+    def summary(self):
+        """A summary for the element.
+
+        A pandas series with the element properties as variables.
+        """
+        attributes = self.__dict__
+        attributes['type'] = self.__class__.__name__
+        return pd.Series(attributes)
+
+
+class ShaftElement(Element):
     r"""A shaft element.
 
     This class will create a shaft element that may take into
@@ -116,13 +131,22 @@ class ShaftElement:
         self.rotary_inertia = rotary_inertia
         self.gyroscopic = gyroscopic
 
-        self.n = n
+        self._n = n
+        self.n_l = n
+        self.n_r = None
+        if n is not None:
+            self.n_r = n + 1
+
         self.L = L
+
+        # diameters
         self.i_d = i_d
         self.o_d = o_d
-        # right diameters
+        self.i_d_l = i_d
+        self.o_d_l = o_d
         self.i_d_r = i_d
         self.o_d_r = o_d
+
         self.material = material
         self.E = material.E
         self.G_s = material.G_s
@@ -153,6 +177,17 @@ class ShaftElement:
             phi = 12*self.E*self.Ie/(self.G_s*kappa*self.A*L**2)
 
         self.phi = phi
+
+    @property
+    def n(self):
+        return self._n
+
+    @n.setter
+    def n(self, value):
+        self._n = value
+        self.n_l = value
+        if value is not None:
+            self.n_r = value + 1
 
     def __repr__(self):
         return f'{self.__class__.__name__}' \
@@ -442,7 +477,7 @@ class ShaftElement:
 
         geometry = pd.DataFrame(df.iloc[19:])
         geometry = geometry.rename(columns=df.loc[18])
-        geometry = geometry.dropna(axis=1, how='all')
+        geometry = geometry.dropna(thresh=3)
 
         material = df.iloc[3:13, 9:15]
         material = material.rename(columns=df.iloc[0])
@@ -461,7 +496,8 @@ class ShaftElement:
 
             material['Density   r'] = material['Density   r'] * 27679.904
 
-        colors = ['#636363', '#969696', '#bdbdbd', '#d9d9d9']
+        colors = ['#636363', '#969696', '#bdbdbd', '#d9d9d9',
+                  '#636363', '#969696', '#bdbdbd', '#d9d9d9']
         materials = {}
         for i, mat in material.iterrows():
             materials[mat.Material] = Material(
@@ -486,7 +522,7 @@ class ShaftElement:
         #  TODO add tappered element. Modify shaft element to accept i_d and o_d as a list with to entries.
 
 
-class LumpedDiskElement:
+class LumpedDiskElement(Element):
     """A lumped disk element.
 
      This class will create a lumped disk element.
@@ -515,6 +551,9 @@ class LumpedDiskElement:
      """
     def __init__(self, n, m, Id, Ip):
         self.n = n
+        self.n_l = n
+        self.n_r = n
+
         self.m = m
         self.Id = Id
         self.Ip = Ip
@@ -708,14 +747,21 @@ class DiskElement(LumpedDiskElement):
         if not isinstance(n, int):
             raise TypeError(f'n should be int, not {n.__class__.__name__}')
         self.n = n
+        self.n_l = n
+        self.n_r = n
+
         self.material = material
         self.rho = material.rho
         self.width = width
+
+        # diameters
         self.i_d = i_d
         self.o_d = o_d
-        # right diameters
+        self.i_d_l = i_d
+        self.o_d_l = o_d
         self.i_d_r = i_d
         self.o_d_r = o_d
+
         self.m = 0.25 * self.rho * np.pi * width * (o_d**2 - i_d**2)
         self.Id = (0.015625 * self.rho * np.pi * width*(o_d**4 - i_d**4)
                    + self.m*(width**2)/12)
@@ -765,7 +811,7 @@ class DiskElement(LumpedDiskElement):
         ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=self.color))
 
 
-class BearingElement:
+class BearingElement(Element):
     #  TODO detail this class attributes inside the docstring
     """A bearing element.
 
@@ -878,6 +924,9 @@ class BearingElement:
                 'cyy': cyy, 'cxy': cxy, 'cyx': cyx}
 
         self.n = n
+        self.n_l = n
+        self.n_r = n
+
         self.w = w
         self.color = '#355d7a'
 
