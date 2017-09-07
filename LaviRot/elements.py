@@ -116,7 +116,10 @@ class ShaftElement:
         self.rotary_inertia = rotary_inertia
         self.gyroscopic = gyroscopic
 
-        self.n = n
+        self._n = n
+        self.n0 = None
+        self.n1 = None
+
         self.L = L
         self.i_d = i_d
         self.o_d = o_d
@@ -153,6 +156,17 @@ class ShaftElement:
             phi = 12*self.E*self.Ie/(self.G_s*kappa*self.A*L**2)
 
         self.phi = phi
+
+    @property
+    def n(self):
+        return self._n
+
+    @n.setter
+    def n(self, value):
+        self._n = value
+        self.n0 = value
+        if value is not None:
+            self.n1 = value + 1
 
     def __repr__(self):
         return f'{self.__class__.__name__}' \

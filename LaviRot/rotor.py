@@ -224,17 +224,18 @@ class Rotor(object):
                     else:
                         summary_disks[col].append(getattr(disk, col))
 
-         # bearings
-        summary_bearings = {k: [] for k in columns}
-
-        for bearing in self.bearing_seal_elements:
-            if bearing.n > df_shaft['n'].max() + 1:
-                raise ValueError(f'Trying to set element on node '
-                                 f'({bearing.n}) outside shaft')
-            for col in columns:
-                if col in ['node_pos', 'node_pos_r']:
-                    summary_bearings[col].append(
-                        df_shaft[df_shaft.n == bearing.n].node_pos.iloc[0])
+        # bearings
+        # TODO add bearings to summary
+        # summary_bearings = {k: [] for k in columns}
+        #
+        # for bearing in self.bearing_seal_elements:
+        #     if bearing.n > df_shaft['n'].max() + 1:
+        #         raise ValueError(f'Trying to set element on node '
+        #                          f'({bearing.n}) outside shaft')
+        #     for col in columns:
+        #         if col in ['node_pos', 'node_pos_r']:
+        #             summary_bearings[col].append(
+        #                 df_shaft[df_shaft.n == bearing.n].node_pos.iloc[0])
 
         df_disks = pd.DataFrame(summary_disks, columns=columns)
 
