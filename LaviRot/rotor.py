@@ -247,7 +247,8 @@ class Rotor(object):
         wn_len = len(self.evalues) // 2
         self.wn = (np.absolute(self.evalues))[:wn_len]
         self.wd = (np.imag(self.evalues))[:wn_len]
-        self.damping_ratio = np.sqrt(1 - ((self.wd / self.wn)**2))
+        self.damping_ratio = (-np.real(self.evalues) /
+                              np.absolute(self.evalues))[:wn_len]
         self.log_dec = (2*np.pi*self.damping_ratio /
                         np.sqrt(1 - self.damping_ratio**2))
         self.H = self._H()
@@ -1152,6 +1153,52 @@ class Rotor(object):
                 marker='s', color='k', alpha=0.25,
                 markersize=5, lw=0, label='kyy')
         ax.legend()
+
+        return ax
+
+    def plot_level1(self, n=None, stiffness_range=None, num=5, ax=None):
+        """Plot level 1 stability analysis.
+
+        This method will plot the stability 1 analysis for a
+        given stiffness range.
+
+        Parameters
+        ----------
+        stiffness_range : tuple, optional
+            Tuple with (start, end) for stiffness range.
+        num : int
+            Number of steps in the range.
+            Default is 5.
+        ax : matplotlib axes, optional
+            Axes in which the plot will be drawn.
+
+        Returns
+        -------
+        ax : matplotlib axes
+            Returns the axes object with the plot.
+        """
+        if ax is None:
+            ax = plt.gca()
+
+        stiffness = np.linspace(*stiffness_range, num)
+
+        log_dec = np.zeros(len(stiffness))
+
+        # set rotor speed to mcs
+        speed = self.rated_w
+
+        for i, Q in enumerate(stiffness):
+            bearings = [copy(b) for b in self.bearing_seal_elements]
+            cross_coupling = BearingElement(n=n, kxx=0, cxx=0, kxy=Q, kyx=-Q)
+            bearings.append(cross_coupling)
+
+            rotor = self.__class__(self.shaft_elements, self.disk_elements,
+                                   bearings, w=speed)
+
+            non_backward = rotor.whirl_direction() != 'Backward'
+            log_dec[i] = rotor.log_dec[non_backward][0]
+
+        ax.plot(stiffness, log_dec)
 
         return ax
 
