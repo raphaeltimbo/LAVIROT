@@ -247,6 +247,9 @@ class Rotor(object):
         wn_len = len(self.evalues) // 2
         self.wn = (np.absolute(self.evalues))[:wn_len]
         self.wd = (np.imag(self.evalues))[:wn_len]
+        self.damping_ratio = np.sqrt(1 - ((self.wd / self.wn)**2))
+        self.log_dec = (2*np.pi*self.damping_ratio /
+                        np.sqrt(1 - self.damping_ratio**2))
         self.H = self._H()
 
     @property
