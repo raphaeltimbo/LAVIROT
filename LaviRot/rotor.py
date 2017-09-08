@@ -732,6 +732,12 @@ class Rotor(object):
         kappa_mode = [self.kappa(node, w)['kappa'] for node in self.nodes]
         return kappa_mode
 
+    def whirl_direction(self):
+        """Get the whirl direction for each frequency."""
+        whirl_w = [whirl(self.kappa_mode(wd)) for wd in range(len(self.wd))]
+
+        return whirl_w
+
     def orbit(self):
         pass
     #  TODO static methods as auxiliary functions
