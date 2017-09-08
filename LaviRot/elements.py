@@ -1117,11 +1117,16 @@ class BearingElement(Element):
 
         df = pd.read_excel(file, sheetname=sheet)
 
-        df_bearing = pd.DataFrame(df.iloc[6:])
-        df_bearing = df_bearing.rename(columns=df.loc[4])
+        # locate were table starts
+        for i, row in df.iterrows():
+            if row.iloc[0] == 'Speed':
+                start = i + 2
+
+        df_bearing = pd.DataFrame(df.iloc[start:])
+        df_bearing = df_bearing.rename(columns=df.loc[start - 2])
         df_bearing = df_bearing.dropna(axis=0, thresh=2)
 
-        if df.iloc[5, 1] == 'lb/in':
+        if df.iloc[start - 1, 1] == 'lb/in':
             for col in df_bearing.columns:
                 if col != 'Speed':
                     df_bearing[col] = df_bearing[col] * 175.126835
