@@ -1156,7 +1156,8 @@ class Rotor(object):
 
         return ax
 
-    def plot_level1(self, n=None, stiffness_range=None, num=5, ax=None):
+    def plot_level1(self, n=None, stiffness_range=None,
+                    num=5, ax=None, **kwargs):
         """Plot level 1 stability analysis.
 
         This method will plot the stability 1 analysis for a
@@ -1198,7 +1199,9 @@ class Rotor(object):
             non_backward = rotor.whirl_direction() != 'Backward'
             log_dec[i] = rotor.log_dec[non_backward][0]
 
-        ax.plot(stiffness, log_dec)
+        ax.plot(stiffness, log_dec, '--', **kwargs)
+        ax.set_xlabel('Applied Cross Coupled Stiffness, Q (N/m)')
+        ax.set_ylabel('Log Dec')
 
         return ax
 
