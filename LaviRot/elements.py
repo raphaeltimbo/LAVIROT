@@ -1117,14 +1117,22 @@ class BearingElement(Element):
 
         df = pd.read_excel(file, sheetname=sheet)
 
+        start_col = 0
+
+        if sheet == 'XLTFPBrg':
+            start_col = 2
+
         # locate were table starts
         for i, row in df.iterrows():
-            if row.iloc[0] == 'Speed':
+            if row.iloc[start_col] == 'Speed':
                 start = i + 2
 
-        df_bearing = pd.DataFrame(df.iloc[start:])
+        df_bearing = pd.DataFrame(df.iloc[start:, start_col:])
+        if sheet == 'XLTFPBrg':
+            df_bearing = df_bearing.iloc[:10]
         df_bearing = df_bearing.rename(columns=df.loc[start - 2])
-        df_bearing = df_bearing.dropna(axis=0, thresh=2)
+        df_bearing = df_bearing.dropna(axis=0, thresh=5)
+        df_bearing = df_bearing.dropna(axis=1, thresh=5)
 
         if df.iloc[start - 1, 1] == 'lb/in':
             for col in df_bearing.columns:
