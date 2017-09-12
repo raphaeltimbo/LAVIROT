@@ -148,6 +148,7 @@ class ShaftElement(Element):
         self.o_d_r = o_d
 
         self.material = material
+        self.material_name = material.name
         self.E = material.E
         self.G_s = material.G_s
         self.Poisson = material.Poisson
