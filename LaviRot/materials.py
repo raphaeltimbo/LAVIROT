@@ -86,3 +86,24 @@ steel = Material(name='Steel', rho=7810, E=211e9, G_s=81.2e9)
 AISI4140 = Material(name='AISI4140', rho=7850, E=203.2e9, G_s=80e9)
 
 available_materials = Material.material_instances
+
+
+class Oil:
+    """Oil.
+
+    Class used to create an oil and define its properties.
+
+    See available_oils for oils already provided.
+
+    Parameters
+    ----------
+    name : str
+        Oil name.
+
+    Examples
+    --------
+    """
+    def __init__(self):
+        pass
+
+
