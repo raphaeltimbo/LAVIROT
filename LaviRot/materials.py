@@ -4,7 +4,8 @@ This module defines the Material class and defines
 some of the most common materials used in rotors.
 """
 
-__all__ = ['Material', 'available_materials']
+__all__ = ['Material', 'available_materials',
+           'Oil']
 
 
 class Material:

@@ -49,3 +49,12 @@ def test_error_E_G_s_Poisson():
     with pytest.raises(ValueError) as ex:
         Material(rho=785, E=203.2e9)
     assert 'At least 2 arguments from E' in str(ex.value)
+
+
+def test_oil():
+    vg32 = Oil(name='ISO VG32', t_a=40, rho_a=856.8, mu_a=0.0255768159199483,
+               t_b=100, mu_b=0.0042050707290448133)
+
+    assert_allclose(vg32.rho_b, 817.72992)
+
+
