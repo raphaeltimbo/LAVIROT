@@ -3,6 +3,7 @@
 This module defines the Material class and defines
 some of the most common materials used in rotors.
 """
+import numpy as np
 
 __all__ = ['Material', 'available_materials',
            'Oil']
@@ -139,10 +140,15 @@ class Oil:
         return self.rho_a * (1 - self.exp_coeff * (T - self.t_a))
 
     def v(self, T):
-        """Viscosity."""
-        pass
+        """Kinematic viscosity."""
+        va = self.v_a
+        vb = self.v_b
+        ta = self.t_a
+        tb = self.t_b
 
-        return
+        v = va * np.exp((np.log(vb/va)*(T - ta))/(tb - ta))
+
+        return v
 
 
 
