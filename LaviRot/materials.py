@@ -99,11 +99,50 @@ class Oil:
     ----------
     name : str
         Oil name.
+    exp_coeff : float
+        Thermal expansion coefficient. Defaults to 0.00076
+    t_a : float
+        Temperature at point a.
+    mu_a : float
+        Viscosity at point a.
+    rho_a : float
+        Density at point a.
+    t_b : float
+        Temperature at point b.
+    mu_b : float
+        Viscosity at point b.
+
 
     Examples
     --------
     """
-    def __init__(self):
+    def __init__(self, name=None, exp_coeff=0.00076,
+                 t_a=None, mu_a=None, rho_a=None,
+                 t_b=None, mu_b=None):
+
+        self.name = name
+        self.exp_coeff = exp_coeff
+
+        self.t_a = t_a
+        self.mu_a = mu_a
+        self.rho_a = rho_a
+        self.v_a = mu_a / rho_a
+
+        self.t_b = t_b
+        self.mu_b = mu_b
+        self.rho_b = self.rho(t_b)
+        self.v_b = mu_b / self.rho_b
+
+    def rho(self, T):
+        """Density."""
+        return self.rho_a * (1 - self.exp_coeff * (T - self.t_a))
+
+    def v(self, T):
+        """Viscosity."""
         pass
+
+        return
+
+
 
 
