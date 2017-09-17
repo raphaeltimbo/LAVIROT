@@ -150,3 +150,11 @@ class Oil:
 
         return v
 
+    def mu(self, T):
+        """Viscosity (Dynamic)."""
+        v = self.v(T)
+        rho = self.rho(T)
+
+        return v * rho
+
+# TODO add better docstrings to methods.
