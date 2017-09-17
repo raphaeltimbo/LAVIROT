@@ -64,4 +64,5 @@ def test_oil():
     assert_allclose(vg32.v(t2), 2.2267241505525717e-05)
     assert_allclose(vg32.mu(t2), 0.01893357537076773)
     assert_allclose(vg32.specific_heat(t2), 1980.0000000000002)
+    assert_allclose(vg32.thermal_conductivity(t2), 0.12706720000000002)
 

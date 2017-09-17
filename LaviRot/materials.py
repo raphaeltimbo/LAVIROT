@@ -168,4 +168,16 @@ class Oil:
         """
         return 1800*(1 + 0.002*T)
 
+    @staticmethod
+    def thermal_conductivity(T):
+        """Thermal conductivity.
+
+        Specific heat approximation as per:
+        Khonsari, Michael M., and E. Richard Booser.
+        Applied tribology: bearing design and lubrication.
+        pg. 52
+        """
+        return 0.1312*(1 - (6.3*1e-4)*T)
+
 # TODO add better docstrings to methods.
+
