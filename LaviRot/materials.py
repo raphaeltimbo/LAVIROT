@@ -157,4 +157,15 @@ class Oil:
 
         return v * rho
 
+    @staticmethod
+    def specific_heat(T):
+        """Specific heat.
+
+        Specific heat approximation as per:
+        Khonsari, Michael M., and E. Richard Booser.
+        Applied tribology: bearing design and lubrication.
+        pg. 52
+        """
+        return 1800*(1 + 0.002*T)
+
 # TODO add better docstrings to methods.
