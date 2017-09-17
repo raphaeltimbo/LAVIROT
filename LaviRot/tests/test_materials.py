@@ -56,5 +56,10 @@ def test_oil():
                t_b=100, mu_b=0.0042050707290448133)
 
     assert_allclose(vg32.rho_b, 817.72992)
+    assert_allclose(vg32.v_a, 2.98515591969518e-05)
+    assert_allclose(vg32.v_b, 5.142371125474794e-06)
+
+    t2 = 50
+    assert_allclose(vg32.rho(t2), 850.2883199999)
 
 
