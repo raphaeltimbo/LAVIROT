@@ -502,7 +502,7 @@ class ShaftElement(Element):
         materials = {}
         for i, mat in material.iterrows():
             materials[mat.Material] = Material(
-                name=f'Material {mat["Material"]}',
+                name=f'Material{mat["Material"]}',
                 rho=mat['Density   r'],
                 E=mat['Elastic Modulus E'],
                 G_s=mat['Shear Modulus G'],
