@@ -68,7 +68,7 @@ def test_oil():
 
 
 def test_available_oils():
-    vg32 = available_oils.iso_vg32
+    vg32 = Oil.AvailableOils.iso_vg32
     assert_allclose(vg32.rho_b, 817.72992)
     assert_allclose(vg32.v_a, 2.98515591969518e-05)
     assert_allclose(vg32.v_b, 5.142371125474794e-06)

@@ -5,8 +5,7 @@ some of the most common materials used in rotors.
 """
 import numpy as np
 
-__all__ = ['Material',
-           'Oil', 'available_oils']
+__all__ = ['Material', 'Oil']
 
 
 class Material:
@@ -91,6 +90,8 @@ class Material:
 steel = Material(name='Steel', rho=7810, E=211e9, G_s=81.2e9)
 AISI4140 = Material(name='AISI4140', rho=7850, E=203.2e9, G_s=80e9)
 
+#####################################################################
+
 
 class Oil:
     """Oil.
@@ -119,7 +120,10 @@ Class used to create an oil and define its properties.
     Examples
     --------
     """
-    oil_instances = []
+
+    # class to hold created instances
+    class AvailableOils:
+        pass
 
     def __init__(self, name=None, exp_coeff=0.00076,
                  t_a=None, mu_a=None, rho_a=None,
@@ -138,7 +142,8 @@ Class used to create an oil and define its properties.
         self.rho_b = self.rho(t_b)
         self.v_b = mu_b / self.rho_b
 
-        Oil.oil_instances.append(name)
+        if name is not None:
+            setattr(self.AvailableOils, name, self)
 
     def rho(self, T):
         """Density."""
@@ -195,5 +200,4 @@ iso_vg32 = Oil(name='ISO VG32', t_a=40, rho_a=856.8, mu_a=0.0255768159199483,
 iso_vg46 = Oil(name='ISO VG46', t_a=40, rho_a=855.7, mu_a=0.0374733067635071,
                t_b=100, mu_b=0.00527934606479555)
 
-available_oils = Oil.oil_instances
-
+#####################################################################
