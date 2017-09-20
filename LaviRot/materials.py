@@ -45,6 +45,9 @@ class Material:
         if rho is None:
             raise ValueError('Density (rho) not provided.')
 
+        if name is not None and ' ' in name:
+            raise ValueError('Spaces are not allowed in Material name')
+
         none_args = []
         for arg in ['E', 'G_s', 'Poisson']:
             if locals()[arg] is None:
@@ -129,6 +132,9 @@ Class used to create an oil and define its properties.
                  t_a=None, mu_a=None, rho_a=None,
                  t_b=None, mu_b=None):
 
+        if name is not None and ' ' in name:
+            raise ValueError('Spaces are not allowed in Oil name')
+
         self.name = name
         self.exp_coeff = exp_coeff
 
@@ -195,9 +201,9 @@ Class used to create an oil and define its properties.
 # Available oils
 #####################################################################
 
-iso_vg32 = Oil(name='ISO VG32', t_a=40, rho_a=856.8, mu_a=0.0255768159199483,
+iso_vg32 = Oil(name='ISO_VG32', t_a=40, rho_a=856.8, mu_a=0.0255768159199483,
                t_b=100, mu_b=0.0042050707290448133)
-iso_vg46 = Oil(name='ISO VG46', t_a=40, rho_a=855.7, mu_a=0.0374733067635071,
+iso_vg46 = Oil(name='ISO_VG46', t_a=40, rho_a=855.7, mu_a=0.0374733067635071,
                t_b=100, mu_b=0.00527934606479555)
 
 #####################################################################

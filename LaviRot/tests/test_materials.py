@@ -4,6 +4,13 @@ from numpy.testing import assert_allclose
 
 AISI4140 = Material.AvailableMaterials.AISI4140
 
+
+def test_raise_name_material():
+    with pytest.raises(ValueError) as excinfo:
+        mat = Material('with space', rho=7850, G_s=80e9, Poisson=0.27)
+    assert 'Spaces are not allowed' in str(excinfo.value)
+
+
 def test_E():
     mat = Material(rho=7850, G_s=80e9, Poisson=0.27)
     assert_allclose(mat.E, 203.2e9)
@@ -51,8 +58,20 @@ def test_error_E_G_s_Poisson():
     assert 'At least 2 arguments from E' in str(ex.value)
 
 
+############################################################
+# Oil tests
+############################################################
+
+
+def test_raise_name_oil():
+    with pytest.raises(ValueError) as excinfo:
+        Oil(name='with space', t_a=40, rho_a=856.8, mu_a=0.0255768159199483,
+            t_b=100, mu_b=0.0042050707290448133)
+    assert 'Spaces are not allowed' in str(excinfo.value)
+
+
 def test_oil():
-    vg32 = Oil(name='ISO VG32', t_a=40, rho_a=856.8, mu_a=0.0255768159199483,
+    vg32 = Oil(name='ISO_VG32', t_a=40, rho_a=856.8, mu_a=0.0255768159199483,
                t_b=100, mu_b=0.0042050707290448133)
 
     assert_allclose(vg32.rho_b, 817.72992)
@@ -68,7 +87,7 @@ def test_oil():
 
 
 def test_available_oils():
-    vg32 = Oil.AvailableOils.iso_vg32
+    vg32 = Oil.AvailableOils.ISO_VG32
     assert_allclose(vg32.rho_b, 817.72992)
     assert_allclose(vg32.v_a, 2.98515591969518e-05)
     assert_allclose(vg32.v_b, 5.142371125474794e-06)
