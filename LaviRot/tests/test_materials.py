@@ -1,8 +1,8 @@
 import pytest
 from LaviRot.materials import *
-from LaviRot.materials import AISI4140
 from numpy.testing import assert_allclose
 
+AISI4140 = Material.AvailableMaterials.AISI4140
 
 def test_E():
     mat = Material(rho=7850, G_s=80e9, Poisson=0.27)
@@ -66,3 +66,9 @@ def test_oil():
     assert_allclose(vg32.specific_heat(t2), 1980.0000000000002)
     assert_allclose(vg32.thermal_conductivity(t2), 0.12706720000000002)
 
+
+def test_available_oils():
+    vg32 = available_oils.iso_vg32
+    assert_allclose(vg32.rho_b, 817.72992)
+    assert_allclose(vg32.v_a, 2.98515591969518e-05)
+    assert_allclose(vg32.v_b, 5.142371125474794e-06)

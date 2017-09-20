@@ -5,8 +5,8 @@ some of the most common materials used in rotors.
 """
 import numpy as np
 
-__all__ = ['Material', 'available_materials',
-           'Oil']
+__all__ = ['Material',
+           'Oil', 'available_oils']
 
 
 class Material:
@@ -36,7 +36,10 @@ class Material:
     0.27
 
     """
-    material_instances = []
+
+    # class to hold created instances
+    class AvailableMaterials:
+        pass
 
     def __init__(self, name=None, rho=None, E=None, G_s=None, Poisson=None,
                  color='#525252'):
@@ -65,7 +68,8 @@ class Material:
 
         self.color = color  # this can be used in the plots
 
-        Material.material_instances.append(name)
+        if name is not None:
+            setattr(self.AvailableMaterials, name, self)
 
     def __repr__(self):
         return f'{self.name}'
@@ -87,13 +91,10 @@ class Material:
 steel = Material(name='Steel', rho=7810, E=211e9, G_s=81.2e9)
 AISI4140 = Material(name='AISI4140', rho=7850, E=203.2e9, G_s=80e9)
 
-available_materials = Material.material_instances
-
 
 class Oil:
     """Oil.
-
-    Class used to create an oil and define its properties.
+Class used to create an oil and define its properties.
 
     See available_oils for oils already provided.
 
@@ -118,6 +119,8 @@ class Oil:
     Examples
     --------
     """
+    oil_instances = []
+
     def __init__(self, name=None, exp_coeff=0.00076,
                  t_a=None, mu_a=None, rho_a=None,
                  t_b=None, mu_b=None):
@@ -134,6 +137,8 @@ class Oil:
         self.mu_b = mu_b
         self.rho_b = self.rho(t_b)
         self.v_b = mu_b / self.rho_b
+
+        Oil.oil_instances.append(name)
 
     def rho(self, T):
         """Density."""
@@ -180,4 +185,15 @@ class Oil:
         return 0.1312*(1 - (6.3*1e-4)*T)
 
 # TODO add better docstrings to methods.
+
+#####################################################################
+# Available oils
+#####################################################################
+
+iso_vg32 = Oil(name='ISO VG32', t_a=40, rho_a=856.8, mu_a=0.0255768159199483,
+               t_b=100, mu_b=0.0042050707290448133)
+iso_vg46 = Oil(name='ISO VG46', t_a=40, rho_a=855.7, mu_a=0.0374733067635071,
+               t_b=100, mu_b=0.00527934606479555)
+
+available_oils = Oil.oil_instances
 
