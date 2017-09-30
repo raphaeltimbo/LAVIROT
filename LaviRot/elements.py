@@ -991,7 +991,7 @@ class BearingElement(Element):
         ax.add_patch(mpatches.Polygon(bearing_points, color=self.color, picker=True))
 
     def plot_k_curve(self, w=None, ax=None,
-                     kxx=True, kxy=True, kyx=True, kyy=True):
+                     kxx=True, kxy=True, kyx=True, kyy=True, **kwargs):
         """Plot the k curve fit.
 
         This method will plot the curve fit for the
@@ -1028,20 +1028,21 @@ class BearingElement(Element):
             ax = plt.gca()
 
         if kxx is True:
-            ax.plot(w, self.kxx(w), label='Kxx N/m')
+            ax.plot(w, self.kxx(w), label='Kxx N/m', **kwargs)
         if kyy is True:
-            ax.plot(w, self.kyy(w), label='Kyy N/m')
+            ax.plot(w, self.kyy(w), label='Kyy N/m', **kwargs)
         if kxy is True:
-            ax.plot(w, self.kxy(w), '--', label='Kxy N/m')
+            ax.plot(w, self.kxy(w), '--', label='Kxy N/m', **kwargs)
         if kyx is True:
-            ax.plot(w, self.kyx(w), '--', label='Kyx N/m')
+            ax.plot(w, self.kyx(w), '--', label='Kyx N/m', **kwargs)
 
+        ax.ticklabel_format(style='sci', axis='y')
         ax.legend()
 
         return ax
 
     def plot_c_curve(self, w=None, ax=None,
-                     cxx=True, cxy=True, cyx=True, cyy=True):
+                     cxx=True, cxy=True, cyx=True, cyy=True, **kwargs):
         """Plot the k curve fit.
 
         This method will plot the curve fit for the
@@ -1078,14 +1079,15 @@ class BearingElement(Element):
             ax = plt.gca()
 
         if cxx is True:
-            ax.plot(w, self.cxx(w), label='Cxx N.s/m')
+            ax.plot(w, self.cxx(w), label='Cxx N.s/m', **kwargs)
         if cyy is True:
-            ax.plot(w, self.cyy(w), label='Cyy N.s/m')
+            ax.plot(w, self.cyy(w), label='Cyy N.s/m', **kwargs)
         if cxy is True:
-            ax.plot(w, self.cxy(w), '--', label='Cxy N.s/m')
+            ax.plot(w, self.cxy(w), '--', label='Cxy N.s/m', **kwargs)
         if cyx is True:
-            ax.plot(w, self.cyx(w), '--', label='Cyx N./m')
+            ax.plot(w, self.cyx(w), '--', label='Cyx N./m', **kwargs)
 
+        ax.ticklabel_format(style='sci', axis='y')
         ax.legend()
 
         return ax
