@@ -1028,14 +1028,16 @@ class BearingElement(Element):
             ax = plt.gca()
 
         if kxx is True:
-            ax.plot(w, self.kxx(w), label='Kxx N/m', **kwargs)
+            ax.plot(w, self.kxx(w), label='Kxx', **kwargs)
         if kyy is True:
-            ax.plot(w, self.kyy(w), label='Kyy N/m', **kwargs)
+            ax.plot(w, self.kyy(w), label='Kyy', **kwargs)
         if kxy is True:
-            ax.plot(w, self.kxy(w), '--', label='Kxy N/m', **kwargs)
+            ax.plot(w, self.kxy(w), '--', label='Kxy', **kwargs)
         if kyx is True:
-            ax.plot(w, self.kyx(w), '--', label='Kyx N/m', **kwargs)
+            ax.plot(w, self.kyx(w), '--', label='Kyx', **kwargs)
 
+        ax.set_xlabel(r'Speed (rad/s)')
+        ax.set_ylabel(r'Stiffness ($N/m$)')
         ax.ticklabel_format(style='sci', axis='y')
         ax.legend()
 
@@ -1077,16 +1079,17 @@ class BearingElement(Element):
 
         if ax is None:
             ax = plt.gca()
-
         if cxx is True:
-            ax.plot(w, self.cxx(w), label='Cxx N.s/m', **kwargs)
+            ax.plot(w, self.cxx(w), label='Cxx', **kwargs)
         if cyy is True:
-            ax.plot(w, self.cyy(w), label='Cyy N.s/m', **kwargs)
+            ax.plot(w, self.cyy(w), label='Cyy', **kwargs)
         if cxy is True:
-            ax.plot(w, self.cxy(w), '--', label='Cxy N.s/m', **kwargs)
+            ax.plot(w, self.cxy(w), '--', label='Cxy', **kwargs)
         if cyx is True:
-            ax.plot(w, self.cyx(w), '--', label='Cyx N./m', **kwargs)
+            ax.plot(w, self.cyx(w), '--', label='Cyx', **kwargs)
 
+        ax.set_xlabel(r'Speed (rad/s)')
+        ax.set_ylabel(r'Damping ($Ns/m$)')
         ax.ticklabel_format(style='sci', axis='y')
         ax.legend()
 
