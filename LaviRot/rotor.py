@@ -1042,6 +1042,8 @@ class Rotor(object):
             z.append([whirl_to_cmap(i) for i in whirl_w])
 
         if plot is False:
+            # add last column
+            points_all[:, idx + 1] += y_wd1
             return points_all
 
         z = np.array(z).flatten()
