@@ -462,6 +462,18 @@ def test_evals_rotor3_rotor4(rotor3, rotor4):
     assert_allclose(rotor3_evals, rotor4_evals, rtol=1e-3)
 
 
+def test_campbell(rotor4):
+    speed = np.linspace(0, 300, 3)
+    camp = rotor4.campbell(speed, plot=False)
+    camp_desired = np.array([[82.65303734, 82.60929602, 82.48132723],
+                             [86.65811435, 86.68625235, 86.76734307],
+                             [254.52047828, 251.70037114, 245.49092844],
+                             [274.31285391, 276.87787937, 282.33294699],
+                             [679.48903239, 652.85679897, 614.05536277],
+                             [716.7863122, 742.60864608, 779.07778334]])
+    assert_allclose(camp, camp_desired)
+
+
 @pytest.fixture()
 def rotor5():
     rotor_file = os.path.join(test_dir, 'data/xl_rotor.xls')
