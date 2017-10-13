@@ -1038,7 +1038,7 @@ class BearingElement(Element):
 
         ax.set_xlabel(r'Speed (rad/s)')
         ax.set_ylabel(r'Stiffness ($N/m$)')
-        ax.ticklabel_format(style='sci', axis='y')
+        ax.ticklabel_format(style='sci', scilimits=(0, 0), axis='y')
         ax.legend()
 
         return ax
@@ -1090,7 +1090,7 @@ class BearingElement(Element):
 
         ax.set_xlabel(r'Speed (rad/s)')
         ax.set_ylabel(r'Damping ($Ns/m$)')
-        ax.ticklabel_format(style='sci', axis='y')
+        ax.ticklabel_format(style='sci', scilimits=(0, 0), axis='y')
         ax.legend()
 
         return ax
