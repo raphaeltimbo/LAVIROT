@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -41,7 +40,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -77,7 +76,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/elements.html">Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/rotor.html">Rotor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/results.html">Results</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples Gallery</a><ul class="current">
@@ -134,98 +132,30 @@
       
   <div class="section" id="compressor">
 <h1>Compressor<a class="headerlink" href="#compressor" title="Permalink to this headline">¶</a></h1>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">LaviRot</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
-</pre></div>
-</div>
 <p>For this example we will consider a compressor with shaft and impellers
-made from AISI 4340, which has the following properties.</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">E</span> <span class="o">=</span> <span class="mi">211</span><span class="n">e9</span>
-<span class="n">Gs</span> <span class="o">=</span> <span class="mf">81.2e9</span>
-<span class="n">rho</span> <span class="o">=</span> <span class="mi">7810</span>
-</pre></div>
-</div>
-<p>Shaft&#8217;s inner and outer diameter will be:</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">si_d</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">so_d</span> <span class="o">=</span> <span class="mf">0.127</span>
-</pre></div>
-</div>
+made from AISI 4140, which has the following properties.</p>
+<p>Shaft’s inner and outer diameter will be:</p>
 <p>Now we define the length for each element, starting at the first element
 on the left (the element that will have the thrust collar).</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.07</span><span class="p">,</span> <span class="c1"># thrust collar</span>
-    <span class="mf">0.058</span><span class="p">,</span>
-    <span class="mf">0.058</span><span class="p">,</span> <span class="c1"># 0 probe</span>
-    <span class="mf">0.052</span><span class="p">,</span> <span class="c1"># 0 bearing</span>
-    <span class="mf">0.092</span><span class="p">,</span>
-    <span class="mf">0.092</span><span class="p">,</span>
-    <span class="mf">0.092</span><span class="p">,</span>
-    <span class="mf">0.092</span><span class="p">,</span> <span class="c1"># 0 impeller</span>
-    <span class="mf">0.082</span><span class="p">,</span> <span class="c1"># 1 impeller</span>
-    <span class="mf">0.082</span><span class="p">,</span> <span class="c1"># 2 impeller</span>
-    <span class="mf">0.082</span><span class="p">,</span> <span class="c1"># 3 impeller</span>
-    <span class="mf">0.082</span><span class="p">,</span> <span class="c1"># 4 impeller</span>
-    <span class="mf">0.082</span><span class="p">,</span> <span class="c1"># 5 impeller</span>
-    <span class="mf">0.068</span><span class="p">,</span> <span class="c1"># honeycomb # change diameter</span>
-    <span class="mf">0.086</span><span class="p">,</span>
-    <span class="mf">0.086</span><span class="p">,</span>
-    <span class="mf">0.086</span><span class="p">,</span>
-    <span class="mf">0.086</span><span class="p">,</span> <span class="c1"># 1 bearing</span>
-    <span class="mf">0.086</span><span class="p">,</span>
-    <span class="mf">0.086</span><span class="p">]</span>
-</pre></div>
-</div>
 <p>The next line defines a list with the number of each element (from 0 to
 len(L)).</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">nelem</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">))]</span>
-</pre></div>
-</div>
 <p>Now we create a list with all the shaft elements using the <a class="reference internal" href="../api/elements.ShaftElement.html#shaftelement"><span class="std std-ref">Shaft Element</span></a> class. In this case we are going to consider Timoshenko beam elements (with shear and rotary inertia effects).</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">shaft_elem</span> <span class="o">=</span> <span class="p">[</span><span class="n">ShaftElement</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">si_d</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">Gs</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span>
-                           <span class="n">shear_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                           <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                           <span class="n">gyroscopic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nelem</span><span class="p">,</span> <span class="n">L</span><span class="p">)]</span>
-</pre></div>
-</div>
 <p>The disks are created using the <a class="reference internal" href="../api/elements.DiskElement.html#diskelement"><span class="std std-ref">Disk Element</span></a> class.</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">colar</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.035</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.245</span><span class="p">)</span>
-<span class="n">disk0</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
-<span class="n">disk1</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
-<span class="n">disk2</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
-<span class="n">disk3</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
-<span class="n">disk4</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
-<span class="n">disk5</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">so_d</span><span class="p">,</span> <span class="mf">0.318</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>For the bearings we use the <a class="reference internal" href="../api/elements.BearingElement.html#bearingelement"><span class="std std-ref">Bearing Element</span></a> class. We will consider a constant stifness for the bearings.</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">stfx</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e8</span>
-<span class="n">stfy</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e8</span>
-<span class="n">bearing0</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">kxx</span><span class="o">=</span><span class="n">stfx</span><span class="p">,</span> <span class="n">kyy</span><span class="o">=</span><span class="n">stfy</span><span class="p">,</span> <span class="n">cxx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cyy</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">bearing1</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="n">kxx</span><span class="o">=</span><span class="n">stfx</span><span class="p">,</span> <span class="n">kyy</span><span class="o">=</span><span class="n">stfy</span><span class="p">,</span> <span class="n">cxx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cyy</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>Now we assemble the compressor rotor using the <a class="reference internal" href="../api/rotor.html#rotor"><span class="std std-ref">Rotor</span></a> class.</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">compressor</span> <span class="o">=</span> <span class="n">Rotor</span><span class="p">(</span><span class="n">shaft_elem</span><span class="p">,</span>
-                   <span class="p">[</span><span class="n">colar</span><span class="p">,</span> <span class="n">disk0</span><span class="p">,</span> <span class="n">disk1</span><span class="p">,</span> <span class="n">disk2</span><span class="p">,</span> <span class="n">disk3</span><span class="p">,</span> <span class="n">disk4</span><span class="p">,</span> <span class="n">disk5</span><span class="p">],</span>
-                   <span class="p">[</span><span class="n">bearing0</span><span class="p">,</span> <span class="n">bearing1</span><span class="p">])</span>
+<p>We can now use the function <span class="xref std std-ref">plot_rotor</span>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">_subplots</span><span class="o">.</span><span class="n">AxesSubplot</span> <span class="n">at</span> <span class="mh">0x7f8178bc7978</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<p>We can now use the function <a class="reference internal" href="../api/results.html#plot-rotor"><span class="std std-ref">Rotor plot</span></a>.</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">plot_rotor</span><span class="p">(</span><span class="n">compressor</span><span class="p">)</span>
-</pre></div>
-</div>
-<img alt="gallery/compressor_files/compressor_19_0.png" src="gallery/compressor_files/compressor_19_0.png" />
+<img alt="../_images/compressor_19_1.png" src="../_images/compressor_19_1.png" />
 <p>Now we are going to check the natural frequencies using the Campbell
 diagram. First we need to define the speed range that we want to
 analyze.</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1500</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<p>Now we can call the <span class="xref std std-ref">campbell</span> function with mult=[1, 2] to plot 1x and 2x the speed.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">_subplots</span><span class="o">.</span><span class="n">AxesSubplot</span> <span class="n">at</span> <span class="mh">0x7f8175356710</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<p>Now we can call the <a class="reference internal" href="../api/results.html#campbell"><span class="std std-ref">Campbell</span></a> function with mult=[1, 2] to plot 1x and 2x the speed.</p>
-<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">campbell</span><span class="p">(</span><span class="n">compressor</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">mult</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-</pre></div>
-</div>
-<img alt="gallery/compressor_files/compressor_23_0.png" src="gallery/compressor_files/compressor_23_0.png" />
+<img alt="../_images/compressor_23_1.png" src="../_images/compressor_23_1.png" />
 </div>
 
 
@@ -241,7 +171,7 @@ analyze.</p>
     </p>
     <p>
         &copy; Copyright 2016, Lavi.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
     </p>
   </div>
 </footer>

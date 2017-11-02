@@ -2,24 +2,22 @@
 Compressor
 ==========
 
-.. code:: python
+.. code:: ipython3
 
-    from LaviRot import *
+    import LaviRot as lr
     import numpy as np
     %matplotlib inline
 
 For this example we will consider a compressor with shaft and impellers
-made from AISI 4340, which has the following properties.
+made from AISI 4140, which has the following properties.
 
-.. code:: python
+.. code:: ipython3
 
-    E = 211e9
-    Gs = 81.2e9
-    rho = 7810
+    material = lr.materials.AISI4140
 
 Shaft's inner and outer diameter will be:
 
-.. code:: python
+.. code:: ipython3
 
     si_d = 0
     so_d = 0.127
@@ -27,7 +25,7 @@ Shaft's inner and outer diameter will be:
 Now we define the length for each element, starting at the first element
 on the left (the element that will have the thrust collar).
 
-.. code:: python
+.. code:: ipython3
 
     L = [0.07, # thrust collar
         0.058,
@@ -53,79 +51,91 @@ on the left (the element that will have the thrust collar).
 The next line defines a list with the number of each element (from 0 to
 len(L)).
 
-.. code:: python
+.. code:: ipython3
 
     nelem = [x for x in range(len(L))]
 
 Now we create a list with all the shaft elements using the :ref:`ShaftElement` class. In this case we are going to consider Timoshenko beam elements (with shear and rotary inertia effects).
 
-.. code:: python
+.. code:: ipython3
 
-    shaft_elem = [ShaftElement(n, l, si_d, so_d, E, Gs, rho,
-                               shear_effects=True,
-                               rotary_inertia=True,
-                               gyroscopic=True) for n, l in zip(nelem, L)]
+    shaft_elem = [lr.ShaftElement(l, si_d, so_d, material,
+                                  shear_effects=True,
+                                  rotary_inertia=True,
+                                  gyroscopic=True) for l in L]
 
 The disks are created using the :ref:`DiskElement` class.
 
-.. code:: python
+.. code:: ipython3
 
-    colar = DiskElement(1, rho, 0.035, so_d, 0.245)
-    disk0 = DiskElement(8, rho, 0.02, so_d, 0.318)
-    disk1 = DiskElement(9, rho, 0.02, so_d, 0.318)
-    disk2 = DiskElement(10, rho, 0.02, so_d, 0.318)
-    disk3 = DiskElement(11, rho, 0.02, so_d, 0.318)
-    disk4 = DiskElement(12, rho, 0.02, so_d, 0.318)
-    disk5 = DiskElement(13, rho, 0.02, so_d, 0.318)
+    colar = lr.DiskElement(1, material, 0.035, so_d, 0.245)
+    disk0 = lr.DiskElement(8, material, 0.02, so_d, 0.318)
+    disk1 = lr.DiskElement(9, material, 0.02, so_d, 0.318)
+    disk2 = lr.DiskElement(10, material, 0.02, so_d, 0.318)
+    disk3 = lr.DiskElement(11, material, 0.02, so_d, 0.318)
+    disk4 = lr.DiskElement(12, material, 0.02, so_d, 0.318)
+    disk5 = lr.DiskElement(13, material, 0.02, so_d, 0.318)
 
 For the bearings we use the :ref:`BearingElement` class. We will consider a constant stifness for the bearings.
 
-.. code:: python
+.. code:: ipython3
 
     stfx = 1e8
     stfy = 1e8
-    bearing0 = BearingElement(4, kxx=stfx, kyy=stfy, cxx=0, cyy=0)
-    bearing1 = BearingElement(-3, kxx=stfx, kyy=stfy, cxx=0, cyy=0)
+    bearing0 = lr.BearingElement(4, kxx=stfx, kyy=stfy, cxx=0, cyy=0)
+    bearing1 = lr.BearingElement(-3, kxx=stfx, kyy=stfy, cxx=0, cyy=0)
 
 Now we assemble the compressor rotor using the :ref:`Rotor` class.
 
-.. code:: python
+.. code:: ipython3
 
-    compressor = Rotor(shaft_elem,
-                       [colar, disk0, disk1, disk2, disk3, disk4, disk5],
-                       [bearing0, bearing1])
+    compressor = lr.Rotor(shaft_elem,
+                          [colar, disk0, disk1, disk2, disk3, disk4, disk5],
+                          [bearing0, bearing1])
 
 We can now use the function :ref:`plot_rotor`.
 
-.. code:: python
+.. code:: ipython3
 
-    plot_rotor(compressor)
-
-
+    compressor.plot_rotor()
 
 
-.. image:: compressor_files/compressor_19_0.png
 
+
+.. parsed-literal::
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f8178bc7978>
+
+
+
+
+.. image:: compressor_files/compressor_19_1.png
 
 
 Now we are going to check the natural frequencies using the Campbell
 diagram. First we need to define the speed range that we want to
 analyze.
 
-.. code:: python
+.. code:: ipython3
 
     speed = np.linspace(0, 1500, 10)
 
 Now we can call the :ref:`campbell` function with mult=[1, 2] to plot 1x and 2x the speed.
 
-.. code:: python
+.. code:: ipython3
 
-    campbell(compressor, speed, mult=[1, 2])
-
-
+    compressor.campbell(speed, mult=[1, 2])
 
 
-.. image:: compressor_files/compressor_23_0.png
 
+
+.. parsed-literal::
+
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f8175356710>
+
+
+
+
+.. image:: compressor_files/compressor_23_1.png
 
 

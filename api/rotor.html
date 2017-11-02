@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -33,15 +32,13 @@
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Results" href="results.html" />
-    <link rel="prev" title="Bearing Element" href="elements.BearingElement.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -77,7 +74,6 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="elements.html">Elements</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Rotor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="results.html">Results</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../gallery/index.html">Examples Gallery</a><ul>
@@ -93,14 +89,6 @@
             
               
                 
-  <li>
-    <a href="elements.BearingElement.html" title="Previous Chapter: Bearing Element"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Bearing Element</span>
-    </a>
-  </li>
-  <li>
-    <a href="results.html" title="Next Chapter: Results"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Results &raquo;</span>
-    </a>
-  </li>
               
             
             
@@ -136,7 +124,7 @@
 <span id="id1"></span><h1>Rotor<a class="headerlink" href="#rotor" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="LaviRot.rotor.Rotor">
-<em class="property">class </em><code class="descclassname">LaviRot.rotor.</code><code class="descname">Rotor</code><span class="sig-paren">(</span><em>shaft_elements</em>, <em>disk_elements</em>, <em>bearing_seal_elements</em>, <em>w=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">LaviRot.rotor.</code><code class="descname">Rotor</code><span class="sig-paren">(</span><em>shaft_elements</em>, <em>disk_elements=None</em>, <em>bearing_seal_elements=None</em>, <em>w=0</em>, <em>sparse=True</em>, <em>n_eigen=12</em>, <em>min_w=None</em>, <em>max_w=None</em>, <em>rated_w=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor" title="Permalink to this definition">¶</a></dt>
 <dd><p>A rotor object.</p>
 <p>This class will create a rotor with the shaft,
 disk and bearing elements provided.</p>
@@ -144,21 +132,31 @@ disk and bearing elements provided.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>shaft_elements: list</strong></p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>shaft_elements</strong> : list</p>
 <blockquote>
 <div><p>List with the shaft elements</p>
 </div></blockquote>
-<p><strong>disk_elements: list</strong></p>
+<p><strong>disk_elements</strong> : list</p>
 <blockquote>
 <div><p>List with the disk elements</p>
 </div></blockquote>
-<p><strong>bearing_elements: list</strong></p>
+<p><strong>bearing_seal_elements</strong> : list</p>
 <blockquote>
 <div><p>List with the bearing elements</p>
 </div></blockquote>
-<p><strong>w: float, optional</strong></p>
+<p><strong>w</strong> : float, optional</p>
 <blockquote>
 <div><p>Rotor speed. Defaults to 0.</p>
+</div></blockquote>
+<p><strong>sparse</strong> : bool, optional</p>
+<blockquote>
+<div><p>If sparse, eigenvalues will be calculated with arpack.
+Default is True.</p>
+</div></blockquote>
+<p><strong>n_eigen</strong> : int, optional</p>
+<blockquote>
+<div><p>Number of eigenvalues calculated by arpack.
+Default is 12.</p>
 </div></blockquote>
 </td>
 </tr>
@@ -169,24 +167,22 @@ disk and bearing elements provided.</p>
 </table>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1">#  Rotor without damping with 2 shaft elements 1 disk and 2 bearings</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">LaviRot.materials</span> <span class="k">import</span> <span class="n">steel</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">le</span> <span class="o">=</span> <span class="mf">0.25</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">i_d</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">o_d</span> <span class="o">=</span> <span class="mf">0.05</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">E</span> <span class="o">=</span> <span class="mi">211</span><span class="n">e9</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="mf">81.2e9</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rho</span> <span class="o">=</span> <span class="mi">7810</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tim0</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="n">le</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tim0</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="n">le</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">steel</span><span class="p">,</span>
 <span class="gp">... </span>                   <span class="n">shear_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="gp">... </span>                   <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="gp">... </span>                   <span class="n">gyroscopic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tim1</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="n">le</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tim1</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="n">le</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">steel</span><span class="p">,</span>
 <span class="gp">... </span>                   <span class="n">shear_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="gp">... </span>                   <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="gp">... </span>                   <span class="n">gyroscopic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shaft_elm</span> <span class="o">=</span> <span class="p">[</span><span class="n">tim0</span><span class="p">,</span> <span class="n">tim1</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">disk0</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">stf</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">disk0</span> <span class="o">=</span> <span class="n">DiskElement</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">steel</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stf</span> <span class="o">=</span> <span class="mf">1e6</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bearing0</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">kxx</span><span class="o">=</span><span class="n">stf</span><span class="p">,</span> <span class="n">cxx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bearing1</span> <span class="o">=</span> <span class="n">BearingElement</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">kxx</span><span class="o">=</span><span class="n">stf</span><span class="p">,</span> <span class="n">cxx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">Rotor</span><span class="p">(</span><span class="n">shaft_elm</span><span class="p">,</span> <span class="p">[</span><span class="n">disk0</span><span class="p">],</span> <span class="p">[</span><span class="n">bearing0</span><span class="p">,</span> <span class="n">bearing1</span><span class="p">])</span>
@@ -202,62 +198,103 @@ disk and bearing elements provided.</p>
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>evalues</td>
-<td>(array) Rotor&#8217;s eigenvalues.</td>
+<td>(array) Rotor’s eigenvalues.</td>
 </tr>
 <tr class="row-even"><td>evectors</td>
-<td>(array) Rotor&#8217;s eigenvectors.</td>
+<td>(array) Rotor’s eigenvectors.</td>
 </tr>
 <tr class="row-odd"><td>wn</td>
-<td>(array) Rotor&#8217;s natural frequencies in rad/s.</td>
+<td>(array) Rotor’s natural frequencies in rad/s.</td>
 </tr>
 <tr class="row-even"><td>wd</td>
-<td>(array) Rotor&#8217;s damped natural frequencies in rad/s.</td>
+<td>(array) Rotor’s damped natural frequencies in rad/s.</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.A" title="LaviRot.rotor.Rotor.A"><code class="xref py py-obj docutils literal"><span class="pre">A</span></code></a>([w])</td>
+<td>State space matrix for an instance of a rotor.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.C" title="LaviRot.rotor.Rotor.C"><code class="xref py py-obj docutils literal"><span class="pre">C</span></code></a>([w])</td>
+<td>Damping matrix for an instance of a rotor.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.G" title="LaviRot.rotor.Rotor.G"><code class="xref py py-obj docutils literal"><span class="pre">G</span></code></a>()</td>
+<td>Gyroscopic matrix for an instance of a rotor.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.H_kappa" title="LaviRot.rotor.Rotor.H_kappa"><code class="xref py py-obj docutils literal"><span class="pre">H_kappa</span></code></a>(node,&nbsp;w[,&nbsp;return_T])</td>
+<td>Calculates the H matrix for a given node and natural frequency.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.K" title="LaviRot.rotor.Rotor.K"><code class="xref py py-obj docutils literal"><span class="pre">K</span></code></a>([w])</td>
+<td>Stiffness matrix for an instance of a rotor.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.M" title="LaviRot.rotor.Rotor.M"><code class="xref py py-obj docutils literal"><span class="pre">M</span></code></a>()</td>
+<td>Mass matrix for an instance of a rotor.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.campbell" title="LaviRot.rotor.Rotor.campbell"><code class="xref py py-obj docutils literal"><span class="pre">campbell</span></code></a>(speed_rad[,&nbsp;freqs,&nbsp;mult,&nbsp;plot,&nbsp;ax])</td>
+<td>Calculates the Campbell diagram.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.freq_response" title="LaviRot.rotor.Rotor.freq_response"><code class="xref py py-obj docutils literal"><span class="pre">freq_response</span></code></a>([omega,&nbsp;modes])</td>
+<td>Frequency response for a mdof system.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.kappa" title="LaviRot.rotor.Rotor.kappa"><code class="xref py py-obj docutils literal"><span class="pre">kappa</span></code></a>(node,&nbsp;w[,&nbsp;wd])</td>
+<td>Calculates kappa for a given node and natural frequency.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.kappa_mode" title="LaviRot.rotor.Rotor.kappa_mode"><code class="xref py py-obj docutils literal"><span class="pre">kappa_mode</span></code></a>(w)</td>
+<td>This function evaluates kappa given the index of the natural frequency of interest.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">orbit</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.plot_level1" title="LaviRot.rotor.Rotor.plot_level1"><code class="xref py py-obj docutils literal"><span class="pre">plot_level1</span></code></a>([n,&nbsp;stiffness_range,&nbsp;num,&nbsp;ax])</td>
+<td>Plot level 1 stability analysis.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.plot_rotor" title="LaviRot.rotor.Rotor.plot_rotor"><code class="xref py py-obj docutils literal"><span class="pre">plot_rotor</span></code></a>([nodes,&nbsp;ax])</td>
+<td>Plots a rotor object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.plot_time_response" title="LaviRot.rotor.Rotor.plot_time_response"><code class="xref py py-obj docutils literal"><span class="pre">plot_time_response</span></code></a>(F,&nbsp;t,&nbsp;dof[,&nbsp;ax])</td>
+<td>Plot the time response.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.plot_ucs" title="LaviRot.rotor.Rotor.plot_ucs"><code class="xref py py-obj docutils literal"><span class="pre">plot_ucs</span></code></a>([stiffness_range,&nbsp;num,&nbsp;ax])</td>
+<td>Plot undamped critical speed map.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.save_mat" title="LaviRot.rotor.Rotor.save_mat"><code class="xref py py-obj docutils literal"><span class="pre">save_mat</span></code></a>(file_name)</td>
+<td>Save matrices and rotor model to a .mat file.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.time_response" title="LaviRot.rotor.Rotor.time_response"><code class="xref py py-obj docutils literal"><span class="pre">time_response</span></code></a>(F,&nbsp;t[,&nbsp;ic])</td>
+<td>Time response for a rotor.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.rotor.Rotor.whirl_direction" title="LaviRot.rotor.Rotor.whirl_direction"><code class="xref py py-obj docutils literal"><span class="pre">whirl_direction</span></code></a>()</td>
+<td>Get the whirl direction for each frequency.</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
-<dt id="LaviRot.rotor.Rotor.M">
-<code class="descname">M</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.M"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.M" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mass matrix for an instance of a rotor.</p>
+<dt id="LaviRot.rotor.Rotor.A">
+<code class="descname">A</code><span class="sig-paren">(</span><em>w=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.A"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.A" title="Permalink to this definition">¶</a></dt>
+<dd><p>State space matrix for an instance of a rotor.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mass matrix for the rotor.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">State space matrix for the rotor.</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">M</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
-<span class="go">array([[ 1.42050794,  0.        ,  0.        ,  0.04931719],</span>
-<span class="go">       [ 0.        ,  1.42050794, -0.04931719,  0.        ],</span>
-<span class="go">       [ 0.        , -0.04931719,  0.00231392,  0.        ],</span>
-<span class="go">       [ 0.04931719,  0.        ,  0.        ,  0.00231392]])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="LaviRot.rotor.Rotor.K">
-<code class="descname">K</code><span class="sig-paren">(</span><em>w=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.K"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.K" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stiffness matrix for an instance of a rotor.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Stiffness matrix for the rotor.</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rotor</span><span class="o">.</span><span class="n">K</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span><span class="p">)</span>
-<span class="go">array([[ 47.,   0.,   0.,   6.],</span>
-<span class="go">       [  0.,  46.,  -6.,   0.],</span>
-<span class="go">       [  0.,  -6.,   1.,   0.],</span>
-<span class="go">       [  6.,   0.,   0.,   1.]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rotor</span><span class="o">.</span><span class="n">A</span><span class="p">()[</span><span class="mi">50</span><span class="p">:</span><span class="mi">56</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+<span class="go">array([[     0.,  11110.],</span>
+<span class="go">       [-11106.,     -0.],</span>
+<span class="go">       [  -169.,     -0.],</span>
+<span class="go">       [    -0.,   -169.],</span>
+<span class="go">       [    -0.,  10511.],</span>
+<span class="go">       [-10507.,     -0.]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -300,35 +337,10 @@ disk and bearing elements provided.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">G</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
-<span class="go">array([[ 0.        , -0.01943344, -0.00022681,  0.        ],</span>
+<span class="go">array([[ 0.        ,  0.01943344, -0.00022681,  0.        ],</span>
 <span class="go">       [-0.01943344,  0.        ,  0.        , -0.00022681],</span>
 <span class="go">       [ 0.00022681,  0.        ,  0.        ,  0.0001524 ],</span>
 <span class="go">       [ 0.        ,  0.00022681, -0.0001524 ,  0.        ]])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="LaviRot.rotor.Rotor.A">
-<code class="descname">A</code><span class="sig-paren">(</span><em>w=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.A"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.A" title="Permalink to this definition">¶</a></dt>
-<dd><p>State space matrix for an instance of a rotor.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">State space matrix for the rotor.</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rotor</span><span class="o">.</span><span class="n">A</span><span class="p">()[</span><span class="mi">50</span><span class="p">:</span><span class="mi">56</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">])</span>
-<span class="go">array([[     0.,  11110.],</span>
-<span class="go">       [-11106.,     -0.],</span>
-<span class="go">       [  -169.,      0.],</span>
-<span class="go">       [    -0.,   -169.],</span>
-<span class="go">       [    -0.,  10511.],</span>
-<span class="go">       [-10507.,     -0.]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -339,11 +351,11 @@ disk and bearing elements provided.</p>
 <dd><p>Calculates the H matrix for a given node and natural frequency.</p>
 <p>The matrix H contains information about the whirl direction,
 the orbit minor and major axis and the orbit inclination.
-The matrix is calculated by <img class="math" src="../_images/math/27dfb6dae3040c219b2743790d9bc5a424f1ea11.png" alt="H = T.T^T"/> where the
+The matrix is calculated by <img class="math" src="../_images/math/71e7ae1f07a76926276bc64c015fa37972bb06ec.png" alt="H = T.T^T"/> where the
 matrix T is constructed using the eigenvector corresponding
 to the natural frequency of interest:</p>
 <div class="math">
-<p><img src="../_images/math/348c9535c92438fbe725a4841c82a55738cf91fc.png" alt="\begin{eqnarray}
+<p><img src="../_images/math/894bb75646e19d6d08f2f793500035ee98368fd9.png" alt="\begin{eqnarray}
    \begin{bmatrix}
    u(t)\\
    v(t)
@@ -365,11 +377,11 @@ to the natural frequency of interest:</p>
    sin(\omega_i t)
    \end{bmatrix}
 \end{eqnarray}"/></p>
-</div><p>Where <img class="math" src="../_images/math/75ee201ba4be1158b05f3b95bd5405aceff9bb3b.png" alt="r_u e^{j\eta_u}"/> e <img class="math" src="../_images/math/d0e739317c192a94a6fa6665b6c4d46964f4a320.png" alt="r_v e^{j\eta_v}"/> are the
+</div><p>Where <img class="math" src="../_images/math/ef836e7987d83dfd9b578a860ebc16e21629d366.png" alt="r_u e^{j\eta_u}"/> e <img class="math" src="../_images/math/0c4e8a8decea39e29b3e4ccd00f9f12d1983b8c6.png" alt="r_v e^{j\eta_v}"/> are the
 elements of the <em>i</em>th eigenvector, corresponding to the node and
 natural frequency of interest (mode).</p>
 <div class="math">
-<p><img src="../_images/math/0f732d3fb6d2fa76c8bb647eae3e545ca5f01664.png" alt="{\bf T} =
+<p><img src="../_images/math/742fcb2459f32cbb065b45d97384a1f81a1a1c48.png" alt="{\bf T} =
 \begin{bmatrix}
 r_u cos(\eta_u) &amp; -r_u sin(\eta_u)\\
 r_u cos(\eta_u) &amp; -r_v sin(\eta_v)
@@ -390,7 +402,7 @@ of interest.</p>
 <p><strong>return_T: bool, optional</strong></p>
 <blockquote>
 <div><p>If True, returns the H matrix and a dictionary with the
-values for <img class="math" src="../_images/math/6b946f09ac312c7b1e6d25f1b41a657317ed825a.png" alt="r_u, r_v, \eta_u, \eta_v"/>.</p>
+values for <img class="math" src="../_images/math/a442b6ec14838e75345e7fa84673f863fede97e1.png" alt="r_u, r_v, \eta_u, \eta_v"/>.</p>
 <p>Default is false.</p>
 </div></blockquote>
 </td>
@@ -401,7 +413,7 @@ values for <img class="math" src="../_images/math/6b946f09ac312c7b1e6d25f1b41a65
 </div></blockquote>
 <p>Tdic: dict</p>
 <blockquote class="last">
-<div><p>Dictionary with values for <img class="math" src="../_images/math/6b946f09ac312c7b1e6d25f1b41a657317ed825a.png" alt="r_u, r_v, \eta_u, \eta_v"/>.</p>
+<div><p>Dictionary with values for <img class="math" src="../_images/math/a442b6ec14838e75345e7fa84673f863fede97e1.png" alt="r_u, r_v, \eta_u, \eta_v"/>.</p>
 <p>It will be returned only if return_T is True.</p>
 </div></blockquote>
 </td>
@@ -412,99 +424,117 @@ values for <img class="math" src="../_images/math/6b946f09ac312c7b1e6d25f1b41a65
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># H matrix for the 0th node</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">H_kappa</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> 
-<span class="go">array([[  2.46154806e-29,  -7.17353298e-18],</span>
-<span class="go">       [ -7.17353298e-18,   2.11429917e-06]])</span>
+<span class="go">array([[  8.78547006e-30,  -4.30647963e-18],</span>
+<span class="go">       [ -4.30647963e-18,   2.11429917e-06]])</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="method">
-<dt id="LaviRot.rotor.Rotor.kappa">
-<code class="descname">kappa</code><span class="sig-paren">(</span><em>node</em>, <em>w</em>, <em>wd=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.kappa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.kappa" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates kappa for a given node and natural frequency.</p>
-<p>w is the the index of the natural frequency of interest.
-The function calculates the orbit parameter <img class="math" src="../_images/math/dd95c55069c86910ffbe2f9833321d0034fd8036.png" alt="\kappa"/>:</p>
-<div class="math">
-<p><img src="../_images/math/24898fdcd2c33572006a06955c96e1e691c47862.png" alt="\kappa = \pm \sqrt{\lambda_2 / \lambda_1}"/></p>
-</div><p>Where <img class="math" src="../_images/math/efe89e133b7203625dba0a458100bbc33a588850.png" alt="\sqrt{\lambda_1}"/> is the length of the semiminor axes
-and <img class="math" src="../_images/math/6cf48d8d78eb8d6ac96c3dae78869cb903fdbb41.png" alt="\sqrt{\lambda_2}"/> is the length of the semimajor axes.</p>
-<p>If <img class="math" src="../_images/math/1b3419fa7b7c7cd8c7c176da44a589ef82581eb4.png" alt="\kappa = \pm 1"/>, the orbit is circular.</p>
-<p>If <img class="math" src="../_images/math/dd95c55069c86910ffbe2f9833321d0034fd8036.png" alt="\kappa"/> is positive we have a forward rotating orbit
-and if it is negative we have a backward rotating orbit.</p>
+<dt id="LaviRot.rotor.Rotor.K">
+<code class="descname">K</code><span class="sig-paren">(</span><em>w=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.K"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.K" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stiffness matrix for an instance of a rotor.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>node: int</strong></p>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Stiffness matrix for the rotor.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">rotor</span><span class="o">.</span><span class="n">K</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">/</span><span class="mf">1e6</span><span class="p">)</span>
+<span class="go">array([[ 47.,   0.,   0.,   6.],</span>
+<span class="go">       [  0.,  46.,  -6.,   0.],</span>
+<span class="go">       [  0.,  -6.,   1.,   0.],</span>
+<span class="go">       [  6.,   0.,   0.,   1.]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.rotor.Rotor.M">
+<code class="descname">M</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.M"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.M" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mass matrix for an instance of a rotor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mass matrix for the rotor.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">M</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="go">array([[ 1.42050794,  0.        ,  0.        ,  0.04931719],</span>
+<span class="go">       [ 0.        ,  1.42050794, -0.04931719,  0.        ],</span>
+<span class="go">       [ 0.        , -0.04931719,  0.00231392,  0.        ],</span>
+<span class="go">       [ 0.04931719,  0.        ,  0.        ,  0.00231392]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.rotor.Rotor.campbell">
+<code class="descname">campbell</code><span class="sig-paren">(</span><em>speed_rad, freqs=6, mult=[1], plot=True, ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.campbell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.campbell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the Campbell diagram.</p>
+<p>This function will calculate the damped natural frequencies
+for a speed range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>speed_rad: array</strong></p>
 <blockquote>
-<div><p>Node for which kappa will be calculated.</p>
+<div><p>Array with the speed range in rad/s.</p>
 </div></blockquote>
-<p><strong>w: int</strong></p>
+<p><strong>freqs: int, optional</strong></p>
 <blockquote>
-<div><p>Index corresponding to the natural frequency
-of interest.</p>
+<div><p>Number of frequencies that will be calculated.
+Default is 6.</p>
 </div></blockquote>
-<p><strong>wd: bool</strong></p>
+<p><strong>mult: list, optional</strong></p>
 <blockquote>
-<div><p>If True, damping natural frequencies are used.</p>
-<p>Default is true.</p>
+<div><p>List withe the harmonics to be plotted.
+The default is to plot 1x.</p>
+</div></blockquote>
+<p><strong>plot: bool, optional</strong></p>
+<blockquote>
+<div><p>If the campbell will be plotted.
+If plot=False, points for the Campbell will be returned.</p>
+</div></blockquote>
+<p><strong>ax</strong> : matplotlib axes, optional</p>
+<blockquote>
+<div><p>Axes in which the plot will be drawn.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">kappa: dict</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">points: array</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Array with the natural frequencies corresponding to each speed</dt>
+<dd><p class="first last">of the speed_rad array. It will be returned if plot=False.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>ax</strong> : matplotlib axes</p>
 <blockquote class="last">
-<div><p>A dictionary with values for the natural frequency,
-major axis, minor axis and kappa.</p>
+<div><p>Returns the axes object with the plot.</p>
 </div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># kappa for each node of the first natural frequency</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Major axes for node 0 and natural frequency (mode) 0.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;Major axes&#39;</span><span class="p">]</span> 
-<span class="go">array(0.00145...)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># kappa for node 2 and natural frequency (mode) 3.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)[</span><span class="s1">&#39;kappa&#39;</span><span class="p">]</span> 
-<span class="go">array(8.7006...e-13)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="LaviRot.rotor.Rotor.kappa_mode">
-<code class="descname">kappa_mode</code><span class="sig-paren">(</span><em>w</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.kappa_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.kappa_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function evaluates kappa given the index of
-the natural frequency of interest.
-Values of kappa are evaluated for each node of the
-corresponding frequency mode.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>w: int</strong></p>
-<blockquote>
-<div><p>Index corresponding to the natural frequency
-of interest.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">kappa_mode: list</p>
-<blockquote class="last">
-<div><p>A list with the value of kappa for each node related
-to the mode/natural frequency of interest.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># kappa for each node of the first natural frequency</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa_mode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> 
-<span class="go">[array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0), array(0.0)]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor1</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">camp</span> <span class="o">=</span> <span class="n">rotor1</span><span class="o">.</span><span class="n">campbell</span><span class="p">(</span><span class="n">speed</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">camp</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">#  damped natural frequencies at the first rotor speed (0 rad/s)</span>
+<span class="go">array([  82.7,   86.7,  254.5,  274.3,  679.5,  716.8])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">camp</span><span class="p">[:,</span> <span class="mi">10</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># damped natural frequencies at 40 rad/s</span>
+<span class="go">array([  82.6,   86.7,  254.3,  274.5,  676.5,  719.7])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -555,6 +585,244 @@ The order of the array is: [output, input, phase]</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="LaviRot.rotor.Rotor.kappa">
+<code class="descname">kappa</code><span class="sig-paren">(</span><em>node</em>, <em>w</em>, <em>wd=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.kappa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.kappa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates kappa for a given node and natural frequency.</p>
+<p>w is the the index of the natural frequency of interest.
+The function calculates the orbit parameter <img class="math" src="../_images/math/e18d839a0e889a07a4e7a17bed70fe453966c6df.png" alt="\kappa"/>:</p>
+<div class="math">
+<p><img src="../_images/math/d2ae5ede55793ea4a09436a5830f4bddda4b560e.png" alt="\kappa = \pm \sqrt{\lambda_2 / \lambda_1}"/></p>
+</div><p>Where <img class="math" src="../_images/math/7d3342452ee8abc4b8abd25ef5897d44e576ea06.png" alt="\sqrt{\lambda_1}"/> is the length of the semiminor axes
+and <img class="math" src="../_images/math/3efe3b1a3823dd9ee401a5fb4c67be1e5bf1c3fe.png" alt="\sqrt{\lambda_2}"/> is the length of the semimajor axes.</p>
+<p>If <img class="math" src="../_images/math/fa3e357965d0985fcff4907ebafe71c3e414bd5b.png" alt="\kappa = \pm 1"/>, the orbit is circular.</p>
+<p>If <img class="math" src="../_images/math/e18d839a0e889a07a4e7a17bed70fe453966c6df.png" alt="\kappa"/> is positive we have a forward rotating orbit
+and if it is negative we have a backward rotating orbit.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>node: int</strong></p>
+<blockquote>
+<div><p>Node for which kappa will be calculated.</p>
+</div></blockquote>
+<p><strong>w: int</strong></p>
+<blockquote>
+<div><p>Index corresponding to the natural frequency
+of interest.</p>
+</div></blockquote>
+<p><strong>wd: bool</strong></p>
+<blockquote>
+<div><p>If True, damping natural frequencies are used.</p>
+<p>Default is true.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">kappa: dict</p>
+<blockquote class="last">
+<div><p>A dictionary with values for the natural frequency,
+major axis, minor axis and kappa.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># kappa for each node of the first natural frequency</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Major axes for node 0 and natural frequency (mode) 0.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;Major axes&#39;</span><span class="p">]</span> 
+<span class="go">0.00145...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># kappa for node 2 and natural frequency (mode) 3.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)[</span><span class="s1">&#39;kappa&#39;</span><span class="p">]</span> 
+<span class="go">8.539...e-14</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.rotor.Rotor.kappa_mode">
+<code class="descname">kappa_mode</code><span class="sig-paren">(</span><em>w</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.kappa_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.kappa_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function evaluates kappa given the index of
+the natural frequency of interest.
+Values of kappa are evaluated for each node of the
+corresponding frequency mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>w: int</strong></p>
+<blockquote>
+<div><p>Index corresponding to the natural frequency
+of interest.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">kappa_mode: list</p>
+<blockquote class="last">
+<div><p>A list with the value of kappa for each node related
+to the mode/natural frequency of interest.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span> <span class="o">=</span> <span class="n">rotor_example</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># kappa for each node of the first natural frequency</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotor</span><span class="o">.</span><span class="n">kappa_mode</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> 
+<span class="go">[-0.0, -0.0, -0.0, -0.0, -1.153...e-08, -0.0, -1.239...e-08]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.rotor.Rotor.plot_level1">
+<code class="descname">plot_level1</code><span class="sig-paren">(</span><em>n=None</em>, <em>stiffness_range=None</em>, <em>num=5</em>, <em>ax=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.plot_level1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.plot_level1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot level 1 stability analysis.</p>
+<p>This method will plot the stability 1 analysis for a
+given stiffness range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>stiffness_range</strong> : tuple, optional</p>
+<blockquote>
+<div><p>Tuple with (start, end) for stiffness range.</p>
+</div></blockquote>
+<p><strong>num</strong> : int</p>
+<blockquote>
+<div><p>Number of steps in the range.
+Default is 5.</p>
+</div></blockquote>
+<p><strong>ax</strong> : matplotlib axes, optional</p>
+<blockquote>
+<div><p>Axes in which the plot will be drawn.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib axes</p>
+<blockquote class="last">
+<div><p>Returns the axes object with the plot.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.rotor.Rotor.plot_rotor">
+<code class="descname">plot_rotor</code><span class="sig-paren">(</span><em>nodes=1</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.plot_rotor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.plot_rotor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a rotor object.</p>
+<p>This function will take a rotor object and plot its shaft,
+disks and bearing elements</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>nodes</strong> : int, optional</p>
+<blockquote>
+<div><p>Increment that will be used to plot nodes label.</p>
+</div></blockquote>
+<p><strong>ax</strong> : matplotlib axes, optional</p>
+<blockquote>
+<div><p>Axes in which the plot will be drawn.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib axes</p>
+<blockquote>
+<div><p>Returns the axes object with the plot.</p>
+</div></blockquote>
+<p class="last">Examples:</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.rotor.Rotor.plot_time_response">
+<code class="descname">plot_time_response</code><span class="sig-paren">(</span><em>F</em>, <em>t</em>, <em>dof</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.plot_time_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.plot_time_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the time response.</p>
+<p>This function will take a rotor object and plot its time response
+given a force and a time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>F</strong> : array</p>
+<blockquote>
+<div><p>Force array (needs to have the same number of rows as time array).
+Each column corresponds to a dof and each row to a time.</p>
+</div></blockquote>
+<p><strong>t</strong> : array</p>
+<blockquote>
+<div><p>Time array.</p>
+</div></blockquote>
+<p><strong>dof</strong> : int</p>
+<blockquote>
+<div><p>Degree of freedom that will be observed.</p>
+</div></blockquote>
+<p><strong>ax</strong> : matplotlib axes, optional</p>
+<blockquote>
+<div><p>Axes in which the plot will be drawn.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib axes</p>
+<blockquote class="last">
+<div><p>Returns the axes object with the plot.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.rotor.Rotor.plot_ucs">
+<code class="descname">plot_ucs</code><span class="sig-paren">(</span><em>stiffness_range=None</em>, <em>num=20</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.plot_ucs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.plot_ucs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot undamped critical speed map.</p>
+<p>This method will plot the undamped critical speed map for a given range
+of stiffness values. If the range is not provided, the bearing
+stiffness at rated speed will be used to create a range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>stiffness_range</strong> : tuple, optional</p>
+<blockquote>
+<div><p>Tuple with (start, end) for stiffness range.</p>
+</div></blockquote>
+<p><strong>num</strong> : int</p>
+<blockquote>
+<div><p>Number of steps in the range.
+Default is 20.</p>
+</div></blockquote>
+<p><strong>ax</strong> : matplotlib axes, optional</p>
+<blockquote>
+<div><p>Axes in which the plot will be drawn.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib axes</p>
+<blockquote class="last">
+<div><p>Returns the axes object with the plot.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.rotor.Rotor.save_mat">
+<code class="descname">save_mat</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.save_mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.save_mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save matrices and rotor model to a .mat file.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="LaviRot.rotor.Rotor.time_response">
 <code class="descname">time_response</code><span class="sig-paren">(</span><em>F</em>, <em>t</em>, <em>ic=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.time_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.time_response" title="Permalink to this definition">¶</a></dt>
 <dd><p>Time response for a rotor.</p>
@@ -597,9 +865,9 @@ given a force, time and initial conditions.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="LaviRot.rotor.Rotor.save_mat">
-<code class="descname">save_mat</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.save_mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.save_mat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save matrices and rotor model to a .mat file.</p>
+<dt id="LaviRot.rotor.Rotor.whirl_direction">
+<code class="descname">whirl_direction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/rotor.html#Rotor.whirl_direction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.rotor.Rotor.whirl_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the whirl direction for each frequency.</p>
 </dd></dl>
 
 </dd></dl>
@@ -619,7 +887,7 @@ given a force, time and initial conditions.</p>
     </p>
     <p>
         &copy; Copyright 2016, Lavi.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
     </p>
   </div>
 </footer>

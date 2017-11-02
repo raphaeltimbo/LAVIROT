@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -33,15 +32,13 @@
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Rotor" href="rotor.html" />
-    <link rel="prev" title="Disk Element" href="elements.DiskElement.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -77,7 +74,6 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="elements.html">Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rotor.html">Rotor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="results.html">Results</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../gallery/index.html">Examples Gallery</a><ul>
@@ -93,14 +89,6 @@
             
               
                 
-  <li>
-    <a href="elements.DiskElement.html" title="Previous Chapter: Disk Element"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Disk Element</span>
-    </a>
-  </li>
-  <li>
-    <a href="rotor.html" title="Next Chapter: Rotor"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Rotor &raquo;</span>
-    </a>
-  </li>
               
             
             
@@ -195,6 +183,192 @@ Values for each parameter will be interpolated for the speed.</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">C</span></code>(w)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">K</span></code>(w)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.elements.BearingElement.load_from_xltrc" title="LaviRot.elements.BearingElement.load_from_xltrc"><code class="xref py py-obj docutils literal"><span class="pre">load_from_xltrc</span></code></a>(n,&nbsp;file[,&nbsp;sheet])</td>
+<td>Load bearing from xltrc.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.elements.BearingElement.patch" title="LaviRot.elements.BearingElement.patch"><code class="xref py py-obj docutils literal"><span class="pre">patch</span></code></a>(ax,&nbsp;position)</td>
+<td>Bearing element patch.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.elements.BearingElement.plot_c_curve" title="LaviRot.elements.BearingElement.plot_c_curve"><code class="xref py py-obj docutils literal"><span class="pre">plot_c_curve</span></code></a>([w,&nbsp;ax,&nbsp;cxx,&nbsp;cxy,&nbsp;cyx,&nbsp;cyy])</td>
+<td>Plot the k curve fit.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.elements.BearingElement.plot_k_curve" title="LaviRot.elements.BearingElement.plot_k_curve"><code class="xref py py-obj docutils literal"><span class="pre">plot_k_curve</span></code></a>([w,&nbsp;ax,&nbsp;kxx,&nbsp;kxy,&nbsp;kyx,&nbsp;kyy])</td>
+<td>Plot the k curve fit.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">summary</span></code>()</td>
+<td>A summary for the element.</td>
+</tr>
+</tbody>
+</table>
+<dl class="classmethod">
+<dt id="LaviRot.elements.BearingElement.load_from_xltrc">
+<em class="property">classmethod </em><code class="descname">load_from_xltrc</code><span class="sig-paren">(</span><em>n</em>, <em>file</em>, <em>sheet=’XLUseKCM’</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#BearingElement.load_from_xltrc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.BearingElement.load_from_xltrc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load bearing from xltrc.</p>
+<p>This method will construct a bearing loading the coefficients
+from an xltrc file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n: int</strong></p>
+<blockquote>
+<div><p>Node in which the bearing will be inserted.</p>
+</div></blockquote>
+<p><strong>file</strong> : str</p>
+<blockquote>
+<div><p>File path name.</p>
+</div></blockquote>
+<p><strong>sheet</strong> : str</p>
+<blockquote>
+<div><p>Bearing sheet name. Default is ‘XLUseKCM’.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>bearing</strong> : lr.BearingElement</p>
+<blockquote class="last">
+<div><p>A bearing element.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.elements.BearingElement.patch">
+<code class="descname">patch</code><span class="sig-paren">(</span><em>ax</em>, <em>position</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#BearingElement.patch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.BearingElement.patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bearing element patch.</p>
+<p>Patch that will be used to draw the bearing element.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib axes, optional</p>
+<blockquote>
+<div><p>Axes in which the plot will be drawn.</p>
+</div></blockquote>
+<p><strong>position</strong> : tuple</p>
+<blockquote>
+<div><p>Position (z, y) in which the patch will be drawn.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib axes</p>
+<blockquote class="last">
+<div><p>Returns the axes object with the plot.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.elements.BearingElement.plot_c_curve">
+<code class="descname">plot_c_curve</code><span class="sig-paren">(</span><em>w=None</em>, <em>ax=None</em>, <em>cxx=True</em>, <em>cxy=True</em>, <em>cyx=True</em>, <em>cyy=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#BearingElement.plot_c_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.BearingElement.plot_c_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the k curve fit.</p>
+<p>This method will plot the curve fit for the
+given speed range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>w</strong> : array, optional</p>
+<blockquote>
+<div><p>Speeds for which the plot will be made.
+If not provided, will use speed from bearing creation.</p>
+</div></blockquote>
+<p><strong>ax</strong> : matplotlib axes, optional</p>
+<blockquote>
+<div><p>Axes in which the plot will be drawn.</p>
+</div></blockquote>
+<p><strong>cxx</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether or not cxx is plotted. Default is True.</p>
+</div></blockquote>
+<p><strong>cxy</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether or not cxy is plotted. Default is True.</p>
+</div></blockquote>
+<p><strong>cyx</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether or not cyx is plotted. Default is True.</p>
+</div></blockquote>
+<p><strong>cyy</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether or not cyy is plotted. Default is True.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib axes</p>
+<blockquote class="last">
+<div><p>Returns the axes object with the plot.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.elements.BearingElement.plot_k_curve">
+<code class="descname">plot_k_curve</code><span class="sig-paren">(</span><em>w=None</em>, <em>ax=None</em>, <em>kxx=True</em>, <em>kxy=True</em>, <em>kyx=True</em>, <em>kyy=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#BearingElement.plot_k_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.BearingElement.plot_k_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the k curve fit.</p>
+<p>This method will plot the curve fit for the
+given speed range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>w</strong> : array, optional</p>
+<blockquote>
+<div><p>Speeds for which the plot will be made.
+If not provided, will use speed from bearing creation.</p>
+</div></blockquote>
+<p><strong>ax</strong> : matplotlib axes, optional</p>
+<blockquote>
+<div><p>Axes in which the plot will be drawn.</p>
+</div></blockquote>
+<p><strong>kxx</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether or not kxx is plotted. Default is True.</p>
+</div></blockquote>
+<p><strong>kxy</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether or not kxy is plotted. Default is True.</p>
+</div></blockquote>
+<p><strong>kyx</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether or not kyx is plotted. Default is True.</p>
+</div></blockquote>
+<p><strong>kyy</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether or not kyy is plotted. Default is True.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib axes</p>
+<blockquote class="last">
+<div><p>Returns the axes object with the plot.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -212,7 +386,7 @@ Values for each parameter will be interpolated for the speed.</p>
     </p>
     <p>
         &copy; Copyright 2016, Lavi.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
     </p>
   </div>
 </footer>

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -33,7 +32,6 @@
     <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Disk Element" href="elements.DiskElement.html" />
     <link rel="prev" title="Elements" href="elements.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -41,7 +39,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body role="document">
+  <body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -77,7 +75,6 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="elements.html">Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rotor.html">Rotor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="results.html">Results</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../gallery/index.html">Examples Gallery</a><ul>
@@ -95,10 +92,6 @@
                 
   <li>
     <a href="elements.html" title="Previous Chapter: Elements"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Elements</span>
-    </a>
-  </li>
-  <li>
-    <a href="elements.DiskElement.html" title="Next Chapter: Disk Element"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Disk Element &raquo;</span>
     </a>
   </li>
               
@@ -136,16 +129,16 @@
 <span id="shaftelement"></span><h1>Shaft Element<a class="headerlink" href="#shaft-element" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="LaviRot.elements.ShaftElement">
-<em class="property">class </em><code class="descclassname">LaviRot.elements.</code><code class="descname">ShaftElement</code><span class="sig-paren">(</span><em>L</em>, <em>i_d</em>, <em>o_d</em>, <em>E</em>, <em>G_s</em>, <em>rho</em>, <em>n=None</em>, <em>axial_force=0</em>, <em>torque=0</em>, <em>shear_effects=False</em>, <em>rotary_inertia=False</em>, <em>gyroscopic=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#ShaftElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.ShaftElement" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">LaviRot.elements.</code><code class="descname">ShaftElement</code><span class="sig-paren">(</span><em>L</em>, <em>i_d</em>, <em>o_d</em>, <em>material</em>, <em>n=None</em>, <em>axial_force=0</em>, <em>torque=0</em>, <em>shear_effects=True</em>, <em>rotary_inertia=True</em>, <em>gyroscopic=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#ShaftElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.ShaftElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>A shaft element.</p>
 <p>This class will create a shaft element that may take into
 account shear, rotary inertia an gyroscopic effects.
 The matrices will be defined considering the following local
 coordinate vector:</p>
 <div class="math">
-<p><img src="../_images/math/6edfbaecd3189bda0c4b391eabedb661b07080f0.png" alt="[x_1, y_1, \alpha_1, \beta_1, x_2, y_2, \alpha_2, \beta_2]^T"/></p>
-</div><p>Where <img class="math" src="../_images/math/d49f1c024407380df81f487799de241fa4e9d29f.png" alt="\alpha_1"/> and <img class="math" src="../_images/math/e6c0bd5b79c290b47b422e07545c3757ca182270.png" alt="\alpha_2"/> are the bending on the yz plane and
-<img class="math" src="../_images/math/85f75b55a5aec0d92fdacc5e2c14fb8f557150de.png" alt="\beta_1"/> and <img class="math" src="../_images/math/fa363d674f37983943b5bf917b5c46baa6d1b900.png" alt="\beta_2"/> are the bending on the xz plane.</p>
+<p><img src="../_images/math/618cf05652bc0207e2da71191dae405169cf8ebe.png" alt="[x_1, y_1, \alpha_1, \beta_1, x_2, y_2, \alpha_2, \beta_2]^T"/></p>
+</div><p>Where <img class="math" src="../_images/math/fc7576763f2a846119d277c2d3aee7ed2539e5b8.png" alt="\alpha_1"/> and <img class="math" src="../_images/math/bae508f8b90711a500281d854d959df50fb72da2.png" alt="\alpha_2"/> are the bending on the yz plane and
+<img class="math" src="../_images/math/ac8d05ee097d1bf410fdbce62e0fc8d063cc9e9a.png" alt="\beta_1"/> and <img class="math" src="../_images/math/ca73e539f1ca5df1f1839d40aabda51cbbfd5f4a.png" alt="\beta_2"/> are the bending on the xz plane.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -162,23 +155,15 @@ coordinate vector:</p>
 <blockquote>
 <div><p>Outer diameter of the element.</p>
 </div></blockquote>
-<p><strong>E</strong> : float</p>
+<p><strong>material</strong> : LaviRot.material</p>
 <blockquote>
-<div><p>Young&#8217;s modulus.</p>
-</div></blockquote>
-<p><strong>G_s</strong> : float</p>
-<blockquote>
-<div><p>Shear modulus.</p>
-</div></blockquote>
-<p><strong>rho</strong> : float</p>
-<blockquote>
-<div><p>Density.</p>
+<div><p>Shaft material.</p>
 </div></blockquote>
 <p><strong>n</strong> : int, optional</p>
 <blockquote>
-<div><p>Element number (coincident with it&#8217;s first node).
+<div><p>Element number (coincident with it’s first node).
 If not given, it will be set when the rotor is assembled
-according to the element&#8217;s position in the list supplied to
+according to the element’s position in the list supplied to
 the rotor constructor.</p>
 </div></blockquote>
 <p><strong>axial_force</strong> : float</p>
@@ -212,21 +197,20 @@ Default is False.</p>
 <table class="docutils citation" frame="void" id="r2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R2]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> &#8216;Dynamics of Rotating Machinery&#8217; by MI Friswell, JET Penny, SD Garvey
+<tr><td class="label">[R2]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> ‘Dynamics of Rotating Machinery’ by MI Friswell, JET Penny, SD Garvey
 &amp; AW Lees, published by Cambridge University Press, 2010 pp. 158-166.</td></tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">le</span> <span class="o">=</span> <span class="mf">0.25</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">LaviRot.materials</span> <span class="k">import</span> <span class="n">steel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">le</span> <span class="o">=</span> <span class="mf">0.25</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">i_d</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">o_d</span> <span class="o">=</span> <span class="mf">0.05</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">E</span> <span class="o">=</span> <span class="mi">211</span><span class="n">e9</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">G_s</span> <span class="o">=</span> <span class="mf">81.2e9</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rho</span> <span class="o">=</span> <span class="mi">7810</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Euler_Bernoulli_Element</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="n">le</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">G_s</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Euler_Bernoulli_Element</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="n">le</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">steel</span><span class="p">,</span>
+<span class="gp">... </span>                                       <span class="n">shear_effects</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Euler_Bernoulli_Element</span><span class="o">.</span><span class="n">phi</span>
 <span class="go">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="n">le</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">G_s</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="n">le</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">o_d</span><span class="p">,</span> <span class="n">steel</span><span class="p">,</span>
 <span class="gp">... </span>                                  <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="gp">... </span>                                  <span class="n">shear_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span><span class="o">.</span><span class="n">phi</span>
@@ -240,7 +224,7 @@ Default is False.</p>
 <col width="95%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td>poisson</td>
+<tr class="row-odd"><td>Poisson</td>
 <td>(float) Poisson coefficient for the element.</td>
 </tr>
 <tr class="row-even"><td>A</td>
@@ -255,27 +239,56 @@ Default is False.</p>
 </tbody>
 </table>
 <p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.elements.ShaftElement.G" title="LaviRot.elements.ShaftElement.G"><code class="xref py py-obj docutils literal"><span class="pre">G</span></code></a>()</td>
+<td>Gyroscopic matrix for an instance of a shaft element.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.elements.ShaftElement.K" title="LaviRot.elements.ShaftElement.K"><code class="xref py py-obj docutils literal"><span class="pre">K</span></code></a>()</td>
+<td>Stiffness matrix for an instance of a shaft element.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.elements.ShaftElement.M" title="LaviRot.elements.ShaftElement.M"><code class="xref py py-obj docutils literal"><span class="pre">M</span></code></a>()</td>
+<td>Mass matrix for an instance of a shaft element.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.elements.ShaftElement.load_from_xltrc" title="LaviRot.elements.ShaftElement.load_from_xltrc"><code class="xref py py-obj docutils literal"><span class="pre">load_from_xltrc</span></code></a>(file[,&nbsp;shaft_sheet])</td>
+<td>Load shaft from xltrc.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#LaviRot.elements.ShaftElement.patch" title="LaviRot.elements.ShaftElement.patch"><code class="xref py py-obj docutils literal"><span class="pre">patch</span></code></a>(ax,&nbsp;position)</td>
+<td>Shaft element patch.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#LaviRot.elements.ShaftElement.section" title="LaviRot.elements.ShaftElement.section"><code class="xref py py-obj docutils literal"><span class="pre">section</span></code></a>(L,&nbsp;ne,&nbsp;si_d,&nbsp;so_d,&nbsp;material[,&nbsp;n,&nbsp;…])</td>
+<td>Shaft section constructor.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">summary</span></code>()</td>
+<td>A summary for the element.</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
-<dt id="LaviRot.elements.ShaftElement.M">
-<code class="descname">M</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#ShaftElement.M"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.ShaftElement.M" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mass matrix for an instance of a shaft element.</p>
+<dt id="LaviRot.elements.ShaftElement.G">
+<code class="descname">G</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#ShaftElement.G"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.ShaftElement.G" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gyroscopic matrix for an instance of a shaft element.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mass matrix for the shaft element.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Gyroscopic matrix for the shaft element.</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">211</span><span class="n">e9</span><span class="p">,</span> <span class="mf">81.2e9</span><span class="p">,</span> <span class="mi">7810</span><span class="p">,</span>
-<span class="gp">... </span>                                 <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="gp">... </span>                                 <span class="n">shear_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span><span class="o">.</span><span class="n">M</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
-<span class="go">array([[ 1.42050794,  0.        ,  0.        ,  0.04931719],</span>
-<span class="go">       [ 0.        ,  1.42050794, -0.04931719,  0.        ],</span>
-<span class="go">       [ 0.        , -0.04931719,  0.00231392,  0.        ],</span>
-<span class="go">       [ 0.04931719,  0.        ,  0.        ,  0.00231392]])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">LaviRot.materials</span> <span class="k">import</span> <span class="n">steel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Timoshenko is the default shaft element</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">steel</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span><span class="o">.</span><span class="n">G</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="go">array([[-0.        ,  0.01943344, -0.00022681, -0.        ],</span>
+<span class="go">       [-0.01943344, -0.        , -0.        , -0.00022681],</span>
+<span class="go">       [ 0.00022681, -0.        , -0.        ,  0.0001524 ],</span>
+<span class="go">       [-0.        ,  0.00022681, -0.0001524 , -0.        ]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -293,10 +306,11 @@ Default is False.</p>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">211</span><span class="n">e9</span><span class="p">,</span> <span class="mf">81.2e9</span><span class="p">,</span> <span class="mi">7810</span><span class="p">,</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">LaviRot.materials</span> <span class="k">import</span> <span class="n">steel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">steel</span><span class="p">,</span>
 <span class="gp">... </span>                                 <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="gp">... </span>                                 <span class="n">shear_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span><span class="o">.</span><span class="n">K</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">/</span><span class="mi">1</span><span class="n">e6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span><span class="o">.</span><span class="n">K</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">/</span><span class="mf">1e6</span>
 <span class="go">array([[ 45.69644273,   0.        ,   0.        ,   5.71205534],</span>
 <span class="go">       [  0.        ,  45.69644273,  -5.71205534,   0.        ],</span>
 <span class="go">       [  0.        ,  -5.71205534,   0.97294287,   0.        ],</span>
@@ -306,36 +320,96 @@ Default is False.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="LaviRot.elements.ShaftElement.G">
-<code class="descname">G</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#ShaftElement.G"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.ShaftElement.G" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gyroscopic matrix for an instance of a shaft element.</p>
+<dt id="LaviRot.elements.ShaftElement.M">
+<code class="descname">M</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#ShaftElement.M"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.ShaftElement.M" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mass matrix for an instance of a shaft element.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Gyroscopic matrix for the shaft element.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mass matrix for the shaft element.</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">211</span><span class="n">e9</span><span class="p">,</span> <span class="mf">81.2e9</span><span class="p">,</span> <span class="mi">7810</span><span class="p">,</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">LaviRot.materials</span> <span class="k">import</span> <span class="n">steel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">steel</span><span class="p">,</span>
 <span class="gp">... </span>                                 <span class="n">rotary_inertia</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="gp">... </span>                                 <span class="n">shear_effects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span><span class="o">.</span><span class="n">G</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
-<span class="go">array([[-0.        , -0.01943344, -0.00022681, -0.        ],</span>
-<span class="go">       [-0.01943344, -0.        , -0.        , -0.00022681],</span>
-<span class="go">       [ 0.00022681, -0.        , -0.        ,  0.0001524 ],</span>
-<span class="go">       [-0.        ,  0.00022681, -0.0001524 , -0.        ]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Timoshenko_Element</span><span class="o">.</span><span class="n">M</span><span class="p">()[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="go">array([[ 1.42050794,  0.        ,  0.        ,  0.04931719],</span>
+<span class="go">       [ 0.        ,  1.42050794, -0.04931719,  0.        ],</span>
+<span class="go">       [ 0.        , -0.04931719,  0.00231392,  0.        ],</span>
+<span class="go">       [ 0.04931719,  0.        ,  0.        ,  0.00231392]])</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="classmethod">
+<dt id="LaviRot.elements.ShaftElement.load_from_xltrc">
+<em class="property">classmethod </em><code class="descname">load_from_xltrc</code><span class="sig-paren">(</span><em>file</em>, <em>shaft_sheet=’Model’</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#ShaftElement.load_from_xltrc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.ShaftElement.load_from_xltrc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load shaft from xltrc.</p>
+<p>This method will construct a shaft loading the geometry
+and materials from a xltrc file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>file</strong> : str</p>
+<blockquote>
+<div><p>File path name.</p>
+</div></blockquote>
+<p><strong>shaft_sheet</strong> : str</p>
+<blockquote>
+<div><p>Shaft sheet name. Default is ‘Model’.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>shaft</strong> : list</p>
+<blockquote class="last">
+<div><p>List with the shaft elements.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="LaviRot.elements.ShaftElement.patch">
+<code class="descname">patch</code><span class="sig-paren">(</span><em>ax</em>, <em>position</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#ShaftElement.patch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.ShaftElement.patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shaft element patch.</p>
+<p>Patch that will be used to draw the shaft element.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib axes, optional</p>
+<blockquote>
+<div><p>Axes in which the plot will be drawn.</p>
+</div></blockquote>
+<p><strong>position</strong> : float</p>
+<blockquote>
+<div><p>Position in which the patch will be drawn.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ax</strong> : matplotlib axes</p>
+<blockquote class="last">
+<div><p>Returns the axes object with the plot.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
 <dt id="LaviRot.elements.ShaftElement.section">
-<em class="property">classmethod </em><code class="descname">section</code><span class="sig-paren">(</span><em>L</em>, <em>ne</em>, <em>si_d</em>, <em>so_d</em>, <em>E</em>, <em>Gs</em>, <em>rho</em>, <em>n=None</em>, <em>shear_effects=True</em>, <em>rotary_inertia=True</em>, <em>gyroscopic=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#ShaftElement.section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.ShaftElement.section" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">section</code><span class="sig-paren">(</span><em>L</em>, <em>ne</em>, <em>si_d</em>, <em>so_d</em>, <em>material</em>, <em>n=None</em>, <em>shear_effects=True</em>, <em>rotary_inertia=True</em>, <em>gyroscopic=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/LaviRot/elements.html#ShaftElement.section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LaviRot.elements.ShaftElement.section" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shaft section constructor.</p>
-<p>This method will create a shaft section with length &#8216;L&#8217;
-divided into &#8216;ne&#8217; elements.</p>
+<p>This method will create a shaft section with length ‘L’
+divided into ‘ne’ elements.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -350,21 +424,21 @@ divided into &#8216;ne&#8217; elements.</p>
 </div></blockquote>
 <p><strong>E</strong> : float</p>
 <blockquote>
-<div><p>Young&#8217;s modulus.</p>
+<div><p>Young’s modulus.</p>
 </div></blockquote>
 <p><strong>G_s</strong> : float</p>
 <blockquote>
 <div><p>Shear modulus.</p>
 </div></blockquote>
-<p><strong>rho</strong> : float</p>
+<p><strong>material</strong> : LaviRot.material</p>
 <blockquote>
-<div><p>Density.</p>
+<div><p>Shaft material.</p>
 </div></blockquote>
 <p><strong>n</strong> : int, optional</p>
 <blockquote>
-<div><p>Element number (coincident with it&#8217;s first node).
+<div><p>Element number (coincident with it’s first node).
 If not given, it will be set when the rotor is assembled
-according to the element&#8217;s position in the list supplied to
+according to the element’s position in the list supplied to
 the rotor constructor.</p>
 </div></blockquote>
 <p><strong>axial_force</strong> : float</p>
@@ -394,21 +468,19 @@ Default is False.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">elements: list</p>
 <blockquote class="last">
-<div><p>List with the &#8216;ne&#8217; shaft elements.</p>
+<div><p>List with the ‘ne’ shaft elements.</p>
 </div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># shaft properties</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">E</span> <span class="o">=</span> <span class="mi">211</span><span class="n">e9</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Gs</span> <span class="o">=</span> <span class="mf">81.2e9</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">rho</span> <span class="o">=</span> <span class="mi">7810</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># shaft material</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">LaviRot.materials</span> <span class="k">import</span> <span class="n">steel</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># shaft inner and outer diameters</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">si_d</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">so_d</span> <span class="o">=</span> <span class="mf">0.01585</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sec</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="mf">247.65e-3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">15.8e-3</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">Gs</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sec</span> <span class="o">=</span> <span class="n">ShaftElement</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="mf">247.65e-3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">15.8e-3</span><span class="p">,</span> <span class="n">steel</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">sec</span><span class="p">)</span>
 <span class="go">4</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">i_d</span>
@@ -434,7 +506,7 @@ Default is False.</p>
     </p>
     <p>
         &copy; Copyright 2016, Lavi.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.<br/>
     </p>
   </div>
 </footer>
