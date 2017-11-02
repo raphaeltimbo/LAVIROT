@@ -35,9 +35,10 @@ sys.path.insert(0, os.path.abspath('sphinxext'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.doctest',
     'sphinx.ext.todo',
-    'sphinx.ext.pngmath',
+    'sphinx.ext.imgmath',
     'sphinx.ext.viewcode',
     'sphinx.ext.coverage',
     'numpydoc',
@@ -322,7 +323,7 @@ html_static_path = ['_static']
 htmlhelp_basename = 'Lavirotdoc'
 
 # pngmath_use_preview = True
-pngmath_dvipng_args = ['-gamma', '1.5', '-D', '96', '-bg', 'Transparent']
+imgmath_dvipng_args = ['-gamma', '1.5', '-D', '96', '-bg', 'Transparent']
 
 # -- Options for LaTeX output ---------------------------------------------
 
