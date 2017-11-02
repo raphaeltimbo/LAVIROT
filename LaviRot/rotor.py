@@ -814,7 +814,10 @@ class Rotor(object):
         C = self.H.C
         D = self.H.D
 
-        evals, psi = self._eigen(self.w, sparse=False)
+        # calculate eigenvalues and eigenvectors using la.eig to get
+        # left and right eigenvectors.
+        # TODO check if this is possible with linalg sparse
+        evals, psi, = la.eig(self.A())
         psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
 
         # if omega is not given, define a range
