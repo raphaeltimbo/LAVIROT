@@ -473,6 +473,7 @@ def test_campbell(rotor4):
                              [716.7863122, 742.60864608, 779.07778334]])
     assert_allclose(camp, camp_desired)
 
+
 def test_freq_response(rotor4):
 
     magdb_exp = np.array([[[-120., -115.04621109, -120.60915249, -115.07995399],
@@ -496,6 +497,7 @@ def test_freq_response(rotor4):
                            [-101.29234967, -93.73394558, -106.6500428, -105.08606445]]])
     omega, magdb, phase = rotor4.freq_response()
     assert_allclose(magdb[:4, :4, :4], magdb_exp)
+    # TODO add test with force input
 
 
 @pytest.fixture()
