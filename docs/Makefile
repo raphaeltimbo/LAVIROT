@@ -204,16 +204,3 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
-
-gh-pages:
-	@echo "$(GH_PAGES_SOURCES)"
-	git checkout gh-pages
-	rm -rf _build _sources _static
-	@echo "test"
-	git checkout master $(GH_PAGES_SOURCES)
-	git reset HEAD
-	make -f docs/Makefile html
-	mv -fv _build/html/* ./
-	rm -rf $(GH_PAGES_SOURCES) _build
-	git add -A
-	git ci -m "Generated gh-pages for `git log master -1 --pretty=short --abbrev-commit`" && git push origin gh-pages ; git checkout master
