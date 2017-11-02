@@ -93,7 +93,7 @@ Now we assemble the compressor rotor using the :ref:`Rotor` class.
                           [colar, disk0, disk1, disk2, disk3, disk4, disk5],
                           [bearing0, bearing1])
 
-We can now use the function method plot_rotor.
+We can now use the function :ref:`plot_rotor`.
 
 .. code:: ipython3
 
@@ -104,7 +104,7 @@ We can now use the function method plot_rotor.
 
 .. parsed-literal::
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f67f17bfa58>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f8178bc7978>
 
 
 
@@ -120,7 +120,7 @@ analyze.
 
     speed = np.linspace(0, 1500, 10)
 
-Now we can call the campbell method with mult=[1, 2] to plot 1x and 2x the speed.
+Now we can call the :ref:`campbell` function with mult=[1, 2] to plot 1x and 2x the speed.
 
 .. code:: ipython3
 
@@ -131,7 +131,7 @@ Now we can call the campbell method with mult=[1, 2] to plot 1x and 2x the speed
 
 .. parsed-literal::
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f67edee4c88>
+    <matplotlib.axes._subplots.AxesSubplot at 0x7f8175356710>
 
 
 
