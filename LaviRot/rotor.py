@@ -820,7 +820,7 @@ class Rotor(object):
         # if omega is not given, define a range
         # TODO adapt this range
         if omega is None:
-            omega = np.linspace(0, 3000, 5000)
+            omega = np.linspace(0, max(evals.imag) * 1.5, 1000)
 
         # if modes are selected:
         if modes is not None:
