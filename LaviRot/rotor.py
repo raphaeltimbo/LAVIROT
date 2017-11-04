@@ -1012,10 +1012,7 @@ class Rotor(object):
         Examples
         --------
         """
-        if ic is not None:
-            return signal.lsim(self.H, F, t, ic)
-        else:
-            return signal.lsim(self.H, F, t)
+        return signal.lsim(self.H, F, t, X0=ic)
 
     def plot_rotor(self, nodes=1, ax=None):
         """ Plots a rotor object.
