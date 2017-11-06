@@ -775,7 +775,7 @@ class Rotor(object):
 
         return sys
 
-    def freq_response(self, F=None, omega=None, modes=None):
+    def freq_response(self, F=None, omega=None, modes=None, units='m'):
         r"""Frequency response for a mdof system.
 
         This method returns the frequency response for a mdof system
@@ -784,7 +784,7 @@ class Rotor(object):
         Parameters
         ----------
         F : array, optional
-            Force array (needs to have the same length as time array).
+            Force array (needs to have the same length as frequencies array).
             If not given the impulse response is calculated.
         omega : array, optional
             Array with the desired range of frequencies (the default
@@ -814,41 +814,45 @@ class Rotor(object):
         C = self.H.C
         D = self.H.D
 
-        # calculate eigenvalues and eigenvectors using la.eig to get
-        # left and right eigenvectors.
-        # TODO check if this is possible with linalg sparse
-        evals, psi, = la.eig(self.A())
-        psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
-
         # if omega is not given, define a range
         # TODO adapt this range
         if omega is None:
-            omega = np.linspace(0, max(evals.imag) * 1.5, 1000)
+            omega = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
 
         # if modes are selected:
-        if modes is not None:
-            n = self.n  # n dof -> number of modes
-            m = len(modes)  # -> number of desired modes
-            # idx to get each evalue/evector and its conjugate
-            idx = np.zeros((2 * m), int)
-            idx[0:m] = modes  # modes
-            idx[m:] = range(2 * n)[-m:]  # conjugates (see how evalues are ordered)
-
-            evals = evals[np.ix_(idx)]
-            psi = psi[np.ix_(range(2 * n), idx)]
-            psi_inv = psi_inv[np.ix_(idx, range(2 * n))]
 
         magdb = np.empty((cols, rows, len(omega)))
         phase = np.empty((cols, rows, len(omega)))
 
         for wi, w in enumerate(omega):
+            # calculate eigenvalues and eigenvectors using la.eig to get
+            # left and right eigenvectors.
+            # TODO check if this is possible with linalg sparse
+            evals, psi, = la.eig(self.A(w))
+            psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
+
+            if modes is not None:
+                n = self.ndof  # n dof -> number of modes
+                m = len(modes)  # -> number of desired modes
+                # idx to get each evalue/evector and its conjugate
+                idx = np.zeros((2 * m), int)
+                idx[0:m] = modes  # modes
+                idx[m:] = range(2 * n)[-m:]  # conjugates (see how evalues are ordered)
+
+                evals = evals[np.ix_(idx)]
+                psi = psi[np.ix_(range(2 * n), idx)]
+                psi_inv = psi_inv[np.ix_(idx, range(2 * n))]
+
             diag = np.diag([1 / (1j * w - lam) for lam in evals])
             if F is None:
                 H = C @ psi @ diag @ psi_inv @ B + D
             else:
-                H = (C @ psi @ diag @ psi_inv @ B + D) @ F[wi]
+                H = (C @ psi @ diag @ psi_inv @ B + D) @ F[:, wi]
 
-            magh = 20.0 * np.log10(abs(H))
+            if units == 'm':
+                magh = abs(H)
+            else:
+                magh = 20.0 * np.log10(abs(H))
             angh = np.rad2deg((np.angle(H)))
 
             magdb[:, :, wi] = magh
@@ -856,8 +860,8 @@ class Rotor(object):
 
         return omega, magdb, phase
 
-    def plot_freq_response(self, out, inp, omega=None, modes=None,
-                           ax0=None, ax1=None, **kwargs):
+    def plot_freq_response(self, out, inp, F=None, omega=None, modes=None,
+                           ax0=None, ax1=None, units='m', **kwargs):
         """Plot frequency response.
 
         This method plots the frequency response given
@@ -900,7 +904,8 @@ class Rotor(object):
             else:
                 ax0, ax1 = ax
         # TODO add option to select plot units
-        omega, magdb, phase = self.freq_response(omega=omega, modes=modes)
+        omega, magdb, phase = self.freq_response(
+            F=F, omega=omega, modes=modes, units=units)
 
         ax0.plot(omega, magdb[out, inp, :], **kwargs)
         ax1.plot(omega, phase[out, inp, :], **kwargs)
@@ -918,13 +923,16 @@ class Rotor(object):
                  horizontalalignment='center',
                  transform=ax0.transAxes)
 
-        ax0.set_ylabel('Magnitude $(dB)$')
+        if units == 'm':
+            ax0.set_ylabel('Magnitude $(m)$')
+        else:
+            ax0.set_ylabel('Magnitude $(dB)$')
         ax1.set_ylabel('Phase')
         ax1.set_xlabel('Frequency (rad/s)')
 
         return ax0, ax1
 
-    def plot_freq_response_grid(self, outs, inps, omega=None, modes=None, ax=None):
+    def plot_freq_response_grid(self, outs, inps, F=None, omega=None, modes=None, ax=None):
         """Plot frequency response.
 
         This method plots the frequency response given
@@ -973,12 +981,12 @@ class Rotor(object):
         if len(outs) > 1:
             for i, out in enumerate(outs):
                 for j, inp in enumerate(inps):
-                    self.plot_freq_response(out, inp, omega=omega, modes=modes,
+                    self.plot_freq_response(out, inp, F=F, omega=omega, modes=modes,
                                             ax0=ax[2 * i, j],
                                             ax1=ax[2 * i + 1, j])
         else:
             for i, inp in enumerate(inps):
-                self.plot_freq_response(outs[0], inp, omega=omega, modes=modes,
+                self.plot_freq_response(outs[0], inp, F=F, omega=omega, modes=modes,
                                         ax0=ax[2 * i],
                                         ax1=ax[2 * i + 1])
 
