@@ -918,6 +918,46 @@ class Rotor(object):
     def plot_unbalance_response(self, out, inp, node, magnitude, phase, omega=None,
                                 modes=None, units='m', ax0=None, ax1=None,
                                 **kwargs):
+        """Plot unbalance response.
+
+        This method plots the unbalance response.
+
+        Parameters
+        ----------
+        out : int
+            Output.
+        input : int
+            Input.
+        modes : list, optional
+            Modes that will be used to calculate the frequency response
+            (all modes will be used if a list is not given).
+        node : int
+            Node where the unbalance is applied.
+        magnitude : float
+            Unbalance magnitude (kg.m)
+        phase : float
+            Unbalance phase (rad)
+
+
+        ax0 : matplotlib.axes, optional
+            Matplotlib axes where the amplitude will be plotted.
+            If None creates a new.
+        ax1 : matplotlib.axes, optional
+            Matplotlib axes where the phase will be plotted.
+            If None creates a new.
+        kwargs : optional
+            Additional key word arguments can be passed to change
+            the plot (e.g. linestyle='--')
+        Returns
+        -------
+        ax0 : matplotlib.axes
+            Matplotlib axes with amplitude plot.
+        ax1 : matplotlib.axes
+            Matplotlib axes with phase plot.
+
+        Examples
+        --------
+        """
         if ax0 is None or ax1 is None:
             fig, ax = plt.subplots(2)
             if ax0 is not None:
