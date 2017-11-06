@@ -775,7 +775,7 @@ class Rotor(object):
 
         return sys
 
-    def freq_response(self, omega=None, modes=None):
+    def freq_response(self, F=None, omega=None, modes=None, units='m'):
         r"""Frequency response for a mdof system.
 
         This method returns the frequency response for a mdof system
@@ -783,6 +783,9 @@ class Rotor(object):
 
         Parameters
         ----------
+        F : array, optional
+            Force array (needs to have the same length as frequencies array).
+            If not given the impulse response is calculated.
         omega : array, optional
             Array with the desired range of frequencies (the default
              is 0 to 1.5 x highest damped natural frequency.
@@ -811,15 +814,23 @@ class Rotor(object):
         C = self.H.C
         D = self.H.D
 
-        evals, psi = self._eigen(self.w, sparse=False)
-        psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
-
         # if omega is not given, define a range
         # TODO adapt this range
         if omega is None:
-            omega = np.linspace(0, 3000, 5000)
+            omega = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
 
         # if modes are selected:
+
+        magdb = np.empty((cols, rows, len(omega)))
+        phase = np.empty((cols, rows, len(omega)))
+
+        for wi, w in enumerate(omega):
+            # calculate eigenvalues and eigenvectors using la.eig to get
+            # left and right eigenvectors.
+            # TODO check if this is possible with linalg sparse
+            evals, psi, = la.eig(self.A(w))
+            psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
+
             if modes is not None:
                 n = self.ndof  # n dof -> number of modes
                 m = len(modes)  # -> number of desired modes
@@ -828,39 +839,299 @@ class Rotor(object):
                 idx[0:m] = modes  # modes
                 idx[m:] = range(2 * n)[-m:]  # conjugates (see how evalues are ordered)
 
-                evals_m = evals[np.ix_(idx)]
-                psi_m = psi[np.ix_(range(2 * n), idx)]
-                psi_inv_m = psi_inv[np.ix_(idx, range(2 * n))]
+                evals = evals[np.ix_(idx)]
+                psi = psi[np.ix_(range(2 * n), idx)]
+                psi_inv = psi_inv[np.ix_(idx, range(2 * n))]
 
-                magdb_m = np.empty((cols, rows, len(omega)))
-                phase_m = np.empty((cols, rows, len(omega)))
-
-                for wi, w in enumerate(omega):
-                    diag = np.diag([1 / (1j * w - lam) for lam in evals_m])
-                    H = C @ psi_m @ diag @ psi_inv_m @ B + D
-
-                    magh = 20.0 * np.log10(abs(H))
-                    angh = np.rad2deg((np.angle(H)))
-
-                    magdb_m[:, :, wi] = magh
-                    phase_m[:, :, wi] = angh
-
-                return omega, magdb_m, phase_m
-
-        magdb = np.empty((cols, rows, len(omega)))
-        phase = np.empty((cols, rows, len(omega)))
-
-        for wi, w in enumerate(omega):
             diag = np.diag([1 / (1j * w - lam) for lam in evals])
-            H = C @ psi @ diag @ psi_inv @ B + D
+            if F is None:
+                H = C @ psi @ diag @ psi_inv @ B + D
+            else:
+                H = (C @ psi @ diag @ psi_inv @ B + D) @ F[:, wi]
 
-            magh = 20.0 * np.log10(abs(H))
+            if units == 'm':
+                magh = abs(H)
+            else:
+                magh = 20.0 * np.log10(abs(H))
             angh = np.rad2deg((np.angle(H)))
 
             magdb[:, :, wi] = magh
             phase[:, :, wi] = angh
 
         return omega, magdb, phase
+
+    def _unbalance_force(self, node, magnitude, phase, omega):
+        """Function to calculate unbalance force"""
+        F0 = np.zeros((self.ndof, len(omega)), dtype=np.complex128)
+        me = magnitude
+        delta = phase
+        b0 = np.array([me * np.exp(1j * delta),
+                       -1j * me * np.exp(1j * delta),
+                       0,  # 1j*(Id - Ip)*beta*np.exp(1j*gamma),
+                       0])  # (Id - Ip)*beta*np.exp(1j*gamma)])
+        # TODO implement moment
+        n0 = 4 * node
+        n1 = n0 + 4
+        for i, w in enumerate(omega):
+            F0[n0:n1, i] += w ** 2 * b0
+
+        return F0
+
+    def unbalance_response(self, node, magnitude, phase, omega=None):
+        r"""Frequency response for a mdof system.
+
+        This method returns the frequency response for a mdof system
+        given a range of frequencies and the modes that will be used.
+
+        Parameters
+        ----------
+        node : int
+            Node where the unbalance is applied.
+        magnitude : float
+            Unbalance magnitude (kg.m)
+        phase : float
+            Unbalance phase (rad)
+
+        Returns
+        -------
+        omega : array
+            Array with the frequencies
+        magdb : array
+            Magnitude (dB) of the frequency response for each pair input/output.
+            The order of the array is: [output, input, magnitude]
+        phase : array
+            Phase of the frequency response for each pair input/output.
+            The order of the array is: [output, input, phase]
+
+        Examples
+        --------
+        """
+        if omega is None:
+            omega = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
+
+        F0 = self._unbalance_force(node, magnitude, phase, omega=omega)
+
+        _omega, _magnitude, _phase = self.freq_response(F=F0, omega=omega)
+
+        return _omega, _magnitude, _phase
+
+    def plot_unbalance_response(self, out, inp, node, magnitude, phase, omega=None,
+                                modes=None, units='m', ax0=None, ax1=None,
+                                **kwargs):
+        """Plot unbalance response.
+
+        This method plots the unbalance response.
+
+        Parameters
+        ----------
+        out : int
+            Output.
+        input : int
+            Input.
+        modes : list, optional
+            Modes that will be used to calculate the frequency response
+            (all modes will be used if a list is not given).
+        node : int
+            Node where the unbalance is applied.
+        magnitude : float
+            Unbalance magnitude (kg.m)
+        phase : float
+            Unbalance phase (rad)
+
+
+        ax0 : matplotlib.axes, optional
+            Matplotlib axes where the amplitude will be plotted.
+            If None creates a new.
+        ax1 : matplotlib.axes, optional
+            Matplotlib axes where the phase will be plotted.
+            If None creates a new.
+        kwargs : optional
+            Additional key word arguments can be passed to change
+            the plot (e.g. linestyle='--')
+        Returns
+        -------
+        ax0 : matplotlib.axes
+            Matplotlib axes with amplitude plot.
+        ax1 : matplotlib.axes
+            Matplotlib axes with phase plot.
+
+        Examples
+        --------
+        """
+        if ax0 is None or ax1 is None:
+            fig, ax = plt.subplots(2)
+            if ax0 is not None:
+                _, ax1 = ax
+            if ax1 is not None:
+                ax0, _ = ax
+            else:
+                ax0, ax1 = ax
+        # TODO add option to select plot units
+
+        if omega is None:
+            omega = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
+
+        F0 = self._unbalance_force(node, magnitude, phase, omega=omega)
+
+        omega, magdb, phase = self.freq_response(
+            F=F0, omega=omega, modes=modes, units=units)
+
+        ax0.plot(omega, magdb[out, inp, :], **kwargs)
+        ax1.plot(omega, phase[out, inp, :], **kwargs)
+        for ax in [ax0, ax1]:
+            ax.set_xlim(0, max(omega))
+            ax.yaxis.set_major_locator(
+                mpl.ticker.MaxNLocator(prune='lower'))
+            ax.yaxis.set_major_locator(
+                mpl.ticker.MaxNLocator(prune='upper'))
+
+        ax0.text(.9, .9, 'Output %s' % out,
+                 horizontalalignment='center',
+                 transform=ax0.transAxes)
+        ax0.text(.9, .7, 'Input %s' % inp,
+                 horizontalalignment='center',
+                 transform=ax0.transAxes)
+
+        if units == 'm':
+            ax0.set_ylabel('Magnitude $(m)$')
+        else:
+            ax0.set_ylabel('Magnitude $(dB)$')
+        ax1.set_ylabel('Phase')
+        ax1.set_xlabel('Frequency (rad/s)')
+
+        return ax0, ax1
+
+    def plot_freq_response(self, out, inp, F=None, omega=None, modes=None,
+                           ax0=None, ax1=None, units='m', **kwargs):
+        """Plot frequency response.
+
+        This method plots the frequency response given
+        an output and an input.
+        Parameters
+        ----------
+        out : int
+            Output.
+        input : int
+            Input.
+        modes : list, optional
+            Modes that will be used to calculate the frequency response
+            (all modes will be used if a list is not given).
+
+        ax0 : matplotlib.axes, optional
+            Matplotlib axes where the amplitude will be plotted.
+            If None creates a new.
+        ax1 : matplotlib.axes, optional
+            Matplotlib axes where the phase will be plotted.
+            If None creates a new.
+        kwargs : optional
+            Additional key word arguments can be passed to change
+            the plot (e.g. linestyle='--')
+        Returns
+        -------
+        ax0 : matplotlib.axes
+            Matplotlib axes with amplitude plot.
+        ax1 : matplotlib.axes
+            Matplotlib axes with phase plot.
+
+        Examples
+        --------
+        """
+        if ax0 is None or ax1 is None:
+            fig, ax = plt.subplots(2)
+            if ax0 is not None:
+                _, ax1 = ax
+            if ax1 is not None:
+                ax0, _ = ax
+            else:
+                ax0, ax1 = ax
+        # TODO add option to select plot units
+        omega, magdb, phase = self.freq_response(
+            F=F, omega=omega, modes=modes, units=units)
+
+        ax0.plot(omega, magdb[out, inp, :], **kwargs)
+        ax1.plot(omega, phase[out, inp, :], **kwargs)
+        for ax in [ax0, ax1]:
+            ax.set_xlim(0, max(omega))
+            ax.yaxis.set_major_locator(
+                mpl.ticker.MaxNLocator(prune='lower'))
+            ax.yaxis.set_major_locator(
+                mpl.ticker.MaxNLocator(prune='upper'))
+
+        ax0.text(.9, .9, 'Output %s' % out,
+                 horizontalalignment='center',
+                 transform=ax0.transAxes)
+        ax0.text(.9, .7, 'Input %s' % inp,
+                 horizontalalignment='center',
+                 transform=ax0.transAxes)
+
+        if units == 'm':
+            ax0.set_ylabel('Magnitude $(m)$')
+        else:
+            ax0.set_ylabel('Magnitude $(dB)$')
+        ax1.set_ylabel('Phase')
+        ax1.set_xlabel('Frequency (rad/s)')
+
+        return ax0, ax1
+
+    def plot_freq_response_grid(self, outs, inps, F=None, omega=None, modes=None, ax=None):
+        """Plot frequency response.
+
+        This method plots the frequency response given
+        an output and an input.
+        Parameters
+        ----------
+        outs : list
+            List with the desired outputs.
+        inps : list
+            List with the desired outputs.
+        modes : list
+            List with the modes that will be used to construct
+            the frequency response plot.
+
+        ax : array with matplotlib.axes, optional
+            Matplotlib axes array created with plt.subplots.
+            It needs to have a shape of (2*inputs, outputs).
+        Returns
+        -------
+        ax : array with matplotlib.axes, optional
+            Matplotlib axes array created with plt.subplots.
+
+        Examples
+        --------
+        >>> m0, m1 = 1, 1
+        >>> c0, c1, c2 = 1, 1, 1
+        >>> k0, k1, k2 = 1e3, 1e3, 1e3
+        >>> M = np.array([[m0, 0],
+        ...               [0, m1]])
+        >>> C = np.array([[c0+c1, -c2],
+        ...               [-c1, c2+c2]])
+        >>> K = np.array([[k0+k1, -k2],
+        ...               [-k1, k2+k2]])
+        >>> sys = VibeSystem(M, C, K) # create the system
+        >>> # plot frequency response for inputs at [0, 1]
+        >>> # and outputs at [0, 1]
+        >>> sys.plot_freq_response_grid(outs=[0, 1], inps=[0, 1])
+        array([[<matplotlib.axes._...
+        """
+        if ax is None:
+            fig, ax = plt.subplots(len(inps) * 2, len(outs),
+                                   sharex=True,
+                                   figsize=(4 * len(outs), 3 * len(inps)))
+            fig.subplots_adjust(hspace=0.001, wspace=0.25)
+
+        if len(outs) > 1:
+            for i, out in enumerate(outs):
+                for j, inp in enumerate(inps):
+                    self.plot_freq_response(out, inp, F=F, omega=omega, modes=modes,
+                                            ax0=ax[2 * i, j],
+                                            ax1=ax[2 * i + 1, j])
+        else:
+            for i, inp in enumerate(inps):
+                self.plot_freq_response(outs[0], inp, F=F, omega=omega, modes=modes,
+                                        ax0=ax[2 * i],
+                                        ax1=ax[2 * i + 1])
+
+        return ax
 
     def time_response(self, F, t, ic=None):
         r"""Time response for a rotor.
@@ -890,10 +1161,7 @@ class Rotor(object):
         Examples
         --------
         """
-        if ic is not None:
-            return signal.lsim(self.H, F, t, ic)
-        else:
-            return signal.lsim(self.H, F, t)
+        return signal.lsim(self.H, F, t, X0=ic)
 
     def plot_rotor(self, nodes=1, ax=None):
         """ Plots a rotor object.
