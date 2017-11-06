@@ -860,6 +860,107 @@ class Rotor(object):
 
         return omega, magdb, phase
 
+    def _unbalance_force(self, node, magnitude, phase, omega):
+        """Function to calculate unbalance force"""
+        F0 = np.zeros((self.ndof, len(omega)), dtype=np.complex128)
+        me = magnitude
+        delta = phase
+        b0 = np.array([me * np.exp(1j * delta),
+                       -1j * me * np.exp(1j * delta),
+                       0,  # 1j*(Id - Ip)*beta*np.exp(1j*gamma),
+                       0])  # (Id - Ip)*beta*np.exp(1j*gamma)])
+        # TODO implement moment
+        n0 = 4 * node
+        n1 = n0 + 4
+        for i, w in enumerate(omega):
+            F0[n0:n1, i] += w ** 2 * b0
+
+        return F0
+
+    def unbalance_response(self, node, magnitude, phase, omega=None):
+        r"""Frequency response for a mdof system.
+
+        This method returns the frequency response for a mdof system
+        given a range of frequencies and the modes that will be used.
+
+        Parameters
+        ----------
+        node : int
+            Node where the unbalance is applied.
+        magnitude : float
+            Unbalance magnitude (kg.m)
+        phase : float
+            Unbalance phase (rad)
+
+        Returns
+        -------
+        omega : array
+            Array with the frequencies
+        magdb : array
+            Magnitude (dB) of the frequency response for each pair input/output.
+            The order of the array is: [output, input, magnitude]
+        phase : array
+            Phase of the frequency response for each pair input/output.
+            The order of the array is: [output, input, phase]
+
+        Examples
+        --------
+        """
+        if omega is None:
+            omega = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
+
+        F0 = self._unbalance_force(node, magnitude, phase, omega=omega)
+
+        _omega, _magnitude, _phase = self.freq_response(F=F0, omega=omega)
+
+        return _omega, _magnitude, _phase
+
+    def plot_unbalance_response(self, out, inp, node, magnitude, phase, omega=None,
+                                modes=None, units='m', ax0=None, ax1=None,
+                                **kwargs):
+        if ax0 is None or ax1 is None:
+            fig, ax = plt.subplots(2)
+            if ax0 is not None:
+                _, ax1 = ax
+            if ax1 is not None:
+                ax0, _ = ax
+            else:
+                ax0, ax1 = ax
+        # TODO add option to select plot units
+
+        if omega is None:
+            omega = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
+
+        F0 = self._unbalance_force(node, magnitude, phase, omega=omega)
+
+        omega, magdb, phase = self.freq_response(
+            F=F0, omega=omega, modes=modes, units=units)
+
+        ax0.plot(omega, magdb[out, inp, :], **kwargs)
+        ax1.plot(omega, phase[out, inp, :], **kwargs)
+        for ax in [ax0, ax1]:
+            ax.set_xlim(0, max(omega))
+            ax.yaxis.set_major_locator(
+                mpl.ticker.MaxNLocator(prune='lower'))
+            ax.yaxis.set_major_locator(
+                mpl.ticker.MaxNLocator(prune='upper'))
+
+        ax0.text(.9, .9, 'Output %s' % out,
+                 horizontalalignment='center',
+                 transform=ax0.transAxes)
+        ax0.text(.9, .7, 'Input %s' % inp,
+                 horizontalalignment='center',
+                 transform=ax0.transAxes)
+
+        if units == 'm':
+            ax0.set_ylabel('Magnitude $(m)$')
+        else:
+            ax0.set_ylabel('Magnitude $(dB)$')
+        ax1.set_ylabel('Phase')
+        ax1.set_xlabel('Frequency (rad/s)')
+
+        return ax0, ax1
+
     def plot_freq_response(self, out, inp, F=None, omega=None, modes=None,
                            ax0=None, ax1=None, units='m', **kwargs):
         """Plot frequency response.
