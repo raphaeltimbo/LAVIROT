@@ -879,7 +879,7 @@ class Rotor(object):
 
         return F0
 
-    def unbalance_response(self, node, magnitude, phase, omega=None):
+    def unbalance_response(self, node, magnitude, phase, **kwargs):
         r"""Frequency response for a mdof system.
 
         This method returns the frequency response for a mdof system
@@ -908,17 +908,23 @@ class Rotor(object):
         Examples
         --------
         """
-        if omega is None:
-            omega = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
+        try:
+            node, magnitude, phase = iter(node), iter(magnitude), iter(phase)
+        except TypeError:
+            node, magnitude, phase = [node], [magnitude], [phase]
 
-        F0 = self._unbalance_force(node, magnitude, phase, omega=omega)
+        for n, m, p in zip(node, magnitude, phase):
+            try:
+                F0 += self._unbalance_force(n, m, p, kwargs['omega'])
+            except NameError:
+                F0 = self._unbalance_force(n, m, p, kwargs['omega'])
 
-        _omega, _magnitude, _phase = self.freq_response(F=F0, omega=omega)
+        _omega, _magnitude, _phase = self.freq_response(F=F0, **kwargs)
 
         return _omega, _magnitude, _phase
 
-    def plot_unbalance_response(self, out, inp, node, magnitude, phase, omega=None,
-                                modes=None, units='m', ax0=None, ax1=None,
+    def plot_unbalance_response(self, out, inp, node, magnitude, phase,
+                                units='m', ax0=None, ax1=None, plot_kws=None,
                                 **kwargs):
         """Plot unbalance response.
 
@@ -970,16 +976,15 @@ class Rotor(object):
                 ax0, ax1 = ax
         # TODO add option to select plot units
 
-        if omega is None:
-            omega = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
+        omega, magdb, phase = self.unbalance_response(
+            node, magnitude, phase, units=units, **kwargs
+        )
 
-        F0 = self._unbalance_force(node, magnitude, phase, omega=omega)
+        if plot_kws is None:
+            plot_kws = {}
 
-        omega, magdb, phase = self.freq_response(
-            F=F0, omega=omega, modes=modes, units=units)
-
-        ax0.plot(omega, magdb[out, inp, :], **kwargs)
-        ax1.plot(omega, phase[out, inp, :], **kwargs)
+        ax0.plot(omega, magdb[out, inp, :], **plot_kws)
+        ax1.plot(omega, phase[out, inp, :], **plot_kws)
         for ax in [ax0, ax1]:
             ax.set_xlim(0, max(omega))
             ax.yaxis.set_major_locator(
