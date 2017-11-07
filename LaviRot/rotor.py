@@ -887,11 +887,11 @@ class Rotor(object):
 
         Parameters
         ----------
-        node : int
+        node : list, int
             Node where the unbalance is applied.
-        magnitude : float
+        magnitude : list, float
             Unbalance magnitude (kg.m)
-        phase : float
+        phase : list, float
             Unbalance phase (rad)
 
         Returns
