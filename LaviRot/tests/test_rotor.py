@@ -576,6 +576,9 @@ def test_freq_response_w_force(rotor4):
     omega, mag, phase = rotor4.freq_response(F=F0, omega=omega)
     assert_allclose(mag[:4, :4, :4], mag_exp)
 
+    omega, mag, phase = rotor4.unbalance_response(2, 0.001, 0, omega=omega)
+    assert_allclose(mag[:4, :4, :4], mag_exp)
+
 
 @pytest.fixture()
 def rotor5():
