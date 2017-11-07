@@ -851,6 +851,8 @@ class Rotor(object):
 
             if units == 'm':
                 magh = abs(H)
+            elif units == 'mic-pk-pk':
+                magh = 2*abs(H) * 1e6
             else:
                 magh = 20.0 * np.log10(abs(H))
             angh = np.rad2deg((np.angle(H)))
@@ -994,6 +996,8 @@ class Rotor(object):
 
         if units == 'm':
             ax0.set_ylabel('Magnitude $(m)$')
+        elif units == 'mic-pk-pk':
+            ax0.set_ylabel('Magnitude $(\mu m pk-pk)$')
         else:
             ax0.set_ylabel('Magnitude $(dB)$')
         ax1.set_ylabel('Phase')
