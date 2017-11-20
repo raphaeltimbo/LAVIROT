@@ -464,7 +464,7 @@ def test_evals_rotor3_rotor4(rotor3, rotor4):
 
 def test_campbell(rotor4):
     speed = np.linspace(0, 300, 3)
-    camp = rotor4.campbell(speed, plot=False)
+    camp = rotor4.campbell(speed, plot=False)[:, 0, :]
     camp_desired = np.array([[82.65303734, 82.60929602, 82.48132723],
                              [86.65811435, 86.68625235, 86.76734307],
                              [254.52047828, 251.70037114, 245.49092844],

@@ -1284,7 +1284,8 @@ class Rotor(object):
 
         speed_rad = np.array(speed_rad)
         z = []  # will contain values for each whirl (0, 0.5, 1)
-        points_all = np.zeros([freqs, len(speed_rad)])
+        # freqs, log_decs, speeds
+        points_all = np.zeros([freqs, 2, len(speed_rad)])
 
         for idx, w0, w1 in(zip(range(len(speed_rad)),
                                speed_rad[:-1],
@@ -1297,15 +1298,19 @@ class Rotor(object):
             # define x as the current speed and y as each wd
             x_w0 = np.full_like(range(freqs), w0)
             y_wd0 = self.wd[:freqs]
+            log_dec0 = self.log_dec[:freqs]
 
             # generate points for the first speed
             points0 = np.array([x_w0, y_wd0]).T.reshape(-1, 1, 2)
-            points_all[:, idx] += y_wd0  # TODO verificar teste
+            y_wd0_log_dec = np.hstack((y_wd0.reshape(freqs, 1),
+                                       log_dec0.reshape(freqs, 1)))
+            points_all[:, :, idx] += y_wd0_log_dec  # TODO verificar teste
 
             # go to the next speed
             self.w = w1
             x_w1 = np.full_like(range(freqs), w1)
             y_wd1 = self.wd[:freqs]
+            log_dec1 = self.log_dec[:freqs]
             points1 = np.array([x_w1, y_wd1]).T.reshape(-1, 1, 2)
 
             new_segment = np.concatenate([points0, points1], axis=1)
@@ -1320,7 +1325,11 @@ class Rotor(object):
 
         if plot is False:
             # add last column
-            points_all[:, idx + 1] += y_wd1
+            y_wd1_log_dec = np.hstack((y_wd1.reshape(freqs, 1),
+                                       log_dec1.reshape(freqs, 1)))
+            points_all[:, :, idx + 1] += y_wd1_log_dec
+            # restore rotor speed
+            self.w = rotor_state_speed
             return points_all
 
         z = np.array(z).flatten()
