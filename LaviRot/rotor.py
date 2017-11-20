@@ -851,6 +851,8 @@ class Rotor(object):
 
             if units == 'm':
                 magh = abs(H)
+            elif units == 'mic-pk-pk':
+                magh = 2*abs(H) * 1e6
             else:
                 magh = 20.0 * np.log10(abs(H))
             angh = np.rad2deg((np.angle(H)))
@@ -877,7 +879,7 @@ class Rotor(object):
 
         return F0
 
-    def unbalance_response(self, node, magnitude, phase, omega=None):
+    def unbalance_response(self, node, magnitude, phase, **kwargs):
         r"""Frequency response for a mdof system.
 
         This method returns the frequency response for a mdof system
@@ -885,11 +887,11 @@ class Rotor(object):
 
         Parameters
         ----------
-        node : int
+        node : list, int
             Node where the unbalance is applied.
-        magnitude : float
+        magnitude : list, float
             Unbalance magnitude (kg.m)
-        phase : float
+        phase : list, float
             Unbalance phase (rad)
 
         Returns
@@ -906,17 +908,23 @@ class Rotor(object):
         Examples
         --------
         """
-        if omega is None:
-            omega = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
+        try:
+            node, magnitude, phase = iter(node), iter(magnitude), iter(phase)
+        except TypeError:
+            node, magnitude, phase = [node], [magnitude], [phase]
 
-        F0 = self._unbalance_force(node, magnitude, phase, omega=omega)
+        for n, m, p in zip(node, magnitude, phase):
+            try:
+                F0 += self._unbalance_force(n, m, p, kwargs['omega'])
+            except NameError:
+                F0 = self._unbalance_force(n, m, p, kwargs['omega'])
 
-        _omega, _magnitude, _phase = self.freq_response(F=F0, omega=omega)
+        _omega, _magnitude, _phase = self.freq_response(F=F0, **kwargs)
 
         return _omega, _magnitude, _phase
 
-    def plot_unbalance_response(self, out, inp, node, magnitude, phase, omega=None,
-                                modes=None, units='m', ax0=None, ax1=None,
+    def plot_unbalance_response(self, out, inp, node, magnitude, phase,
+                                units='m', ax0=None, ax1=None, plot_kws=None,
                                 **kwargs):
         """Plot unbalance response.
 
@@ -968,16 +976,15 @@ class Rotor(object):
                 ax0, ax1 = ax
         # TODO add option to select plot units
 
-        if omega is None:
-            omega = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
+        omega, magdb, phase = self.unbalance_response(
+            node, magnitude, phase, units=units, **kwargs
+        )
 
-        F0 = self._unbalance_force(node, magnitude, phase, omega=omega)
+        if plot_kws is None:
+            plot_kws = {}
 
-        omega, magdb, phase = self.freq_response(
-            F=F0, omega=omega, modes=modes, units=units)
-
-        ax0.plot(omega, magdb[out, inp, :], **kwargs)
-        ax1.plot(omega, phase[out, inp, :], **kwargs)
+        ax0.plot(omega, magdb[out, inp, :], **plot_kws)
+        ax1.plot(omega, phase[out, inp, :], **plot_kws)
         for ax in [ax0, ax1]:
             ax.set_xlim(0, max(omega))
             ax.yaxis.set_major_locator(
@@ -994,6 +1001,8 @@ class Rotor(object):
 
         if units == 'm':
             ax0.set_ylabel('Magnitude $(m)$')
+        elif units == 'mic-pk-pk':
+            ax0.set_ylabel('Magnitude $(\mu m pk-pk)$')
         else:
             ax0.set_ylabel('Magnitude $(dB)$')
         ax1.set_ylabel('Phase')
@@ -1275,7 +1284,8 @@ class Rotor(object):
 
         speed_rad = np.array(speed_rad)
         z = []  # will contain values for each whirl (0, 0.5, 1)
-        points_all = np.zeros([freqs, len(speed_rad)])
+        # freqs, log_decs, speeds
+        points_all = np.zeros([freqs, 2, len(speed_rad)])
 
         for idx, w0, w1 in(zip(range(len(speed_rad)),
                                speed_rad[:-1],
@@ -1288,15 +1298,19 @@ class Rotor(object):
             # define x as the current speed and y as each wd
             x_w0 = np.full_like(range(freqs), w0)
             y_wd0 = self.wd[:freqs]
+            log_dec0 = self.log_dec[:freqs]
 
             # generate points for the first speed
             points0 = np.array([x_w0, y_wd0]).T.reshape(-1, 1, 2)
-            points_all[:, idx] += y_wd0  # TODO verificar teste
+            y_wd0_log_dec = np.hstack((y_wd0.reshape(freqs, 1),
+                                       log_dec0.reshape(freqs, 1)))
+            points_all[:, :, idx] += y_wd0_log_dec  # TODO verificar teste
 
             # go to the next speed
             self.w = w1
             x_w1 = np.full_like(range(freqs), w1)
             y_wd1 = self.wd[:freqs]
+            log_dec1 = self.log_dec[:freqs]
             points1 = np.array([x_w1, y_wd1]).T.reshape(-1, 1, 2)
 
             new_segment = np.concatenate([points0, points1], axis=1)
@@ -1311,7 +1325,11 @@ class Rotor(object):
 
         if plot is False:
             # add last column
-            points_all[:, idx + 1] += y_wd1
+            y_wd1_log_dec = np.hstack((y_wd1.reshape(freqs, 1),
+                                       log_dec1.reshape(freqs, 1)))
+            points_all[:, :, idx + 1] += y_wd1_log_dec
+            # restore rotor speed
+            self.w = rotor_state_speed
             return points_all
 
         z = np.array(z).flatten()
