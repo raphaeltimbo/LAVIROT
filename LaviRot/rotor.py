@@ -1000,11 +1000,11 @@ class Rotor(object):
                  transform=ax0.transAxes)
 
         if units == 'm':
-            ax0.set_ylabel('Magnitude $(m)$')
+            ax0.set_ylabel('Amplitude $(m)$')
         elif units == 'mic-pk-pk':
-            ax0.set_ylabel('Magnitude $(\mu m pk-pk)$')
+            ax0.set_ylabel('Amplitude$(\mu m$ pk-pk)')
         else:
-            ax0.set_ylabel('Magnitude $(dB)$')
+            ax0.set_ylabel('Amplitude $(dB)$')
         ax1.set_ylabel('Phase')
         ax1.set_xlabel('Frequency (rad/s)')
 
@@ -1074,9 +1074,9 @@ class Rotor(object):
                  transform=ax0.transAxes)
 
         if units == 'm':
-            ax0.set_ylabel('Magnitude $(m)$')
+            ax0.set_ylabel('Amplitude $(m)$')
         else:
-            ax0.set_ylabel('Magnitude $(dB)$')
+            ax0.set_ylabel('Amplitude $(dB)$')
         ax1.set_ylabel('Phase')
         ax1.set_xlabel('Frequency (rad/s)')
 
