@@ -218,6 +218,7 @@ class Rotor(object):
         self.nodes = list(range(len(self.nodes_pos)))
         self.L = nodes_pos[-1]
 
+        # rotor mass can also be calculated with self.M()[::4, ::4].sum()
         self.m_disks = np.sum([disk.m for disk in self.disk_elements])
         self.m_shaft = np.sum([sh_el.m for sh_el in self.shaft_elements])
         self.m = self.m_disks + self.m_shaft
