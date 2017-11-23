@@ -1634,9 +1634,11 @@ def MAC_modes(U, V, n=None, plot=True):
     #fig.suptitle('MAC - %s vs %s' % (U.name, V.name), fontsize=12)
     ax = fig.add_subplot(111, projection='3d')
     ax.bar3d(xpos, ypos, zpos, dx, dy, dz,
-             color=plt.cm.viridis(dz), alpha=0.7)
+             color=plt.cm.viridis(dz),
+             alpha=0.7, zsort='max')
     ax.set_xticks(range(1, n + 1))
     ax.set_yticks(range(1, n + 1))
+    ax.set_zlim(0, 1)
     #ax.set_xlabel('%s  modes' % U.name)
     #ax.set_ylabel('%s  modes' % V.name)
 
