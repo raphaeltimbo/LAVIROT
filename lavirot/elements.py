@@ -453,7 +453,7 @@ class ShaftElement(Element):
         return elements
 
     @classmethod
-    def load_from_xltrc(cls, file, shaft_sheet='Model'):
+    def load_from_xltrc(cls, file, sheet_name='Model'):
         """Load shaft from xltrc.
 
         This method will construct a shaft loading the geometry
@@ -463,7 +463,7 @@ class ShaftElement(Element):
         ----------
         file : str
             File path name.
-        shaft_sheet : str
+        sheet_name : str
             Shaft sheet name. Default is 'Model'.
 
         Returns
@@ -474,7 +474,7 @@ class ShaftElement(Element):
         Examples
         --------
         """
-        df = pd.read_excel(file, sheetname=shaft_sheet)
+        df = pd.read_excel(file, sheet_name=sheet_name)
 
         geometry = pd.DataFrame(df.iloc[19:])
         geometry = geometry.rename(columns=df.loc[18])
@@ -663,7 +663,7 @@ class LumpedDiskElement(Element):
                                      radius=0.01, color=self.color))
 
     @classmethod
-    def load_from_xltrc(cls, file, sheet='More'):
+    def load_from_xltrc(cls, file, sheet_name='More'):
         """Load lumped masses from xltrc.
 
         This method will construct a disks list with loaded data
@@ -673,7 +673,7 @@ class LumpedDiskElement(Element):
         ----------
         file : str
             File path name.
-        sheet : str
+        sheet_name : str
             Masses sheet name. Default is 'More'.
 
         Returns
@@ -684,7 +684,7 @@ class LumpedDiskElement(Element):
         Examples
         --------
         """
-        df = pd.read_excel(file, sheetname=sheet)
+        df = pd.read_excel(file, sheet_name=sheet_name)
 
         df_masses = pd.DataFrame(df.iloc[4:, :4])
         df_masses = df_masses.rename(columns=df.iloc[1, 1:4])
@@ -1096,7 +1096,7 @@ class BearingElement(Element):
         return ax
 
     @classmethod
-    def load_from_xltrc(cls, n, file, sheet='XLUseKCM'):
+    def load_from_xltrc(cls, n, file, sheet_name='XLUseKCM'):
         """Load bearing from xltrc.
 
         This method will construct a bearing loading the coefficients
@@ -1108,7 +1108,7 @@ class BearingElement(Element):
             Node in which the bearing will be inserted.
         file : str
             File path name.
-        sheet : str
+        sheet_name : str
             Bearing sheet name. Default is 'XLUseKCM'.
 
         Returns
@@ -1121,11 +1121,11 @@ class BearingElement(Element):
         """
         # TODO Check .xls units to see if argument provided is consistent
 
-        df = pd.read_excel(file, sheetname=sheet)
+        df = pd.read_excel(file, sheet_name=sheet_name)
 
         start_col = 0
 
-        if sheet == 'XLTFPBrg':
+        if sheet_name == 'XLTFPBrg':
             start_col = 2
 
         # locate were table starts
@@ -1134,7 +1134,7 @@ class BearingElement(Element):
                 start = i + 2
 
         df_bearing = pd.DataFrame(df.iloc[start:, start_col:])
-        if sheet == 'XLTFPBrg':
+        if sheet_name == 'XLTFPBrg':
             df_bearing = df_bearing.iloc[:10]
         df_bearing = df_bearing.rename(columns=df.loc[start - 2])
         df_bearing = df_bearing.dropna(axis=0, thresh=5)
