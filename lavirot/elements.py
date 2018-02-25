@@ -6,7 +6,7 @@ import matplotlib as mpl
 import matplotlib.patches as mpatches
 from itertools import permutations
 from collections import Iterable
-from LaviRot.materials import Material
+from lavirot.materials import Material
 
 
 __all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",

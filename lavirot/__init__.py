@@ -1,4 +1,4 @@
-"""LaviRot
+"""lavirot
 
     .. [1] 'Desenvolvimento de uma interface gráﬁca para simulação
        de máquinas rotativas, com foco na inﬂuência de selos labirintos
