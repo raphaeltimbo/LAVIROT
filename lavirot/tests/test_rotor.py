@@ -1,9 +1,9 @@
 import os
 import pytest
-from LaviRot.elements import *
-from LaviRot.rotor import *
-from LaviRot.rotor import MAC_modes
-from LaviRot.materials import steel
+from lavirot.elements import *
+from lavirot.rotor import *
+from lavirot.rotor import MAC_modes
+from lavirot.materials import steel
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_allclose
 

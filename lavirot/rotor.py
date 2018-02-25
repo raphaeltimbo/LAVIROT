@@ -16,8 +16,8 @@ from matplotlib.colors import ListedColormap
 from mpl_toolkits.mplot3d import Axes3D
 from cycler import cycler
 
-from LaviRot.elements import *
-from LaviRot.materials import steel
+from lavirot.elements import *
+from lavirot.materials import steel
 
 
 __all__ = ['Rotor', 'rotor_example']
@@ -89,7 +89,7 @@ class Rotor(object):
     Examples
     --------
     >>> #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
-    >>> from LaviRot.materials import steel
+    >>> from lavirot.materials import steel
     >>> z = 0
     >>> le = 0.25
     >>> i_d = 0

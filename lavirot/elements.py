@@ -58,7 +58,7 @@ class ShaftElement(Element):
         Inner diameter of the element.
     o_d : float
         Outer diameter of the element.
-    material : LaviRot.material
+    material : lavirot.material
         Shaft material.
     n : int, optional
         Element number (coincident with it's first node).
@@ -102,7 +102,7 @@ class ShaftElement(Element):
 
     Examples
     --------
-    >>> from LaviRot.materials import steel
+    >>> from lavirot.materials import steel
     >>> le = 0.25
     >>> i_d = 0
     >>> o_d = 0.05
@@ -216,7 +216,7 @@ class ShaftElement(Element):
 
         Examples
         --------
-        >>> from LaviRot.materials import steel
+        >>> from lavirot.materials import steel
         >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, steel,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
@@ -275,7 +275,7 @@ class ShaftElement(Element):
 
         Examples
         --------
-        >>> from LaviRot.materials import steel
+        >>> from lavirot.materials import steel
         >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, steel,
         ...                                  rotary_inertia=True,
         ...                                  shear_effects=True)
@@ -312,7 +312,7 @@ class ShaftElement(Element):
 
         Examples
         --------
-        >>> from LaviRot.materials import steel
+        >>> from lavirot.materials import steel
         >>> # Timoshenko is the default shaft element
         >>> Timoshenko_Element = ShaftElement(0.25, 0, 0.05, steel)
         >>> Timoshenko_Element.G()[:4, :4]
@@ -401,7 +401,7 @@ class ShaftElement(Element):
             Young's modulus.
         G_s : float
             Shear modulus.
-        material : LaviRot.material
+        material : lavirot.material
             Shaft material.
         n : int, optional
             Element number (coincident with it's first node).
@@ -430,7 +430,7 @@ class ShaftElement(Element):
         Examples
         --------
         >>> # shaft material
-        >>> from LaviRot.materials import steel
+        >>> from lavirot.materials import steel
         >>> # shaft inner and outer diameters
         >>> si_d = 0
         >>> so_d = 0.01585
@@ -712,7 +712,7 @@ class DiskElement(LumpedDiskElement):
     ----------
     n: int
         Node in which the disk will be inserted.
-    material : LaviRot.Material
+    material : lavirot.Material
          Shaft material.
     width: float
         The disk width.
@@ -737,7 +737,7 @@ class DiskElement(LumpedDiskElement):
 
     Examples
     --------
-    >>> from LaviRot.materials import steel
+    >>> from lavirot.materials import steel
     >>> disk = DiskElement(0, steel, 0.07, 0.05, 0.28)
     >>> disk.Ip
     0.32956362089137037

@@ -1,5 +1,5 @@
 import pytest
-from LaviRot.materials import *
+from lavirot.materials import *
 from numpy.testing import assert_allclose
 
 AISI4140 = Material.AvailableMaterials.AISI4140
