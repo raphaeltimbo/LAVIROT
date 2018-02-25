@@ -114,3 +114,4 @@ imgs/
 /update_gh_page.sh
 /LaviRot/debug.py
 /docs/gallery/development/
+.pytest_cache/
