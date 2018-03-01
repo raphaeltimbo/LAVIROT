@@ -18,6 +18,7 @@ pmip
 .settings/
 .*.sw[nop]
 .sw[nop]
+*.swp
 *.tmp
 *.vim
 tags
@@ -115,3 +116,4 @@ imgs/
 /LaviRot/debug.py
 /docs/gallery/development/
 .pytest_cache/
+
