@@ -201,6 +201,7 @@ Class used to create an oil and define its properties.
 # Available oils
 #####################################################################
 
+
 iso_vg32 = Oil(name='ISO_VG32', t_a=40, rho_a=856.8, mu_a=0.0255768159199483,
                t_b=100, mu_b=0.0042050707290448133)
 iso_vg46 = Oil(name='ISO_VG46', t_a=40, rho_a=855.7, mu_a=0.0374733067635071,
