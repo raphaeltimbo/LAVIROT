@@ -936,16 +936,16 @@ class BearingElement(Element):
                 # set values for each val so that interpolation can be created
                 val = [val for i in range(4)]
             interp_func = interpolate.UnivariateSpline(w, val)
-            setattr(self, arg, interp_func)
+            setattr(self, 'interpolated_' + arg, interp_func)
 
     def __repr__(self):
         return '%s' % self.__class__.__name__
 
     def K(self, w):
-        kxx = self.kxx(w)
-        kyy = self.kyy(w)
-        kxy = self.kxy(w)
-        kyx = self.kyx(w)
+        kxx = self.interpolated_kxx(w)
+        kyy = self.interpolated_kyy(w)
+        kxy = self.interpolated_kxy(w)
+        kyx = self.interpolated_kyx(w)
 
         K = np.array([[kxx, kxy],
                       [kyx, kyy]])
@@ -953,10 +953,10 @@ class BearingElement(Element):
         return K
 
     def C(self, w):
-        cxx = self.cxx(w)
-        cyy = self.cyy(w)
-        cxy = self.cxy(w)
-        cyx = self.cyx(w)
+        cxx = self.interpolated_cxx(w)
+        cyy = self.interpolated_cyy(w)
+        cxy = self.interpolated_cxy(w)
+        cyx = self.interpolated_cyx(w)
 
         C = np.array([[cxx, cxy],
                       [cyx, cyy]])

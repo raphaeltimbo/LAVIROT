@@ -172,23 +172,23 @@ def bearing0():
 
 
 def test_bearing_interpol_kxx(bearing0):
-    assert_allclose(bearing0.kxx(314.2), 8.5e7)
-    assert_allclose(bearing0.kxx(1151.9), 2.6e8)
+    assert_allclose(bearing0.interpolated_kxx(314.2), 8.5e7)
+    assert_allclose(bearing0.interpolated_kxx(1151.9), 2.6e8)
 
 
 def test_bearing_interpol_kyy(bearing0):
-    assert_allclose(bearing0.kyy(314.2), 9.2e7)
-    assert_allclose(bearing0.kyy(1151.9), 2.6e8)
+    assert_allclose(bearing0.interpolated_kyy(314.2), 9.2e7)
+    assert_allclose(bearing0.interpolated_kyy(1151.9), 2.6e8)
 
 
 def test_bearing_interpol_cxx(bearing0):
-    assert_allclose(bearing0.cxx(314.2), 226837, rtol=1e5)
-    assert_allclose(bearing0.cxx(1151.9), 137973, rtol=1e5)
+    assert_allclose(bearing0.interpolated_cxx(314.2), 226837, rtol=1e5)
+    assert_allclose(bearing0.interpolated_cxx(1151.9), 137973, rtol=1e5)
 
 
 def test_bearing_interpol_cyy(bearing0):
-    assert_allclose(bearing0.kxx(314.2), 235837, rtol=1e5)
-    assert_allclose(bearing0.kxx(1151.9), 2.6e8, rtol=1e5)
+    assert_allclose(bearing0.interpolated_kxx(314.2), 235837, rtol=1e5)
+    assert_allclose(bearing0.interpolated_kxx(1151.9), 2.6e8, rtol=1e5)
 
 
 @pytest.fixture
@@ -214,23 +214,23 @@ def bearing1():
 
 
 def test_bearing1_interpol_kxx(bearing1):
-    assert_allclose(bearing1.kxx(314.2), 8.5e7)
-    assert_allclose(bearing1.kxx(1151.9), 2.6e8)
+    assert_allclose(bearing1.interpolated_kxx(314.2), 8.5e7)
+    assert_allclose(bearing1.interpolated_kxx(1151.9), 2.6e8)
 
 
 def test_bearing1_interpol_kyy(bearing1):
-    assert_allclose(bearing1.kyy(314.2), 9.2e7)
-    assert_allclose(bearing1.kyy(1151.9), 2.6e8)
+    assert_allclose(bearing1.interpolated_kyy(314.2), 9.2e7)
+    assert_allclose(bearing1.interpolated_kyy(1151.9), 2.6e8)
 
 
 def test_bearing1_interpol_cxx(bearing1):
-    assert_allclose(bearing1.cxx(314.2), 226837, rtol=1e5)
-    assert_allclose(bearing1.cxx(1151.9), 137973, rtol=1e5)
+    assert_allclose(bearing1.interpolated_cxx(314.2), 226837, rtol=1e5)
+    assert_allclose(bearing1.interpolated_cxx(1151.9), 137973, rtol=1e5)
 
 
 def test_bearing1_interpol_cyy(bearing1):
-    assert_allclose(bearing1.kxx(314.2), 235837, rtol=1e5)
-    assert_allclose(bearing1.kxx(1151.9), 2.6e8, rtol=1e5)
+    assert_allclose(bearing1.interpolated_kxx(314.2), 235837, rtol=1e5)
+    assert_allclose(bearing1.interpolated_kxx(1151.9), 2.6e8, rtol=1e5)
 
 
 def test_bearing_error1():
