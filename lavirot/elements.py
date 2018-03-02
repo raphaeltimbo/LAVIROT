@@ -937,6 +937,7 @@ class BearingElement(Element):
                 val = [val for i in range(4)]
             interp_func = interpolate.UnivariateSpline(w, val)
             setattr(self, 'interpolated_' + arg, interp_func)
+            setattr(self, arg, interp_func)
 
     def __repr__(self):
         return '%s' % self.__class__.__name__
