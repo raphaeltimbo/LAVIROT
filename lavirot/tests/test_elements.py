@@ -243,6 +243,17 @@ def test_bearing_error1():
             ' the parameters dimension') in str(excinfo.value)
 
 
+@pytest.fixture
+def bearing_constant():
+    bearing = BearingElement(n=4, kxx=8e7, cxx=0)
+    return bearing
+
+
+def test_bearing_constant(bearing_constant):
+    assert_allclose(bearing_constant.interpolated_kxx(314.2), 8e7, rtol=1e5)
+    assert_allclose(bearing_constant.interpolated_cxx(300.9), 0, rtol=1e5)
+
+
 def test_load_shaft_from_xltrc():
     file = os.path.join(test_dir, 'data/xl_rotor.xls')
 

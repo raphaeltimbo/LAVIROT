@@ -873,7 +873,7 @@ class BearingElement(Element):
         args = locals()
         for k, v in args.items():
             if isinstance(v, Iterable):
-                args[k] = np.array(v)
+                args[k] = np.array(v, dtype=np.float64)
 
         kxx = args['kxx']
         cxx = args['cxx']
