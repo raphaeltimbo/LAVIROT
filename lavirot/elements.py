@@ -7,6 +7,7 @@ import matplotlib.patches as mpatches
 from itertools import permutations
 from collections import Iterable
 from lavirot.materials import Material
+from lavirot.plot import BearingSealPlots
 
 
 __all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",
@@ -937,7 +938,9 @@ class BearingElement(Element):
                 val = [val for i in range(4)]
             interp_func = interpolate.UnivariateSpline(w, val)
             setattr(self, 'interpolated_' + arg, interp_func)
-            setattr(self, arg, interp_func)
+            setattr(self, arg, val)
+
+        self.plot = BearingSealPlots(self)
 
     def __repr__(self):
         return '%s' % self.__class__.__name__
