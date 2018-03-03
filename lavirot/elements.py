@@ -856,6 +856,44 @@ class BearingElement(Element):
 
     """
 
+    class _Coefficient(np.ndarray):
+        """
+        Helper class to create coefficients (kxx, kxy...)
+        """
+
+        def __new__(cls, input_array, w=None):
+
+            if isinstance(input_array, (int, float)):
+                if w is not None:
+                    input_array = [input_array for _ in range(len(w))]
+                else:
+                    input_array = [input_array]
+
+            obj = np.asarray(input_array, dtype=np.float64).view(cls)
+            obj.w = w
+
+            if len(obj) > 1:
+                try:
+                    obj.interpolated = interpolate.UnivariateSpline(w, obj)
+                except:
+                    raise ValueError('Arguments (coefficients and w)'
+                                     ' must have the same dimension')
+            else:
+                obj.interpolated = lambda x: np.array(obj[0])
+
+            return obj
+
+        def __array_finalize__(self, obj):
+            # see InfoArray.__array_finalize__ for comments
+            if obj is None: return
+            self.w = getattr(obj, 'w', None)
+
+        def plot(self, ax=None):
+            if ax is None:
+                ax = plt.gca()
+
+            ax.plot(self.w, self)
+
     #  TODO implement for more complex cases (kxy, kthetatheta etc.)
     #  TODO consider kxx, kxy, kyx, kyy, cxx, cxy, cyx, cyy, mxx, myy, myx, myy (to import from XLTRC)
     #  TODO add speed as an argument
@@ -863,67 +901,45 @@ class BearingElement(Element):
     #  TODO evaluate the use of pandas tables to display
     #  TODO create tests to evaluate interpolation
     #  TODO create tests for different cases of bearing instantiation
+
+        # TODO try to simplify the rest of the function putting
+        # TODO everything in this for loop
     def __init__(self, n,
                  kxx, cxx,
                  kyy=None, kxy=0, kyx=0,
                  cyy=None, cxy=0, cyx=0,
                  w=None):
 
-        # TODO try to simplify the rest of the function putting
-        # TODO everything in this for loop
-        args = locals()
-        for k, v in args.items():
-            if isinstance(v, Iterable):
-                args[k] = np.array(v, dtype=np.float64)
+        args = ['kxx', 'kyy', 'kxy', 'kyx',
+                'cxx', 'cyy', 'cxy', 'cyx']
 
-        kxx = args['kxx']
-        cxx = args['cxx']
-        kyy = args['kyy']
-        kxy = args['kxy']
-        kyx = args['kyx']
-        cyy = args['cyy']
-        cxy = args['cxy']
-        cyx = args['cyx']
-        w = args['w']
-
-        # check for args consistency
-        if w is not None:
-            for arg in permutations([kxx, cxx, w], 2):
-                if arg[0].shape != arg[1].shape:
-                    raise Exception(
-                        'kxx, cxx and w must have the same dimension'
-                    )
-
-        # set values for speed so that interpolation can be created
-        if w is None:
-            for arg in [kxx, cxx,
-                        kyy, kxy, kyx,
-                        cyy, cxy, cyx]:
-                if isinstance(arg, np.ndarray):
-                    raise Exception(
-                        'w should be an array with the parameters dimension'
-                    )
-            w = np.linspace(0, 10000, 4)
-
-        w = np.array(w, dtype=np.float)
+        # all args to coefficients
+        args_dict = locals()
+        coefficients = {}
 
         if kyy is None:
-            kyy = kxx
+            args_dict['kyy'] = kxx
         if cyy is None:
-            cyy = cxx
-        # adjust array size to avoid error in interpolation
-        if isinstance(kxy, (int, float)):
-            kxy = [kxy for i in range(len(w))]
-        if isinstance(kyx, (int, float)):
-            kyx = [kyx for i in range(len(w))]
-        if isinstance(cxy, (int, float)):
-            cxy = [cxy for i in range(len(w))]
-        if isinstance(cyx, (int, float)):
-            cyx = [cyx for i in range(len(w))]
+            args_dict['cyy'] = cxx
 
-        args = {'kxx': kxx, 'cxx': cxx,
-                'kyy': kyy, 'kxy': kxy, 'kyx': kyx,
-                'cyy': cyy, 'cxy': cxy, 'cyx': cyx}
+        for arg in args:
+            coefficients[arg] = self._Coefficient(args_dict[arg], args_dict['w'])
+
+        coefficients_len = [len(v) for v in coefficients.values()]
+
+        if w is not None:
+            coefficients_len.append(len(args_dict['w']))
+            if len(set(coefficients_len)) > 1:
+                raise ValueError('Arguments (coefficients and w)'
+                                 ' must have the same dimension')
+        else:
+            for c in coefficients_len:
+                if c != 1:
+                    raise ValueError('Arguments (coefficients and w)'
+                                     ' must have the same dimension')
+
+        for k, v in coefficients.items():
+            setattr(self, k, v)
 
         self.n = n
         self.n_l = n
@@ -932,24 +948,14 @@ class BearingElement(Element):
         self.w = w
         self.color = '#355d7a'
 
-        for arg, val in args.items():
-            if isinstance(val, (int, float)):
-                # set values for each val so that interpolation can be created
-                val = [val for i in range(4)]
-            interp_func = interpolate.UnivariateSpline(w, val)
-            setattr(self, 'interpolated_' + arg, interp_func)
-            setattr(self, arg, val)
-
-        self.plot = BearingSealPlots(self)
-
     def __repr__(self):
         return '%s' % self.__class__.__name__
 
     def K(self, w):
-        kxx = self.interpolated_kxx(w)
-        kyy = self.interpolated_kyy(w)
-        kxy = self.interpolated_kxy(w)
-        kyx = self.interpolated_kyx(w)
+        kxx = self.kxx.interpolated(w)
+        kyy = self.kyy.interpolated(w)
+        kxy = self.kxy.interpolated(w)
+        kyx = self.kyx.interpolated(w)
 
         K = np.array([[kxx, kxy],
                       [kyx, kyy]])
@@ -957,10 +963,10 @@ class BearingElement(Element):
         return K
 
     def C(self, w):
-        cxx = self.interpolated_cxx(w)
-        cyy = self.interpolated_cyy(w)
-        cxy = self.interpolated_cxy(w)
-        cyx = self.interpolated_cyx(w)
+        cxx = self.cxx.interpolated(w)
+        cyy = self.cyy.interpolated(w)
+        cxy = self.cxy.interpolated(w)
+        cyx = self.cyx.interpolated(w)
 
         C = np.array([[cxx, cxy],
                       [cyx, cyy]])
