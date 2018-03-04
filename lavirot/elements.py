@@ -7,7 +7,6 @@ import matplotlib.patches as mpatches
 from itertools import permutations
 from collections import Iterable
 from lavirot.materials import Material
-from lavirot.plot import BearingSealPlots
 
 
 __all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",

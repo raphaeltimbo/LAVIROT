@@ -1663,6 +1663,7 @@ def whirl(kappa_mode):
     return whirldir
 
 
+@np.vectorize
 def whirl_to_cmap(whirl):
     """Maps the whirl to a value"""
     if whirl == 'Forward':
