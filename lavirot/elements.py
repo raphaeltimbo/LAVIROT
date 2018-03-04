@@ -888,11 +888,29 @@ class BearingElement(Element):
             if obj is None: return
             self.w = getattr(obj, 'w', None)
 
-        def plot(self, ax=None):
+        def plot(self, ax=None, **kwargs):
             if ax is None:
                 ax = plt.gca()
 
-            ax.plot(self.w, self)
+            ax.plot(self.w, self, **kwargs)
+            ax.set_xlabel('Speed (rad/s)')
+            ax.ticklabel_format(style='sci', scilimits=(0, 0), axis='y')
+
+            return ax
+
+    class _Stiffness_Coefficient(_Coefficient):
+        def plot(self, **kwargs):
+            ax = super().plot(**kwargs)
+            ax.set_ylabel('Stiffness ($N/m$)')
+
+            return ax
+
+    class _Damping_Coefficient(_Coefficient):
+        def plot(self, **kwargs):
+            ax = super().plot(**kwargs)
+            ax.set_ylabel('Damping ($Ns/m$)')
+
+            return ax
 
     #  TODO implement for more complex cases (kxy, kthetatheta etc.)
     #  TODO consider kxx, kxy, kyx, kyy, cxx, cxy, cyx, cyy, mxx, myy, myx, myy (to import from XLTRC)
@@ -902,8 +920,6 @@ class BearingElement(Element):
     #  TODO create tests to evaluate interpolation
     #  TODO create tests for different cases of bearing instantiation
 
-        # TODO try to simplify the rest of the function putting
-        # TODO everything in this for loop
     def __init__(self, n,
                  kxx, cxx,
                  kyy=None, kxy=0, kyx=0,
@@ -923,7 +939,12 @@ class BearingElement(Element):
             args_dict['cyy'] = cxx
 
         for arg in args:
-            coefficients[arg] = self._Coefficient(args_dict[arg], args_dict['w'])
+            if arg[0] == 'k':
+                coefficients[arg] = self._Stiffness_Coefficient(
+                    args_dict[arg], args_dict['w'])
+            else:
+                coefficients[arg] = self._Damping_Coefficient(
+                    args_dict[arg], args_dict['w'])
 
         coefficients_len = [len(v) for v in coefficients.values()]
 
