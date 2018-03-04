@@ -966,7 +966,7 @@ class BearingElement(Element):
         self.n_l = n
         self.n_r = n
 
-        self.w = w
+        self.w = np.array(w, dtype=np.float64)
         self.color = '#355d7a'
 
     def __repr__(self):
