@@ -736,9 +736,14 @@ class Rotor(object):
 
     def whirl_direction(self):
         """Get the whirl direction for each frequency."""
+        # whirl direction/values are methods because they are expensive.
         whirl_w = [whirl(self.kappa_mode(wd)) for wd in range(len(self.wd))]
 
         return np.array(whirl_w)
+
+    def whirl_values(self):
+        """Get the whirl value (0., 0.5, or 1.) for each frequency."""
+        return whirl_to_cmap(self.whirl_direction())
 
     def orbit(self):
         pass
