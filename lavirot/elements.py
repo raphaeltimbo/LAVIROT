@@ -13,15 +13,6 @@ __all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",
            "BearingElement", "SealElement"]
 
 
-c_pal = {'red': '#C93C3C',
-         'blue': '#0760BA',
-         'green': '#2ECC71',
-         'dark blue': '#07325E',
-         'purple': '#A349C6',
-         'grey': '#2D2D2D',
-         'green2': '#08A4AF'}
-
-
 class Element:
     """Element class."""
     def __init__(self):
