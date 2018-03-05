@@ -882,10 +882,21 @@ class BearingElement(Element):
 
             return obj
 
+        def __getitem__(self, *args, **kwargs):
+            self.slice = args
+            return super().__getitem__(*args, **kwargs)
+
         def __array_finalize__(self, obj):
             # see InfoArray.__array_finalize__ for comments
-            if obj is None: return
-            self.w = getattr(obj, 'w', None)
+            if obj is None:
+                return
+
+            # handle objects created through slices (see __getitem__)
+            try:
+                self.w = getattr(obj, 'w', None).__getitem__(obj.slice)
+                del obj.slice
+            except (AttributeError, IndexError):
+                self.w = getattr(obj, 'w', None)
 
         def plot(self, ax=None, **kwargs):
             if ax is None:
