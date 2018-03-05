@@ -48,6 +48,27 @@ seaborn_colors = ['#4c72b0', '#55a868', '#c44e52',
                   '#8172b2', '#ccb974', '#64b5cd']
 
 
+class Results(np.ndarray):
+    """Class used to store results and provide plots.
+
+    This class subclasses np.ndarray to provide additional info and a plot
+    method to the calculated results from Rotor.
+
+    Metadata about the results should be stored on info as a dictionary to be
+    used on plot configurations and so on.
+
+    """
+    def __new__(cls, input_array, info=None):
+        obj = np.asarray(input_array).view(cls)
+        obj.info = info
+        return obj
+
+    def __array_finalize__(self, obj):
+        if obj is None:
+            return
+        self.info = getattr(obj, 'info', None)
+
+
 class Rotor(object):
     r"""A rotor object.
 
