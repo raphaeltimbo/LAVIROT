@@ -68,6 +68,62 @@ class Results(np.ndarray):
             return
         self.info = getattr(obj, 'info', None)
 
+    def plot(self, fig=None, ax=None):
+
+        if self.info['type'] == 'campbell':
+
+            # results for campbell is an array with [speed_range, wd/log_dec/whirl]
+
+            if fig is None and ax is None:
+                fig, ax = plt.subplots()
+
+            speed_range = self.info['speed_range']
+
+            wd = self[:, :, 0]
+            log_dec = self[:, :, 1]
+            whirl = self[:, :, 2]
+
+            for i in range(wd.shape[1]):
+                im = ax.scatter(speed_range, wd[:, i], marker='D', c=log_dec[:, i],
+                                cmap='RdBu', vmin=0.1, vmax=2., s=20, alpha=0.5)
+            for mark, whirl_dir in zip(['^', 'o', 'v'],
+                                       [0., 0.5, 1.]):
+                for i in range(wd.shape[1]):
+                    # get only forward
+                    wd_i = wd[:, i]
+                    whirl_i = whirl[:, i]
+                    log_dec_i = log_dec[:, i]
+                    if whirl_i[whirl_i == whirl_dir].shape[0] == 0:
+                        continue
+                    else:
+                        im = ax.scatter(speed_range, wd_i[whirl_i == whirl_dir], c=log_dec_i[whirl_i == whirl_dir],
+                                        marker=mark, cmap='RdBu', vmin=0.1, vmax=2., s=20, alpha=0.5)
+
+            cbar = fig.colorbar(im)
+            cbar.ax.set_ylabel('log dec')
+            cbar.solids.set_edgecolor("face")
+
+            label_color = cbar.cmap(cbar.vmax, alpha=0.3)
+            forward_label = mpl.lines.Line2D([], [], marker='^', lw=0,
+                                             color=label_color,
+                                             label='Forward')
+            backwardlabel = mpl.lines.Line2D([], [], marker='v', lw=0,
+                                             color=label_color,
+                                             label='Backward')
+            mixedlabel = mpl.lines.Line2D([], [], marker='o', lw=0,
+                                          color=label_color,
+                                          label='Mixed')
+
+            legend = plt.legend(handles=[forward_label, backwardlabel, mixedlabel],
+                                loc=2)
+
+            ax.add_artist(legend)
+
+            ax.set_xlabel('Rotor speed ($rad/s$)')
+            ax.set_ylabel('Damped natural frequencies ($rad/s$)')
+
+            return ax
+
 
 class Rotor(object):
     r"""A rotor object.
@@ -1267,7 +1323,7 @@ class Rotor(object):
 
         return ax
 
-    def campbell(self, speed_rad, freqs=6, mult=[1], plot=True, ax=None):
+    def campbell(self, speed_range, freqs=6):
         r"""Calculates the Campbell diagram.
 
         This function will calculate the damped natural frequencies
@@ -1275,7 +1331,7 @@ class Rotor(object):
 
         Parameters
         ----------
-        speed_rad: array
+        speed_range: array
             Array with the speed range in rad/s.
         freqs: int, optional
             Number of frequencies that will be calculated.
@@ -1301,111 +1357,30 @@ class Rotor(object):
         --------
         >>> rotor1 = rotor_example()
         >>> speed = np.linspace(0, 400, 101)
-        >>> camp = rotor1.campbell(speed, plot=False)
+        >>> camp = rotor1.campbell(speed)
         >>> np.round(camp[:, 0], 1) #  damped natural frequencies at the first rotor speed (0 rad/s)
         array([  82.7,   86.7,  254.5,  274.3,  679.5,  716.8])
         >>> np.round(camp[:, 10], 1) # damped natural frequencies at 40 rad/s
         array([  82.6,   86.7,  254.3,  274.5,  676.5,  719.7])
         """
-        rotor_state_speed = self.w
+        rotor_current_speed = self.w
 
-        speed_rad = np.array(speed_rad)
-        z = []  # will contain values for each whirl (0, 0.5, 1)
-        # freqs, log_decs, speeds
-        points_all = np.zeros([freqs, 2, len(speed_rad)])
+        # store in results [speeds(x axis), freqs[0] or logdec[1] or whirl[2](y axis), 3]
+        results = np.zeros([len(speed_range), freqs, 3])
 
-        for idx, w0, w1 in(zip(range(len(speed_rad)),
-                               speed_rad[:-1],
-                               speed_rad[1:])):
-            # define shaft speed
-            # check rotor state to avoid recalculating eigenvalues
-            if not self.w == w0:
-                self.w = w0
+        for i, w in enumerate(speed_range):
+            self.w = w
 
-            # define x as the current speed and y as each wd
-            x_w0 = np.full_like(range(freqs), w0)
-            y_wd0 = self.wd[:freqs]
-            log_dec0 = self.log_dec[:freqs]
+            results[i, :, 0] = self.wd[:freqs]
+            results[i, :, 1] = self.log_dec[:freqs]
+            results[i, :, 2] = self.whirl_values()[:freqs]
 
-            # generate points for the first speed
-            points0 = np.array([x_w0, y_wd0]).T.reshape(-1, 1, 2)
-            y_wd0_log_dec = np.hstack((y_wd0.reshape(freqs, 1),
-                                       log_dec0.reshape(freqs, 1)))
-            points_all[:, :, idx] += y_wd0_log_dec  # TODO verificar teste
+        results = Results(results, info={'type': 'campbell',
+                                         'speed_range': speed_range})
 
-            # go to the next speed
-            self.w = w1
-            x_w1 = np.full_like(range(freqs), w1)
-            y_wd1 = self.wd[:freqs]
-            log_dec1 = self.log_dec[:freqs]
-            points1 = np.array([x_w1, y_wd1]).T.reshape(-1, 1, 2)
+        self.w = rotor_current_speed
 
-            new_segment = np.concatenate([points0, points1], axis=1)
-
-            if w0 == speed_rad[0]:
-                segments = new_segment
-            else:
-                segments = np.concatenate([segments, new_segment])
-
-            whirl_w = [whirl(self.kappa_mode(wd)) for wd in range(freqs)]
-            z.append([whirl_to_cmap(i) for i in whirl_w])
-
-        if plot is False:
-            # add last column
-            y_wd1_log_dec = np.hstack((y_wd1.reshape(freqs, 1),
-                                       log_dec1.reshape(freqs, 1)))
-            points_all[:, :, idx + 1] += y_wd1_log_dec
-            # restore rotor speed
-            self.w = rotor_state_speed
-            return points_all
-
-        z = np.array(z).flatten()
-
-        cmap = ListedColormap([c_pal['blue'],
-                               c_pal['grey'],
-                               c_pal['red']])
-
-        if ax is None:
-            ax = plt.gca()
-        lines_2 = LineCollection(segments, array=z, cmap=cmap)
-        ax.add_collection(lines_2)
-
-        # plot harmonics in hertz
-        for m in mult:
-            ax.plot(speed_rad, m * speed_rad,
-                    color=c_pal['green2'],
-                    linestyle='dashed')
-
-        # axis limits
-        ax.set_xlim(0, max(speed_rad))
-        ax.set_ylim(0, max(max(mult) * speed_rad))
-
-        # legend and title
-        ax.set_xlabel(r'Rotor speed ($rad/s$)')
-        ax.set_ylabel(r'Damped natural frequencies ($rad/s$)')
-
-        forward_label = mpl.lines.Line2D([], [],
-                                         color=c_pal['blue'],
-                                         label='Forward')
-        backwardlabel = mpl.lines.Line2D([], [],
-                                         color=c_pal['red'],
-                                         label='Backward')
-        mixedlabel = mpl.lines.Line2D([], [],
-                                      color=c_pal['grey'],
-                                      label='Mixed')
-
-        # add legend manually so that the user can add additional
-        # legend in the returned axes.
-        # See multiple legends on the same axes:
-        # https://matplotlib.org/users/legend_guide.html
-        legend = plt.legend(handles=[forward_label, backwardlabel, mixedlabel],
-                            loc=2)
-        ax.add_artist(legend)
-
-        # restore rotor speed
-        self.w = rotor_state_speed
-
-        return ax
+        return results
 
     def plot_ucs(self, stiffness_range=None, num=20, ax=None):
         """Plot undamped critical speed map.
