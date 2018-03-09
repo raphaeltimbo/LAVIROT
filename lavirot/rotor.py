@@ -18,6 +18,7 @@ from cycler import cycler
 
 from lavirot.elements import *
 from lavirot.materials import steel
+from lavirot.results import CampbellResults
 
 
 __all__ = ['Rotor', 'rotor_example']
@@ -1246,7 +1247,7 @@ class Rotor(object):
 
         return ax
 
-    def campbell(self, speed_range, freqs=6):
+    def campbell(self, speed_range, frequencies=6):
         r"""Calculates the Campbell diagram.
 
         This function will calculate the damped natural frequencies
@@ -1254,27 +1255,17 @@ class Rotor(object):
 
         Parameters
         ----------
-        speed_range: array
+        speed_range : array
             Array with the speed range in rad/s.
-        freqs: int, optional
+        frequencies : int, optional
             Number of frequencies that will be calculated.
             Default is 6.
-        mult: list, optional
-            List withe the harmonics to be plotted.
-            The default is to plot 1x.
-        plot: bool, optional
-            If the campbell will be plotted.
-            If plot=False, points for the Campbell will be returned.
-        ax : matplotlib axes, optional
-            Axes in which the plot will be drawn.
 
         Returns
         -------
-        points: array
+        results : array
             Array with the natural frequencies corresponding to each speed
-             of the speed_rad array. It will be returned if plot=False.
-        ax : matplotlib axes
-            Returns the axes object with the plot.
+            of the speed_rad array. It will be returned if plot=False.
 
         Examples
         --------
@@ -1288,18 +1279,18 @@ class Rotor(object):
         """
         rotor_current_speed = self.w
 
-        # store in results [speeds(x axis), freqs[0] or logdec[1] or whirl[2](y axis), 3]
-        results = np.zeros([len(speed_range), freqs, 3])
+        # store in results [speeds(x axis), frequencies[0] or logdec[1] or whirl[2](y axis), 3]
+        results = np.zeros([len(speed_range), frequencies, 3])
 
         for i, w in enumerate(speed_range):
             self.w = w
 
-            results[i, :, 0] = self.wd[:freqs]
-            results[i, :, 1] = self.log_dec[:freqs]
-            results[i, :, 2] = self.whirl_values()[:freqs]
+            results[i, :, 0] = self.wd[:frequencies]
+            results[i, :, 1] = self.log_dec[:frequencies]
+            results[i, :, 2] = self.whirl_values()[:frequencies]
 
-        results = Results(results, info={'type': 'campbell',
-                                         'speed_range': speed_range})
+        results = CampbellResults(results, info={'type': 'campbell',
+                                                 'speed_range': speed_range})
 
         self.w = rotor_current_speed
 
