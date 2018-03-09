@@ -66,11 +66,13 @@ class CampbellResults(Results):
                 wd_i = wd[:, i]
                 whirl_i = whirl[:, i]
                 log_dec_i = log_dec[:, i]
-                if whirl_i[whirl_i == whirl_dir].shape[0] == 0:
+
+                whirl_mask = (whirl_i == whirl_dir)
+                if whirl_mask.shape[0] == 0:
                     continue
                 else:
-                    im = ax.scatter(speed_range, wd_i[whirl_i == whirl_dir],
-                                    c=log_dec_i[whirl_i == whirl_dir],
+                    im = ax.scatter(speed_range[whirl_mask], wd_i[whirl_mask],
+                                    c=log_dec_i[whirl_mask],
                                     marker=mark, cmap='RdBu', vmin=0.1,
                                     vmax=2., s=20, alpha=0.5)
 
