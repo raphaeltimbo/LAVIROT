@@ -12,16 +12,32 @@ class Results(np.ndarray):
     Metadata about the results should be stored on info as a dictionary to be
     used on plot configurations and so on.
 
+    Additional attributes can be passed as a dictionary in new_attributes kwarg.
+
     """
-    def __new__(cls, input_array, info=None):
+    def __new__(cls, input_array, info=None, new_attributes=None):
         obj = np.asarray(input_array).view(cls)
         obj.info = info
+
+        for k, v in new_attributes.items():
+            setattr(obj, k, v)
+
+        # save new attributes names to create them on array finalize
+        obj._new_attributes = new_attributes
+
         return obj
 
     def __array_finalize__(self, obj):
         if obj is None:
             return
+
         self.info = getattr(obj, 'info', None)
+
+        try:
+            for k, v in obj._new_attributes.items():
+                setattr(self, k, getattr(obj, k, v))
+        except AttributeError:
+            return
 
     def plot(self, *args, **kwargs):
         raise NotImplementedError

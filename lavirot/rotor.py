@@ -18,7 +18,7 @@ from cycler import cycler
 
 from lavirot.elements import *
 from lavirot.materials import steel
-from lavirot.results import CampbellResults
+from lavirot.results import CampbellResults, FrequencyResponseResults
 
 
 __all__ = ['Rotor', 'rotor_example']
@@ -820,8 +820,7 @@ class Rotor(object):
 
         # if modes are selected:
 
-        magdb = np.empty((inputs, outputs, len(omega)))
-        phase = np.empty((inputs, outputs, len(omega)))
+        mag_phase = np.empty((inputs, outputs, len(omega), 2))
 
         for wi, w in enumerate(omega):
             # calculate eigenvalues and eigenvectors using la.eig to get
@@ -856,10 +855,14 @@ class Rotor(object):
                 magh = 20.0 * np.log10(abs(H))
             angh = np.rad2deg((np.angle(H)))
 
-            magdb[:, :, wi] = magh
-            phase[:, :, wi] = angh
+            mag_phase[:, :, wi, 0] = magh
+            mag_phase[:, :, wi, 1] = angh
 
-        return omega, magdb, phase
+            results = FrequencyResponseResults(
+                mag_phase, info={'type': 'frequency_response', 'omega': omega}
+            )
+
+        return results
 
     def _unbalance_force(self, node, magnitude, phase, omega):
         """Function to calculate unbalance force"""
@@ -1008,7 +1011,6 @@ class Rotor(object):
         ax1.set_xlabel('Frequency (rad/s)')
 
         return ax0, ax1
-
 
     def plot_freq_response_grid(self, outs, inps, F=None, omega=None, modes=None, ax=None):
         """Plot frequency response.
