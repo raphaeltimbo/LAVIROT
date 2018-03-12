@@ -806,8 +806,8 @@ class Rotor(object):
         Examples
         --------
         """
-        rows = self.lti.inputs  # inputs (mag and phase)
-        cols = self.lti.inputs  # outputs
+        inputs = self.lti.inputs  # inputs (mag and phase)
+        outputs = self.lti.outputs  # outputs
 
         B = self.lti.B
         C = self.lti.C
@@ -820,8 +820,8 @@ class Rotor(object):
 
         # if modes are selected:
 
-        magdb = np.empty((cols, rows, len(omega)))
-        phase = np.empty((cols, rows, len(omega)))
+        magdb = np.empty((inputs, outputs, len(omega)))
+        phase = np.empty((inputs, outputs, len(omega)))
 
         for wi, w in enumerate(omega):
             # calculate eigenvalues and eigenvectors using la.eig to get
