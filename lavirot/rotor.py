@@ -858,9 +858,7 @@ class Rotor(object):
             mag_phase[:, :, wi, 0] = magh
             mag_phase[:, :, wi, 1] = angh
 
-            results = FrequencyResponseResults(
-                mag_phase, info={'type': 'frequency_response', 'omega': omega}
-            )
+            results = FrequencyResponseResults(mag_phase, new_attributes={'omega': omega})
 
         return results
 
@@ -921,9 +919,9 @@ class Rotor(object):
             except NameError:
                 F0 = self._unbalance_force(n, m, p, kwargs['omega'])
 
-        _omega, _magnitude, _phase = self.freq_response(F=F0, **kwargs)
+        results = self.freq_response(F=F0, **kwargs)
 
-        return _omega, _magnitude, _phase
+        return results
 
     def plot_unbalance_response(self, out, inp, node, magnitude, phase,
                                 units='m', ax0=None, ax1=None, plot_kws=None,
@@ -1212,8 +1210,7 @@ class Rotor(object):
             results[i, :, 1] = self.log_dec[:frequencies]
             results[i, :, 2] = self.whirl_values()[:frequencies]
 
-        results = CampbellResults(results, info={'type': 'campbell',
-                                                 'speed_range': speed_range})
+        results = CampbellResults(results, new_attributes={'speed_range': speed_range})
 
         self.w = rotor_current_speed
 

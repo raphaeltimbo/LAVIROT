@@ -513,9 +513,12 @@ def test_freq_response(rotor4):
                                    [-121.31645881, -120.44617713, -124.36604496, -122.47735964]]])
 
     omega = np.linspace(0., 450., 4)
-    omega, magdb, phase = rotor4.freq_response(omega=omega, units='dB')
+    freq_resp = rotor4.freq_response(omega=omega, units='dB')
+    magdb = freq_resp[:, :, :, 0]
     assert_allclose(magdb[:4, :4, :4], magdb_exp)
-    omega, magdb, phase = rotor4.freq_response(omega=omega, modes=list(range(4)), units='dB')
+
+    freq_resp = rotor4.freq_response(omega=omega, modes=list(range(4)), units='dB')
+    magdb = freq_resp[:, :, :, 0]
     assert_allclose(magdb[:4, :4, :4], magdb_exp_modes_4)
 
     # TODO add test with force input
@@ -589,14 +592,17 @@ def test_freq_response_w_force(rotor4):
                                [0.00000000e+00, 3.79692673e-05, 5.97050225e-05, 5.48105215e-05],
                                [0.00000000e+00, 4.16812885e-05, 1.38592416e-05, 2.20209089e-05]]])
     omega = np.linspace(0., 450., 4)
-    omega, mag, phase = rotor4.freq_response(F=F0, omega=omega)
+    freq_resp = rotor4.freq_response(F=F0, omega=omega)
+    mag = freq_resp[:, :, :, 0]
     assert_allclose(mag[:4, :4, :4], mag_exp)
 
-    omega, mag, phase = rotor4.unbalance_response(2, 0.001, 0, omega=omega)
+    freq_resp = rotor4.unbalance_response(2, 0.001, 0, omega=omega)
+    mag = freq_resp[:, :, :, 0]
     assert_allclose(mag[:4, :4, :4], mag_exp)
 
-    omega, mag, phase = rotor4.unbalance_response(
+    freq_resp = rotor4.unbalance_response(
         [2, 3], [0.001, 0.001], [0., 0], omega=omega)
+    mag = freq_resp[:, :, :, 0]
     assert_allclose(mag[:4, :4, :4], mag_exp_2_unb)
 
 

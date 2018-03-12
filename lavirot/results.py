@@ -15,10 +15,10 @@ class Results(np.ndarray):
     Additional attributes can be passed as a dictionary in new_attributes kwarg.
 
     """
-    def __new__(cls, input_array, info=None, new_attributes=None):
+    def __new__(cls, input_array, new_attributes=None):
         obj = np.asarray(input_array).view(cls)
-        obj.info = info
 
+        # TODO evaluate if new_attributes is useful. Slicing may by a problem
         for k, v in new_attributes.items():
             setattr(obj, k, v)
 
@@ -30,8 +30,6 @@ class Results(np.ndarray):
     def __array_finalize__(self, obj):
         if obj is None:
             return
-
-        self.info = getattr(obj, 'info', None)
 
         try:
             for k, v in obj._new_attributes.items():
@@ -69,7 +67,7 @@ class CampbellResults(Results):
         if fig is None and ax is None:
             fig, ax = plt.subplots()
 
-        speed_range = self.info['speed_range']
+        speed_range = self.speed_range
 
         wd = self[:, :, 0]
         log_dec = self[:, :, 1]
@@ -160,11 +158,12 @@ class FrequencyResponseResults(Results):
             else:
                 ax0, ax1 = ax
         # TODO add option to select plot units
-        omega, magdb, phase = self.freq_response(
-            F=F, omega=omega, modes=modes, units=units)
+        omega = self.omega
+        magdb = self[:, :, :, 0]
+        phase = self[:, :, :, 1]
 
-        ax0.plot(omega, magdb[out, inp, :], **kwargs)
-        ax1.plot(omega, phase[out, inp, :], **kwargs)
+        ax0.plot(omega, magdb[inp, out, :], **kwargs)
+        ax1.plot(omega, phase[inp, out, :], **kwargs)
         for ax in [ax0, ax1]:
             ax.set_xlim(0, max(omega))
             ax.yaxis.set_major_locator(
@@ -172,10 +171,10 @@ class FrequencyResponseResults(Results):
             ax.yaxis.set_major_locator(
                 mpl.ticker.MaxNLocator(prune='upper'))
 
-        ax0.text(.9, .9, 'Output %s' % out,
+        ax0.text(.9, .9, 'Output %s' % inp,
                  horizontalalignment='center',
                  transform=ax0.transAxes)
-        ax0.text(.9, .7, 'Input %s' % inp,
+        ax0.text(.9, .7, 'Input %s' % out,
                  horizontalalignment='center',
                  transform=ax0.transAxes)
 
@@ -187,6 +186,4 @@ class FrequencyResponseResults(Results):
         ax1.set_xlabel('Frequency (rad/s)')
 
         return ax0, ax1
-
-
 
