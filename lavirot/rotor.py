@@ -37,14 +37,6 @@ plt.style.use({
 
 _orig_rc_params = mpl.rcParams.copy()
 
-c_pal = {'red': '#C93C3C',
-         'blue': '#0760BA',
-         'green': '#2ECC71',
-         'dark blue': '#07325E',
-         'purple': '#A349C6',
-         'grey': '#2D2D2D',
-         'green2': '#08A4AF'}
-
 seaborn_colors = ['#4c72b0', '#55a868', '#c44e52',
                   '#8172b2', '#ccb974', '#64b5cd']
 
