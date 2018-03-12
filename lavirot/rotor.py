@@ -222,7 +222,7 @@ class Rotor(object):
         self.evectors = None
         self.wn = None
         self.wd = None
-        self.H = None
+        self.lti = None
 
         self._v0 = None  # used to call eigs
         #  TODO check when disk diameter in no consistent with shaft diameter
@@ -245,7 +245,7 @@ class Rotor(object):
                               np.absolute(self.evalues))[:wn_len]
         self.log_dec = (2*np.pi*self.damping_ratio /
                         np.sqrt(1 - self.damping_ratio**2))
-        self.H = self._H()
+        self.lti = self._lti()
 
     @property
     def w(self):
@@ -742,7 +742,7 @@ class Rotor(object):
         pass
     #  TODO static methods as auxiliary functions
 
-    def _H(self):
+    def _lti(self):
         r"""Continuous-time linear time invariant system.
 
         This method is used to create a Continuous-time linear
@@ -806,12 +806,12 @@ class Rotor(object):
         Examples
         --------
         """
-        rows = self.H.inputs  # inputs (mag and phase)
-        cols = self.H.inputs  # outputs
+        rows = self.lti.inputs  # inputs (mag and phase)
+        cols = self.lti.inputs  # outputs
 
-        B = self.H.B
-        C = self.H.C
-        D = self.H.D
+        B = self.lti.B
+        C = self.lti.C
+        D = self.lti.D
 
         # if omega is not given, define a range
         # TODO adapt this range
@@ -1169,7 +1169,7 @@ class Rotor(object):
         Examples
         --------
         """
-        return signal.lsim(self.H, F, t, X0=ic)
+        return signal.lsim(self.lti, F, t, X0=ic)
 
     def plot_rotor(self, nodes=1, ax=None):
         """ Plots a rotor object.
