@@ -198,6 +198,8 @@ class FrequencyResponseResults(Results):
 
         if units == 'm':
             ax0.set_ylabel('Amplitude $(m)$')
+        elif units == 'mic-pk-pk':
+            ax0.set_ylabel('Amplitude $(\mu pk-pk)$')
         else:
             ax0.set_ylabel('Amplitude $(dB)$')
         ax1.set_ylabel('Phase')
@@ -266,96 +268,3 @@ class FrequencyResponseResults(Results):
                                         ax1=ax[2 * i + 1])
 
         return ax
-
-
-class UnbalanceResponseResults(FrequencyResponseResults):
-    def plot_unbalance_response(self, out, inp, node, magnitude, phase,
-                                units='m', ax0=None, ax1=None, plot_kws=None,
-                                **kwargs):
-        """Plot unbalance response.
-
-        This method plots the unbalance response.
-
-        Parameters
-        ----------
-        out : int
-            Output.
-        input : int
-            Input.
-        modes : list, optional
-            Modes that will be used to calculate the frequency response
-            (all modes will be used if a list is not given).
-        node : int
-            Node where the unbalance is applied.
-        magnitude : float
-            Unbalance magnitude (kg.m)
-        phase : float
-            Unbalance phase (rad)
-
-
-        ax0 : matplotlib.axes, optional
-            Matplotlib axes where the amplitude will be plotted.
-            If None creates a new.
-        ax1 : matplotlib.axes, optional
-            Matplotlib axes where the phase will be plotted.
-            If None creates a new.
-        kwargs : optional
-            Additional key word arguments can be passed to change
-            the plot (e.g. linestyle='--')
-        Returns
-        -------
-        ax0 : matplotlib.axes
-            Matplotlib axes with amplitude plot.
-        ax1 : matplotlib.axes
-            Matplotlib axes with phase plot.
-
-        Examples
-        --------
-        """
-        if ax0 is None or ax1 is None:
-            fig, ax = plt.subplots(2)
-            if ax0 is not None:
-                _, ax1 = ax
-            if ax1 is not None:
-                ax0, _ = ax
-            else:
-                ax0, ax1 = ax
-        # TODO add option to select plot units
-
-        omega = self.omega
-        magdb = self[:, :, :, 0]
-        phase = self[:, :, :, 0]
-
-        if plot_kws is None:
-            plot_kws = {}
-
-        ax0.plot(omega, magdb[out, inp, :], **plot_kws)
-        ax1.plot(omega, phase[out, inp, :], **plot_kws)
-        for ax in [ax0, ax1]:
-            ax.set_xlim(0, max(omega))
-            ax.yaxis.set_major_locator(
-                mpl.ticker.MaxNLocator(prune='lower'))
-            ax.yaxis.set_major_locator(
-                mpl.ticker.MaxNLocator(prune='upper'))
-
-        ax0.text(.9, .9, 'Output %s' % out,
-                 horizontalalignment='center',
-                 transform=ax0.transAxes)
-        ax0.text(.9, .7, 'Input %s' % inp,
-                 horizontalalignment='center',
-                 transform=ax0.transAxes)
-
-        if units == 'm':
-            ax0.set_ylabel('Amplitude $(m)$')
-        elif units == 'mic-pk-pk':
-            ax0.set_ylabel('Amplitude$(\mu m$ pk-pk)')
-        else:
-            ax0.set_ylabel('Amplitude $(dB)$')
-        ax1.set_ylabel('Phase')
-        ax1.set_xlabel('Frequency (rad/s)')
-
-        return ax0, ax1
-
-
-
-
