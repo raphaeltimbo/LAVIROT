@@ -335,6 +335,7 @@ class ModeShapeResults(Results):
         elements_included = []
 
         # TODO Check how to pass rotor.shaft_elements.
+        # TODO pass elements length.
         for el in rotor.shaft_elements:
             n = el.n
             if n in elements_included:
