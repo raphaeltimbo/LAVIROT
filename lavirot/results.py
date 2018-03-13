@@ -1,3 +1,4 @@
+import pickle
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -37,7 +38,21 @@ class Results(np.ndarray):
         except AttributeError:
             return
 
-    # TODO add __reduce__ and __setstate__ to enable pickle
+    def __reduce__(self):
+        pickled_state = super().__reduce__()
+        new_state = pickled_state[2] + (self._new_attributes,)
+
+        return (pickled_state[0], pickled_state[1], new_state)
+
+    def __setstate__(self, state):
+        self._new_attributes = state[-1]
+        for k, v in self._new_attributes.items():
+            setattr(self, k, v)
+        super().__setstate__(state[0:-1])
+
+    def save(self, file):
+        with open(file, mode='wb') as f:
+            pickle.dump(self, f)
 
     def plot(self, *args, **kwargs):
         raise NotImplementedError
