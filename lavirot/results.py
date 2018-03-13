@@ -37,6 +37,8 @@ class Results(np.ndarray):
         except AttributeError:
             return
 
+    # TODO add __reduce__ and __setstate__ to enable pickle
+
     def plot(self, *args, **kwargs):
         raise NotImplementedError
 
