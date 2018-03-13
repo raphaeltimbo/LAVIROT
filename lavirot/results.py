@@ -263,3 +263,124 @@ class FrequencyResponseResults(Results):
                           ax1=ax[2 * i + 1], **kwargs,)
 
         return ax
+
+
+class ModeShapeResults(Results):
+    def plot(self, mode=None, evec=None, fig=None, ax=None):
+        if ax is None:
+            fig = plt.figure()
+            ax = fig.gca(projection='3d')
+
+        # get only displacement (not velocity)
+        # if evec is None:
+        #     evec0 = rotor.evectors[:rotor.ndof, mode]
+        # else:
+        #     evec0 = evec[:rotor.ndof, mode]
+        #
+
+        evec0 = self[:, mode]
+        nodes = self.nodes
+        nodes_pos = self.nodes_pos
+        kappa_modes = self.kappa_modes
+
+        modex = evec0[0::4]
+        modey = evec0[1::4]
+        xmax, ixmax = max(abs(modex)), np.argmax(abs(modex))
+        ymax, iymax = max(abs(modey)), np.argmax(abs(modey))
+
+        if ymax > 0.4 * xmax:
+            evec0 /= modey[iymax]
+        else:
+            evec0 /= modex[ixmax]
+
+        modex = evec0[0::4]
+        modey = evec0[1::4]
+
+        num_points = 201
+        c = np.linspace(0, 2 * np.pi, num_points)
+        circle = np.exp(1j * c)
+
+        x_circles = np.zeros((num_points, len(nodes)))
+        y_circles = np.zeros((num_points, len(nodes)))
+        z_circles_pos = np.zeros((num_points, len(nodes)))
+
+        # kappa_mode = rotor.kappa_mode(mode)
+        # kappa_mode = ['tab:blue' if k > 0 else 'tab:red' for k in kappa_mode]
+        kappa_mode = kappa_modes[mode]
+
+        for node in nodes:
+            x = modex[node] * circle
+            x_circles[:, node] = np.real(x)
+            y = modey[node] * circle
+            y_circles[:, node] = np.real(y)
+            z_circles_pos[:, node] = nodes_pos[node]
+
+        # plot lines
+        nn = 21
+        zeta = np.linspace(0, 1, nn)
+        onn = np.ones_like(zeta)
+
+        zeta = zeta.reshape(nn, 1)
+        onn = onn.reshape(nn, 1)
+
+        xn = np.zeros(nn * (len(nodes) - 1))
+        yn = np.zeros(nn * (len(nodes) - 1))
+        zn = np.zeros(nn * (len(nodes) - 1))
+
+        N1 = onn - 3 * zeta ** 2 + 2 * zeta ** 3
+        N2 = zeta - 2 * zeta ** 2 + zeta ** 3
+        N3 = 3 * zeta ** 2 - 2 * zeta ** 3
+        N4 = -zeta ** 2 + zeta ** 3
+
+        elements_included = []
+
+        # TODO Check how to pass rotor.shaft_elements.
+        for el in rotor.shaft_elements:
+            n = el.n
+            if n in elements_included:
+                continue
+            else:
+                elements_included.append(n)  # list with elements already included
+            Le = el.L
+            node_pos = rotor.nodes_pos[n]
+            Nx = np.hstack((N1, Le * N2, N3, Le * N4))
+            Ny = np.hstack((N1, -Le * N2, N3, -Le * N4))
+
+            xx = [4 * n, 4 * n + 3, 4 * n + 4, 4 * n + 7]
+            yy = [4 * n + 1, 4 * n + 2, 4 * n + 5, 4 * n + 6]
+
+            pos0 = nn * n
+            pos1 = nn * (n + 1)
+            xn[pos0:pos1] = Nx @ evec0[xx].real
+            yn[pos0:pos1] = Ny @ evec0[yy].real
+            zn[pos0:pos1] = (node_pos * onn + Le * zeta).reshape(nn)
+
+        for node in rotor.nodes:
+            ax.plot(x_circles[10:, node],
+                    y_circles[10:, node],
+                    z_circles_pos[10:, node],
+                    color=kappa_mode[node],
+                    linewidth=0.5, zdir='x')
+            ax.scatter(x_circles[10, node],
+                       y_circles[10, node],
+                       z_circles_pos[10, node],
+                       s=5,
+                       color=kappa_mode[node], zdir='x')
+
+        ax.plot(xn, yn, zn, 'k--', zdir='x')
+
+        # plot center line
+        zn_cl0 = -(zn[-1] * 0.1)
+        zn_cl1 = zn[-1] * 1.1
+        zn_cl = np.linspace(zn_cl0, zn_cl1, 30)
+        ax.plot(zn_cl * 0, zn_cl * 0, zn_cl, 'k-.', linewidth=0.8, zdir='x')
+
+        ax.set_zlim(-2, 2)
+        ax.set_ylim(-2, 2)
+        ax.set_xlim(zn_cl0 - 0.1, zn_cl1 + 0.1)
+
+        fig.text(0, 0.15, f'$speed$ = {rotor.w:.1f} rad/s')
+        fig.text(0, 0.1, f'$\omega_d$ = {rotor.wd[mode]:.1f} rad/s')
+        fig.text(0, 0.05, f'$log dec$ = {rotor.log_dec[mode]:.1f}')
+
+        return fig, ax

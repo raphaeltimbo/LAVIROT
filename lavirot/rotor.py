@@ -18,7 +18,8 @@ from cycler import cycler
 
 from lavirot.elements import *
 from lavirot.materials import steel
-from lavirot.results import CampbellResults, FrequencyResponseResults
+from lavirot.results import (CampbellResults, FrequencyResponseResults,
+                             ModeShapeResults)
 
 
 __all__ = ['Rotor', 'rotor_example']
@@ -1069,6 +1070,17 @@ class Rotor(object):
         self.w = rotor_current_speed
 
         return results
+
+    def mode_shapes(self):
+        kappa_modes = [self.kappa_mode(i) for i in range(len(self.wn))]
+        kappa_modes = ['tab:blue' if k > 0 else 'tab:red' for k in kappa_modes]
+
+        mode_shapes = ModeShapeResults(self.evectors[:self.ndof],
+                                       new_attributes={'ndof': self.ndof,
+                                                       'nodes': self.nodes,
+                                                       'nodes_pos': self.nodes_pos
+                                                       'kappa_modes': kappa_modes})
+
 
     def plot_ucs(self, stiffness_range=None, num=20, ax=None):
         """Plot undamped critical speed map.
