@@ -592,7 +592,7 @@ def test_freq_response_w_force(rotor4):
                                [0.00000000e+00, 3.79692673e-05, 5.97050225e-05, 5.48105215e-05],
                                [0.00000000e+00, 4.16812885e-05, 1.38592416e-05, 2.20209089e-05]]])
     omega = np.linspace(0., 450., 4)
-    freq_resp = rotor4.freq_response(F=F0, omega=omega)
+    freq_resp = rotor4.freq_response(force=F0, omega=omega)
     mag = freq_resp[:, :, :, 0]
     assert_allclose(mag[:4, :4, :4], mag_exp)
 

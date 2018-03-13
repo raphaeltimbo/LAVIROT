@@ -182,6 +182,7 @@ class FrequencyResponseResults(Results):
 
         ax0.plot(omega, magdb[inp, out, :], **kwargs)
         ax1.plot(omega, phase[inp, out, :], **kwargs)
+
         for ax in [ax0, ax1]:
             ax.set_xlim(0, max(omega))
             ax.yaxis.set_major_locator(
@@ -189,25 +190,19 @@ class FrequencyResponseResults(Results):
             ax.yaxis.set_major_locator(
                 mpl.ticker.MaxNLocator(prune='upper'))
 
-        ax0.text(.9, .9, 'Output %s' % inp,
-                 horizontalalignment='center',
-                 transform=ax0.transAxes)
-        ax0.text(.9, .7, 'Input %s' % out,
-                 horizontalalignment='center',
-                 transform=ax0.transAxes)
-
         if units == 'm':
             ax0.set_ylabel('Amplitude $(m)$')
         elif units == 'mic-pk-pk':
             ax0.set_ylabel('Amplitude $(\mu pk-pk)$')
         else:
             ax0.set_ylabel('Amplitude $(dB)$')
+
         ax1.set_ylabel('Phase')
         ax1.set_xlabel('Frequency (rad/s)')
 
         return ax0, ax1
 
-    def plot_freq_response_grid(self, outs, inps, F=None, omega=None, modes=None, ax=None):
+    def plot_freq_response_grid(self, outs, inps, ax=None, **kwargs):
         # TODO function not tested after being moved from rotor.py
         # TODO check if this can be integrated to the plot function
         """Plot frequency response.
@@ -258,13 +253,13 @@ class FrequencyResponseResults(Results):
         if len(outs) > 1:
             for i, out in enumerate(outs):
                 for j, inp in enumerate(inps):
-                    self.plot_freq_response(out, inp, F=F, omega=omega, modes=modes,
-                                            ax0=ax[2 * i, j],
-                                            ax1=ax[2 * i + 1, j])
+                    self.plot(out, inp,
+                              ax0=ax[2 * i, j],
+                              ax1=ax[2 * i + 1, j], **kwargs,)
         else:
             for i, inp in enumerate(inps):
-                self.plot_freq_response(outs[0], inp, F=F, omega=omega, modes=modes,
-                                        ax0=ax[2 * i],
-                                        ax1=ax[2 * i + 1])
+                self.plot(outs[0], inp,
+                          ax0=ax[2 * i],
+                          ax1=ax[2 * i + 1], **kwargs,)
 
         return ax

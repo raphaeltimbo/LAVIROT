@@ -774,7 +774,7 @@ class Rotor(object):
 
         return sys
 
-    def freq_response(self, F=None, omega=None, modes=None, units='m'):
+    def freq_response(self, force=None, omega=None, modes=None, units='m'):
         r"""Frequency response for a mdof system.
 
         This method returns the frequency response for a mdof system
@@ -782,7 +782,7 @@ class Rotor(object):
 
         Parameters
         ----------
-        F : array, optional
+        force : array, optional
             Force array (needs to have the same length as frequencies array).
             If not given the impulse response is calculated.
         omega : array, optional
@@ -842,10 +842,10 @@ class Rotor(object):
                 psi_inv = psi_inv[np.ix_(idx, range(2 * n))]
 
             diag = np.diag([1 / (1j * w - lam) for lam in evals])
-            if F is None:
+            if force is None:
                 H = C @ psi @ diag @ psi_inv @ B + D
             else:
-                H = (C @ psi @ diag @ psi_inv @ B + D) @ F[:, wi]
+                H = (C @ psi @ diag @ psi_inv @ B + D) @ force[:, wi]
 
             if units == 'm':
                 magh = abs(H)
@@ -864,6 +864,7 @@ class Rotor(object):
 
     def _unbalance_force(self, node, magnitude, phase, omega):
         """Function to calculate unbalance force"""
+        # TODO add unbalance as a rotor attribute.
         F0 = np.zeros((self.ndof, len(omega)), dtype=np.complex128)
         me = magnitude
         delta = phase
@@ -919,7 +920,7 @@ class Rotor(object):
             except NameError:
                 F0 = self._unbalance_force(n, m, p, kwargs['omega'])
 
-        results = self.freq_response(F=F0, **kwargs)
+        results = self.freq_response(force=F0, **kwargs)
 
         return results
 
