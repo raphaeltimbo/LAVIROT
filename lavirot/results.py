@@ -180,8 +180,8 @@ class FrequencyResponseResults(Results):
         magdb = self[:, :, :, 0]
         phase = self[:, :, :, 1]
 
-        ax0.plot(omega, magdb[inp, out, :], **kwargs)
-        ax1.plot(omega, phase[inp, out, :], **kwargs)
+        ax0.plot(omega, magdb[:, inp, out], **kwargs)
+        ax1.plot(omega, phase[:, inp, out], **kwargs)
 
         for ax in [ax0, ax1]:
             ax.set_xlim(0, max(omega))

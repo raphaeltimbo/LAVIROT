@@ -822,9 +822,9 @@ class Rotor(object):
 
         # if modes are selected:
 
-        mag_phase = np.empty((inputs, outputs, len(omega), 2))
+        mag_phase = np.empty((len(omega), inputs, outputs, 2))
 
-        for wi, w in enumerate(omega):
+        for i, w in enumerate(omega):
             # calculate eigenvalues and eigenvectors using la.eig to get
             # left and right eigenvectors.
             # TODO check if this is possible with linalg sparse
@@ -847,7 +847,7 @@ class Rotor(object):
             if force is None:
                 H = C @ psi @ diag @ psi_inv @ B + D
             else:
-                H = (C @ psi @ diag @ psi_inv @ B + D) @ force[:, wi]
+                H = (C @ psi @ diag @ psi_inv @ B + D) @ force[:, i]
 
             if units == 'm':
                 magh = abs(H)
@@ -857,8 +857,8 @@ class Rotor(object):
                 magh = 20.0 * np.log10(abs(H))
             angh = np.rad2deg((np.angle(H)))
 
-            mag_phase[:, :, wi, 0] = magh
-            mag_phase[:, :, wi, 1] = angh
+            mag_phase[i, :, :, 0] = magh
+            mag_phase[i, :, :, 1] = angh
 
             results = FrequencyResponseResults(mag_phase, new_attributes={'omega': omega})
 
