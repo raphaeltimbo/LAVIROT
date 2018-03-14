@@ -210,6 +210,7 @@ class Rotor(object):
         self.nodes_o_d = nodes_o_d
 
         self.nodes = list(range(len(self.nodes_pos)))
+        self.elements_length = self.df.groupby('n_l')['L'].max()
         self.L = nodes_pos[-1]
 
         # rotor mass can also be calculated with self.M()[::4, ::4].sum()
@@ -1072,15 +1073,26 @@ class Rotor(object):
         return results
 
     def mode_shapes(self):
-        kappa_modes = [self.kappa_mode(i) for i in range(len(self.wn))]
-        kappa_modes = ['tab:blue' if k > 0 else 'tab:red' for k in kappa_modes]
+        # TODO add docs
+        kappa_modes = []
+        for mode in range(len(self.wn)):
+            kappa_color = []
+            kappa_mode = self.kappa_mode(mode)
+            for kappa in kappa_mode:
+                kappa_color.append('tab:blue' if kappa > 0 else 'tab:red')
+            kappa_modes.append(kappa_color)
 
         mode_shapes = ModeShapeResults(self.evectors[:self.ndof],
                                        new_attributes={'ndof': self.ndof,
                                                        'nodes': self.nodes,
-                                                       'nodes_pos': self.nodes_pos
+                                                       'nodes_pos': self.nodes_pos,
+                                                       'elements_length': self.elements_length,
+                                                       'w': self.w,
+                                                       'wd': self.wd,
+                                                       'log_dec': self.log_dec,
                                                        'kappa_modes': kappa_modes})
 
+        return mode_shapes
 
     def plot_ucs(self, stiffness_range=None, num=20, ax=None):
         """Plot undamped critical speed map.

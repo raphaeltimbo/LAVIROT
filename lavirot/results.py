@@ -271,17 +271,11 @@ class ModeShapeResults(Results):
             fig = plt.figure()
             ax = fig.gca(projection='3d')
 
-        # get only displacement (not velocity)
-        # if evec is None:
-        #     evec0 = rotor.evectors[:rotor.ndof, mode]
-        # else:
-        #     evec0 = evec[:rotor.ndof, mode]
-        #
-
         evec0 = self[:, mode]
         nodes = self.nodes
         nodes_pos = self.nodes_pos
         kappa_modes = self.kappa_modes
+        elements_length = self.elements_length
 
         modex = evec0[0::4]
         modey = evec0[1::4]
@@ -304,8 +298,6 @@ class ModeShapeResults(Results):
         y_circles = np.zeros((num_points, len(nodes)))
         z_circles_pos = np.zeros((num_points, len(nodes)))
 
-        # kappa_mode = rotor.kappa_mode(mode)
-        # kappa_mode = ['tab:blue' if k > 0 else 'tab:red' for k in kappa_mode]
         kappa_mode = kappa_modes[mode]
 
         for node in nodes:
@@ -332,18 +324,11 @@ class ModeShapeResults(Results):
         N3 = 3 * zeta ** 2 - 2 * zeta ** 3
         N4 = -zeta ** 2 + zeta ** 3
 
-        elements_included = []
-
         # TODO Check how to pass rotor.shaft_elements.
         # TODO pass elements length.
-        for el in rotor.shaft_elements:
-            n = el.n
-            if n in elements_included:
-                continue
-            else:
-                elements_included.append(n)  # list with elements already included
-            Le = el.L
-            node_pos = rotor.nodes_pos[n]
+
+        for Le, n in zip(elements_length, nodes):
+            node_pos = nodes_pos[n]
             Nx = np.hstack((N1, Le * N2, N3, Le * N4))
             Ny = np.hstack((N1, -Le * N2, N3, -Le * N4))
 
@@ -356,7 +341,7 @@ class ModeShapeResults(Results):
             yn[pos0:pos1] = Ny @ evec0[yy].real
             zn[pos0:pos1] = (node_pos * onn + Le * zeta).reshape(nn)
 
-        for node in rotor.nodes:
+        for node in nodes:
             ax.plot(x_circles[10:, node],
                     y_circles[10:, node],
                     z_circles_pos[10:, node],
@@ -380,8 +365,8 @@ class ModeShapeResults(Results):
         ax.set_ylim(-2, 2)
         ax.set_xlim(zn_cl0 - 0.1, zn_cl1 + 0.1)
 
-        fig.text(0, 0.15, f'$speed$ = {rotor.w:.1f} rad/s')
-        fig.text(0, 0.1, f'$\omega_d$ = {rotor.wd[mode]:.1f} rad/s')
-        fig.text(0, 0.05, f'$log dec$ = {rotor.log_dec[mode]:.1f}')
+        fig.text(0, 0.15, f'$speed$ = {self.w:.1f} rad/s')
+        fig.text(0, 0.1, f'$\omega_d$ = {self.wd[mode]:.1f} rad/s')
+        fig.text(0, 0.05, f'$log dec$ = {self.log_dec[mode]:.1f}')
 
         return fig, ax
