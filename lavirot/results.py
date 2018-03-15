@@ -135,10 +135,111 @@ class CampbellResults(Results):
 
 
 class FrequencyResponseResults(Results):
+    def plot_magnitude(self, inp, out, ax=None, units='m',
+                       **kwargs):
+        """Plot frequency response.
+
+        This method plots the frequency response magnitude given an output and
+        an input.
+
+        Parameters
+        ----------
+        inp : int
+            Input.
+        out : int
+            Output.
+        ax : matplotlib.axes, optional
+            Matplotlib axes where the phase will be plotted.
+            If None creates a new.
+        kwargs : optional
+            Additional key word arguments can be passed to change
+            the plot (e.g. linestyle='--')
+
+        Returns
+        -------
+        ax : matplotlib.axes
+            Matplotlib axes with phase plot.
+
+        Examples
+        --------
+        """
+        if ax is None:
+            ax = plt.gca()
+
+        omega = self.omega
+        mag = self[:, :, :, 0]
+
+        ax.plot(omega, mag[:, inp, out], **kwargs)
+
+        ax.set_xlim(0, max(omega))
+        ax.yaxis.set_major_locator(
+            mpl.ticker.MaxNLocator(prune='lower'))
+        ax.yaxis.set_major_locator(
+            mpl.ticker.MaxNLocator(prune='upper'))
+
+        if units == 'm':
+            ax.set_ylabel('Amplitude $(m)$')
+        elif units == 'mic-pk-pk':
+            ax.set_ylabel('Amplitude $(\mu pk-pk)$')
+        else:
+            ax.set_ylabel('Amplitude $(dB)$')
+
+        ax.set_xlabel('Frequency (rad/s)')
+
+        return ax
+
+    def plot_phase(self, inp, out, ax=None,
+                   **kwargs):
+        """Plot frequency response.
+
+        This method plots the frequency response phase given an output and
+        an input.
+
+        Parameters
+        ----------
+        inp : int
+            Input.
+        out : int
+            Output.
+        ax : matplotlib.axes, optional
+            Matplotlib axes where the phase will be plotted.
+            If None creates a new.
+        kwargs : optional
+            Additional key word arguments can be passed to change
+            the plot (e.g. linestyle='--')
+
+        Returns
+        -------
+        ax0 : matplotlib.axes
+            Matplotlib axes with amplitude plot.
+        ax1 : matplotlib.axes
+            Matplotlib axes with phase plot.
+
+        Examples
+        --------
+        """
+        if ax is None:
+            ax = plt.gca()
+
+        omega = self.omega
+        phase = self[:, :, :, 1]
+
+        ax.plot(omega, phase[:, inp, out], **kwargs)
+
+        ax.set_xlim(0, max(omega))
+        ax.yaxis.set_major_locator(
+            mpl.ticker.MaxNLocator(prune='lower'))
+        ax.yaxis.set_major_locator(
+            mpl.ticker.MaxNLocator(prune='upper'))
+
+        ax.set_ylabel('Phase')
+        ax.set_xlabel('Frequency (rad/s)')
+
+        return ax
+
     def plot(self, inp, out, ax0=None, ax1=None, units='m',
              **kwargs):
         """Plot frequency response.
-
         This method plots the frequency response given
         an output and an input.
         Parameters
@@ -156,49 +257,22 @@ class FrequencyResponseResults(Results):
         kwargs : optional
             Additional key word arguments can be passed to change
             the plot (e.g. linestyle='--')
-
         Returns
         -------
         ax0 : matplotlib.axes
             Matplotlib axes with amplitude plot.
         ax1 : matplotlib.axes
             Matplotlib axes with phase plot.
-
         Examples
         --------
         """
-        if ax0 is None or ax1 is None:
-            fig, ax = plt.subplots(2)
-            if ax0 is not None:
-                _, ax1 = ax
-            if ax1 is not None:
-                ax0, _ = ax
-            else:
-                ax0, ax1 = ax
-        # TODO add option to select plot units
-        omega = self.omega
-        magdb = self[:, :, :, 0]
-        phase = self[:, :, :, 1]
+        if ax0 is None and ax1 is None:
+            fig, (ax0, ax1) = plt.subplots(2)
 
-        ax0.plot(omega, magdb[:, inp, out], **kwargs)
-        ax1.plot(omega, phase[:, inp, out], **kwargs)
+        ax0 = self.plot_magnitude(inp, out, ax=ax0, units=units)
+        ax1 = self.plot_magnitude(inp, out, ax=ax1)
 
-        for ax in [ax0, ax1]:
-            ax.set_xlim(0, max(omega))
-            ax.yaxis.set_major_locator(
-                mpl.ticker.MaxNLocator(prune='lower'))
-            ax.yaxis.set_major_locator(
-                mpl.ticker.MaxNLocator(prune='upper'))
-
-        if units == 'm':
-            ax0.set_ylabel('Amplitude $(m)$')
-        elif units == 'mic-pk-pk':
-            ax0.set_ylabel('Amplitude $(\mu pk-pk)$')
-        else:
-            ax0.set_ylabel('Amplitude $(dB)$')
-
-        ax1.set_ylabel('Phase')
-        ax1.set_xlabel('Frequency (rad/s)')
+        ax0.set_xlabel('')
 
         return ax0, ax1
 
@@ -253,14 +327,16 @@ class FrequencyResponseResults(Results):
         if len(outs) > 1:
             for i, out in enumerate(outs):
                 for j, inp in enumerate(inps):
-                    self.plot(out, inp,
-                              ax0=ax[2 * i, j],
-                              ax1=ax[2 * i + 1, j], **kwargs,)
+                    self.plot_magnitude(out, inp,
+                                        ax=ax[2 * i, j], **kwargs)
+                    self.plot_phase(out, inp,
+                                    ax=ax[2 * i + 1, j], **kwargs)
         else:
             for i, inp in enumerate(inps):
-                self.plot(outs[0], inp,
-                          ax0=ax[2 * i],
-                          ax1=ax[2 * i + 1], **kwargs,)
+                self.plot_magnitude(outs[0], inp,
+                                    ax=ax[2 * i], **kwargs)
+                self.plot_phase(outs[0], inp,
+                                ax=ax[2 * i + 1], **kwargs)
 
         return ax
 
