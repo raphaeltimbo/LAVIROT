@@ -168,6 +168,7 @@ class FrequencyResponseResults(Results):
 
         omega = self.omega
         mag = self[:, :, :, 0]
+        units = self.units
 
         ax.plot(omega, mag[:, inp, out], **kwargs)
 
@@ -237,7 +238,7 @@ class FrequencyResponseResults(Results):
 
         return ax
 
-    def plot(self, inp, out, ax0=None, ax1=None, units='m',
+    def plot(self, inp, out, ax0=None, ax1=None,
              **kwargs):
         """Plot frequency response.
         This method plots the frequency response given
@@ -257,6 +258,7 @@ class FrequencyResponseResults(Results):
         kwargs : optional
             Additional key word arguments can be passed to change
             the plot (e.g. linestyle='--')
+
         Returns
         -------
         ax0 : matplotlib.axes
@@ -269,8 +271,8 @@ class FrequencyResponseResults(Results):
         if ax0 is None and ax1 is None:
             fig, (ax0, ax1) = plt.subplots(2)
 
-        ax0 = self.plot_magnitude(inp, out, ax=ax0, units=units)
-        ax1 = self.plot_magnitude(inp, out, ax=ax1)
+        ax0 = self.plot_magnitude(inp, out, ax=ax0)
+        ax1 = self.plot_phase(inp, out, ax=ax1)
 
         ax0.set_xlabel('')
 
@@ -289,13 +291,10 @@ class FrequencyResponseResults(Results):
             List with the desired outputs.
         inps : list
             List with the desired outputs.
-        modes : list
-            List with the modes that will be used to construct
-            the frequency response plot.
-
         ax : array with matplotlib.axes, optional
             Matplotlib axes array created with plt.subplots.
             It needs to have a shape of (2*inputs, outputs).
+
         Returns
         -------
         ax : array with matplotlib.axes, optional

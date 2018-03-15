@@ -860,7 +860,8 @@ class Rotor(object):
             mag_phase[i, :, :, 0] = magh
             mag_phase[i, :, :, 1] = angh
 
-            results = FrequencyResponseResults(mag_phase, new_attributes={'omega': omega})
+            results = FrequencyResponseResults(mag_phase, new_attributes={'omega': omega,
+                                                                          'units': units})
 
         return results
 
