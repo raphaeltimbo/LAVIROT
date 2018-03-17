@@ -340,6 +340,145 @@ class FrequencyResponseResults(Results):
         return ax
 
 
+class ForcedResponseResults(Results):
+    def plot_magnitude(self, dof, ax=None, units='m',
+                       **kwargs):
+        """Plot frequency response.
+
+        This method plots the frequency response magnitude given an output and
+        an input.
+
+        Parameters
+        ----------
+        dof : int
+            Degree of freedom.
+        ax : matplotlib.axes, optional
+            Matplotlib axes where the phase will be plotted.
+            If None creates a new.
+        units : str
+            Units to plot the magnitude ('m' or 'mic-pk-pk')
+        kwargs : optional
+            Additional key word arguments can be passed to change
+            the plot (e.g. linestyle='--')
+
+        Returns
+        -------
+        ax : matplotlib.axes
+            Matplotlib axes with phase plot.
+
+        Examples
+        --------
+        """
+        if ax is None:
+            ax = plt.gca()
+
+        frequency_range = self.frequency_range
+        mag = self.magnitude
+
+        if units == 'm':
+            ax.set_ylabel('Amplitude $(m)$')
+        elif units == 'mic-pk-pk':
+            mag = 2*mag*1e6
+            ax.set_ylabel('Amplitude $(\mu pk-pk)$')
+
+        ax.plot(frequency_range, mag[dof], **kwargs)
+
+        ax.set_xlim(0, max(frequency_range))
+        ax.yaxis.set_major_locator(
+            mpl.ticker.MaxNLocator(prune='lower'))
+        ax.yaxis.set_major_locator(
+            mpl.ticker.MaxNLocator(prune='upper'))
+
+        ax.set_xlabel('Frequency (rad/s)')
+
+        return ax
+
+    def plot_phase(self, dof, ax=None,
+                   **kwargs):
+        """Plot frequency response.
+
+        This method plots the frequency response phase given an output and
+        an input.
+
+        Parameters
+        ----------
+        dof : int
+            Degree of freedom.
+        ax : matplotlib.axes, optional
+            Matplotlib axes where the phase will be plotted.
+            If None creates a new.
+        kwargs : optional
+            Additional key word arguments can be passed to change
+            the plot (e.g. linestyle='--')
+
+        Returns
+        -------
+        ax0 : matplotlib.axes
+            Matplotlib axes with amplitude plot.
+        ax1 : matplotlib.axes
+            Matplotlib axes with phase plot.
+
+        Examples
+        --------
+        """
+        if ax is None:
+            ax = plt.gca()
+
+        frequency_range = self.frequency_range
+        phase = self.phase
+
+        ax.plot(frequency_range, phase[dof], **kwargs)
+
+        ax.set_xlim(0, max(frequency_range))
+        ax.yaxis.set_major_locator(
+            mpl.ticker.MaxNLocator(prune='lower'))
+        ax.yaxis.set_major_locator(
+            mpl.ticker.MaxNLocator(prune='upper'))
+
+        ax.set_ylabel('Phase')
+        ax.set_xlabel('Frequency (rad/s)')
+
+        return ax
+
+    def plot(self, dof, ax0=None, ax1=None,
+             **kwargs):
+        """Plot frequency response.
+        This method plots the frequency response given
+        an output and an input.
+        Parameters
+        ----------
+        dof : int
+            Degree of freedom.
+        ax0 : matplotlib.axes, optional
+            Matplotlib axes where the amplitude will be plotted.
+            If None creates a new.
+        ax1 : matplotlib.axes, optional
+            Matplotlib axes where the phase will be plotted.
+            If None creates a new.
+        kwargs : optional
+            Additional key word arguments can be passed to change
+            the plot (e.g. linestyle='--')
+
+        Returns
+        -------
+        ax0 : matplotlib.axes
+            Matplotlib axes with amplitude plot.
+        ax1 : matplotlib.axes
+            Matplotlib axes with phase plot.
+        Examples
+        --------
+        """
+        if ax0 is None and ax1 is None:
+            fig, (ax0, ax1) = plt.subplots(2)
+
+        ax0 = self.plot_magnitude(dof, ax=ax0)
+        ax1 = self.plot_phase(dof, ax=ax1)
+
+        ax0.set_xlabel('')
+
+        return ax0, ax1
+
+
 class ModeShapeResults(Results):
     def plot(self, mode=None, evec=None, fig=None, ax=None):
         if ax is None:

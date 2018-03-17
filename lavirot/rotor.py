@@ -19,7 +19,7 @@ from cycler import cycler
 from lavirot.elements import *
 from lavirot.materials import steel
 from lavirot.results import (CampbellResults, FrequencyResponseResults,
-                             ModeShapeResults)
+                             ForcedResponseResults, ModeShapeResults)
 
 
 __all__ = ['Rotor', 'rotor_example']
@@ -784,6 +784,7 @@ class Rotor(object):
         # calculate eigenvalues and eigenvectors using la.eig to get
         # left and right eigenvectors.
         # TODO check if this is possible with linalg sparse
+        # TODO test_freq_response is failing because evalues here are not sorted
         evals, psi, = la.eig(self.A(w))
         psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
 
@@ -805,35 +806,51 @@ class Rotor(object):
 
         return H
 
-    def freq_response2(self, frequency_range=None, modes=None, units='m'):
+    def freq_response2(self, frequency_range=None, modes=None):
         if frequency_range is None:
             frequency_range = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
 
-        mag_phase = np.empty(
-            (len(frequency_range), self.lti.inputs, self.lti.outputs, 2))
+        freq_resp = np.empty(
+            (self.lti.inputs, self.lti.outputs, len(frequency_range)), dtype=np.complex)
 
         for i, w in enumerate(frequency_range):
             H = self.transfer_matrix(w=w, modes=modes)
+            freq_resp[..., i] = H
+            magh = 20.0 * np.log10(abs(H))
 
-            if units == 'm':
-                magh = abs(H)
-            elif units == 'mic-pk-pk':
-                magh = 2*abs(H) * 1e6
-            else:
-                magh = 20.0 * np.log10(abs(H))
-            angh = np.rad2deg((np.angle(H)))
+            # if units == 'm':
+            #     magh = abs(H)
+            # elif units == 'mic-pk-pk':
+            #     magh = 2*abs(H) * 1e6
+            # else:
+            #     magh = 20.0 * np.log10(abs(H))
+            # angh = np.rad2deg((np.angle(H)))
 
             # TODO evaluate if when force is applied we can remove one axis
-            mag_phase[i, :, :, 0] = magh
-            mag_phase[i, :, :, 1] = angh
 
         results = FrequencyResponseResults(
-            mag_phase, new_attributes={'frequency_range': frequency_range,
-                                       'units': units,
-                                       'magnitude': mag_phase[:, :, :, 0],
-                                       'phase': mag_phase[:, :, :, 1]})
+            freq_resp, new_attributes={'frequency_range': frequency_range,
+                                       'magnitude': abs(freq_resp),
+                                       'phase': np.angle(freq_resp)})
 
         return results
+
+    def forced_response(self, force=None, frequency_range=None, modes=None):
+        freq_resp = self.freq_response2(
+            frequency_range=frequency_range, modes=None)
+
+        forced_resp = np.zeros((self.ndof, len(freq_resp.omega)),
+                               dtype=np.complex)
+
+        for i in range(len(freq_resp.omega)):
+            forced_resp[:, i] = freq_resp[..., i] @ force[..., i]
+
+        forced_resp = ForcedResponseResults(
+            forced_resp, new_attributes={'frequency_range': frequency_range,
+                                         'magnitude': abs(forced_resp),
+                                         'phase': np.angle(forced_resp)})
+
+        return forced_resp
 
     def freq_response(self, force=None, omega=None, modes=None, units='m'):
         r"""Frequency response for a mdof system.
@@ -921,11 +938,11 @@ class Rotor(object):
             mag_phase[i, :, :, 0] = magh
             mag_phase[i, :, :, 1] = angh
 
-            results = FrequencyResponseResults(
-                mag_phase, new_attributes={'omega': omega,
-                                           'units': units,
-                                           'magnitude': mag_phase[:, :, :, 0],
-                                           'phase': mag_phase[:, :, :, 1]})
+        results = FrequencyResponseResults(
+            mag_phase, new_attributes={'omega': omega,
+                                       'units': units,
+                                       'magnitude': mag_phase[:, :, :, 0],
+                                       'phase': mag_phase[:, :, :, 1]})
 
         return results
 
