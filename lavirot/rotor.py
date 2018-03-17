@@ -806,54 +806,8 @@ class Rotor(object):
 
         return H
 
-    def freq_response2(self, frequency_range=None, modes=None):
-        if frequency_range is None:
-            frequency_range = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
-
-        freq_resp = np.empty(
-            (self.lti.inputs, self.lti.outputs, len(frequency_range)), dtype=np.complex)
-
-        for i, w in enumerate(frequency_range):
-            H = self.transfer_matrix(w=w, modes=modes)
-            freq_resp[..., i] = H
-            magh = 20.0 * np.log10(abs(H))
-
-            # if units == 'm':
-            #     magh = abs(H)
-            # elif units == 'mic-pk-pk':
-            #     magh = 2*abs(H) * 1e6
-            # else:
-            #     magh = 20.0 * np.log10(abs(H))
-            # angh = np.rad2deg((np.angle(H)))
-
-            # TODO evaluate if when force is applied we can remove one axis
-
-        results = FrequencyResponseResults(
-            freq_resp, new_attributes={'frequency_range': frequency_range,
-                                       'magnitude': abs(freq_resp),
-                                       'phase': np.angle(freq_resp)})
-
-        return results
-
-    def forced_response(self, force=None, frequency_range=None, modes=None):
-        freq_resp = self.freq_response2(
-            frequency_range=frequency_range, modes=None)
-
-        forced_resp = np.zeros((self.ndof, len(freq_resp.omega)),
-                               dtype=np.complex)
-
-        for i in range(len(freq_resp.omega)):
-            forced_resp[:, i] = freq_resp[..., i] @ force[..., i]
-
-        forced_resp = ForcedResponseResults(
-            forced_resp, new_attributes={'frequency_range': frequency_range,
-                                         'magnitude': abs(forced_resp),
-                                         'phase': np.angle(forced_resp)})
-
-        return forced_resp
-
-    def freq_response(self, force=None, omega=None, modes=None, units='m'):
-        r"""Frequency response for a mdof system.
+    def freq_response(self, frequency_range=None, modes=None):
+        """Frequency response for a mdof system.
 
         This method returns the frequency response for a mdof system
         given a range of frequencies and the modes that will be used.
@@ -884,67 +838,39 @@ class Rotor(object):
         Examples
         --------
         """
-        inputs = self.lti.inputs  # inputs (mag and phase)
-        outputs = self.lti.outputs  # outputs
+        if frequency_range is None:
+            frequency_range = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
 
-        B = self.lti.B
-        C = self.lti.C
-        D = self.lti.D
+        freq_resp = np.empty(
+            (self.lti.inputs, self.lti.outputs, len(frequency_range)), dtype=np.complex)
 
-        # if omega is not given, define a range
-        # TODO adapt this range
-        if omega is None:
-            omega = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
-
-        # if modes are selected:
-
-        mag_phase = np.empty((len(omega), inputs, outputs, 2))
-
-        for i, w in enumerate(omega):
-            # calculate eigenvalues and eigenvectors using la.eig to get
-            # left and right eigenvectors.
-            # TODO check if this is possible with linalg sparse
-            evals, psi, = la.eig(self.A(w))
-            psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
-
-            if modes is not None:
-                n = self.ndof  # n dof -> number of modes
-                m = len(modes)  # -> number of desired modes
-                # idx to get each evalue/evector and its conjugate
-                idx = np.zeros((2 * m), int)
-                idx[0:m] = modes  # modes
-                idx[m:] = range(2 * n)[-m:]  # conjugates (see how evalues are ordered)
-
-                evals = evals[np.ix_(idx)]
-                psi = psi[np.ix_(range(2 * n), idx)]
-                psi_inv = psi_inv[np.ix_(idx, range(2 * n))]
-
-            diag = np.diag([1 / (1j * w - lam) for lam in evals])
-
-            if force is None:
-                H = C @ psi @ diag @ psi_inv @ B + D
-            else:
-                H = (C @ psi @ diag @ psi_inv @ B + D) @ force[:, i]
-
-            if units == 'm':
-                magh = abs(H)
-            elif units == 'mic-pk-pk':
-                magh = 2*abs(H) * 1e6
-            else:
-                magh = 20.0 * np.log10(abs(H))
-            angh = np.rad2deg((np.angle(H)))
-
-            # TODO evaluate if when force is applied we can remove one axis
-            mag_phase[i, :, :, 0] = magh
-            mag_phase[i, :, :, 1] = angh
+        for i, w in enumerate(frequency_range):
+            H = self.transfer_matrix(w=w, modes=modes)
+            freq_resp[..., i] = H
 
         results = FrequencyResponseResults(
-            mag_phase, new_attributes={'omega': omega,
-                                       'units': units,
-                                       'magnitude': mag_phase[:, :, :, 0],
-                                       'phase': mag_phase[:, :, :, 1]})
+            freq_resp, new_attributes={'frequency_range': frequency_range,
+                                       'magnitude': abs(freq_resp),
+                                       'phase': np.angle(freq_resp)})
 
         return results
+
+    def forced_response(self, force=None, frequency_range=None, modes=None):
+        freq_resp = self.freq_response(
+            frequency_range=frequency_range, modes=modes)
+
+        forced_resp = np.zeros((self.ndof, len(freq_resp.frequency_range)),
+                               dtype=np.complex)
+
+        for i in range(len(freq_resp.frequency_range)):
+            forced_resp[:, i] = freq_resp[..., i] @ force[..., i]
+
+        forced_resp = ForcedResponseResults(
+            forced_resp, new_attributes={'frequency_range': frequency_range,
+                                         'magnitude': abs(forced_resp),
+                                         'phase': np.angle(forced_resp)})
+
+        return forced_resp
 
     def _unbalance_force(self, node, magnitude, phase, omega):
         """Function to calculate unbalance force"""
@@ -964,8 +890,8 @@ class Rotor(object):
 
         return F0
 
-    def unbalance_response(self, node, magnitude, phase, **kwargs):
-        r"""Frequency response for a mdof system.
+    def unbalance_response(self, node, magnitude, phase, frequency_range=None):
+        """frequency response for a mdof system.
 
         This method returns the frequency response for a mdof system
         given a range of frequencies and the modes that will be used.
@@ -981,7 +907,7 @@ class Rotor(object):
 
         Returns
         -------
-        omega : array
+        frequency_range : array
             Array with the frequencies
         magdb : array
             Magnitude (dB) of the frequency response for each pair input/output.
@@ -993,18 +919,17 @@ class Rotor(object):
         Examples
         --------
         """
+        force = np.zeros((self.ndof, len(frequency_range)), dtype=np.complex)
+
         try:
-            node, magnitude, phase = iter(node), iter(magnitude), iter(phase)
+            for n, m, p in zip(node, magnitude, phase):
+                    force += self._unbalance_force(n, m, p, frequency_range)
         except TypeError:
-            node, magnitude, phase = [node], [magnitude], [phase]
+            force = self._unbalance_force(node, magnitude, phase, frequency_range)
 
-        for n, m, p in zip(node, magnitude, phase):
-            try:
-                F0 += self._unbalance_force(n, m, p, kwargs['omega'])
-            except NameError:
-                F0 = self._unbalance_force(n, m, p, kwargs['omega'])
+        forced_response = self.forced_response(force, frequency_range)
 
-        results = self.freq_response(force=F0, **kwargs)
+        return forced_response
 
         return results
 
