@@ -844,6 +844,7 @@ class Rotor(object):
                 psi_inv = psi_inv[np.ix_(idx, range(2 * n))]
 
             diag = np.diag([1 / (1j * w - lam) for lam in evals])
+
             if force is None:
                 H = C @ psi @ diag @ psi_inv @ B + D
             else:
@@ -857,11 +858,15 @@ class Rotor(object):
                 magh = 20.0 * np.log10(abs(H))
             angh = np.rad2deg((np.angle(H)))
 
+            # TODO evaluate if when force is applied we can remove one axis
             mag_phase[i, :, :, 0] = magh
             mag_phase[i, :, :, 1] = angh
 
-            results = FrequencyResponseResults(mag_phase, new_attributes={'omega': omega,
-                                                                          'units': units})
+            results = FrequencyResponseResults(
+                mag_phase, new_attributes={'omega': omega,
+                                           'units': units,
+                                           'magnitude': mag_phase[:, :, :, 0],
+                                           'phase': mag_phase[:, :, :, 1]})
 
         return results
 
