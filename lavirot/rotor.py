@@ -776,6 +776,65 @@ class Rotor(object):
 
         return sys
 
+    def transfer_matrix(self, w=None, modes=None):
+        B = self.lti.B
+        C = self.lti.C
+        D = self.lti.D
+
+        # calculate eigenvalues and eigenvectors using la.eig to get
+        # left and right eigenvectors.
+        # TODO check if this is possible with linalg sparse
+        evals, psi, = la.eig(self.A(w))
+        psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
+
+        if modes is not None:
+            n = self.ndof  # n dof -> number of modes
+            m = len(modes)  # -> number of desired modes
+            # idx to get each evalue/evector and its conjugate
+            idx = np.zeros((2 * m), int)
+            idx[0:m] = modes  # modes
+            idx[m:] = range(2 * n)[-m:]  # conjugates (see how evalues are ordered)
+
+            evals = evals[np.ix_(idx)]
+            psi = psi[np.ix_(range(2 * n), idx)]
+            psi_inv = psi_inv[np.ix_(idx, range(2 * n))]
+
+        diag = np.diag([1 / (1j * w - lam) for lam in evals])
+
+        H = C @ psi @ diag @ psi_inv @ B + D
+
+        return H
+
+    def freq_response2(self, frequency_range=None, modes=None, units='m'):
+        if frequency_range is None:
+            frequency_range = np.linspace(0, max(self.evalues.imag) * 1.5, 1000)
+
+        mag_phase = np.empty(
+            (len(frequency_range), self.lti.inputs, self.lti.outputs, 2))
+
+        for i, w in enumerate(frequency_range):
+            H = self.transfer_matrix(w=w, modes=modes)
+
+            if units == 'm':
+                magh = abs(H)
+            elif units == 'mic-pk-pk':
+                magh = 2*abs(H) * 1e6
+            else:
+                magh = 20.0 * np.log10(abs(H))
+            angh = np.rad2deg((np.angle(H)))
+
+            # TODO evaluate if when force is applied we can remove one axis
+            mag_phase[i, :, :, 0] = magh
+            mag_phase[i, :, :, 1] = angh
+
+        results = FrequencyResponseResults(
+            mag_phase, new_attributes={'frequency_range': frequency_range,
+                                       'units': units,
+                                       'magnitude': mag_phase[:, :, :, 0],
+                                       'phase': mag_phase[:, :, :, 1]})
+
+        return results
+
     def freq_response(self, force=None, omega=None, modes=None, units='m'):
         r"""Frequency response for a mdof system.
 
