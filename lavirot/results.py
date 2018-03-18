@@ -60,7 +60,7 @@ class Results(np.ndarray):
 
 
 class CampbellResults(Results):
-    def plot(self, harmonics=[1], fig=None, ax=None):
+    def plot(self, harmonics=[1], fig=None, ax=None, **kwargs):
         """Plot campbell results.
 
         Parameters
@@ -91,6 +91,10 @@ class CampbellResults(Results):
         log_dec = self.log_dec
         whirl = self.whirl_values
 
+        default_values = dict(cmap='RdBu', vmin=0.1, vmax=2., s=20, alpha=0.5)
+        for k, v in default_values.items():
+            kwargs.setdefault(k, v)
+
         for mark, whirl_dir in zip(['^', 'o', 'v'],
                                    [0., 0.5, 1.]):
             for i in range(wd.shape[1]):
@@ -105,31 +109,31 @@ class CampbellResults(Results):
                 else:
                     im = ax.scatter(speed_range[whirl_mask], wd_i[whirl_mask],
                                     c=log_dec_i[whirl_mask],
-                                    marker=mark, cmap='RdBu', vmin=0.1,
-                                    vmax=2., s=20, alpha=0.5)
+                                    marker=mark, **kwargs)
 
-        cbar = fig.colorbar(im)
-        cbar.ax.set_ylabel('log dec')
-        cbar.solids.set_edgecolor("face")
+        if len(fig.axes) == 1:
+            cbar = fig.colorbar(im)
+            cbar.ax.set_ylabel('log dec')
+            cbar.solids.set_edgecolor("face")
 
-        label_color = cbar.cmap(cbar.vmax, alpha=0.3)
-        forward_label = mpl.lines.Line2D([], [], marker='^', lw=0,
-                                         color=label_color,
-                                         label='Forward')
-        backward_label = mpl.lines.Line2D([], [], marker='v', lw=0,
-                                          color=label_color,
-                                          label='Backward')
-        mixed_label = mpl.lines.Line2D([], [], marker='o', lw=0,
-                                       color=label_color,
-                                       label='Mixed')
+            label_color = cbar.cmap(cbar.vmax, alpha=0.3)
+            forward_label = mpl.lines.Line2D([], [], marker='^', lw=0,
+                                             color=label_color,
+                                             label='Forward')
+            backward_label = mpl.lines.Line2D([], [], marker='v', lw=0,
+                                              color=label_color,
+                                              label='Backward')
+            mixed_label = mpl.lines.Line2D([], [], marker='o', lw=0,
+                                           color=label_color,
+                                           label='Mixed')
 
-        legend = plt.legend(
-            handles=[forward_label, backward_label, mixed_label], loc=2)
+            legend = plt.legend(
+                handles=[forward_label, backward_label, mixed_label], loc=2)
 
-        ax.add_artist(legend)
+            ax.add_artist(legend)
 
-        ax.set_xlabel('Rotor speed ($rad/s$)')
-        ax.set_ylabel('Damped natural frequencies ($rad/s$)')
+            ax.set_xlabel('Rotor speed ($rad/s$)')
+            ax.set_ylabel('Damped natural frequencies ($rad/s$)')
 
         return fig, ax
 
