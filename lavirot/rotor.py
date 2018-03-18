@@ -1072,7 +1072,11 @@ class Rotor(object):
             results[i, :, 1] = self.log_dec[:frequencies]
             results[i, :, 2] = self.whirl_values()[:frequencies]
 
-        results = CampbellResults(results, new_attributes={'speed_range': speed_range})
+        results = CampbellResults(results, 
+                new_attributes={'speed_range': speed_range,
+                                'wd': results[..., 0], 
+                                'log_dec': results[..., 1],
+                                'whirl_values': results[..., 2]})
 
         self.w = rotor_current_speed
 

@@ -87,9 +87,9 @@ class CampbellResults(Results):
 
         speed_range = self.speed_range
 
-        wd = self[:, :, 0]
-        log_dec = self[:, :, 1]
-        whirl = self[:, :, 2]
+        wd = self.wd
+        log_dec = self.log_dec
+        whirl = self.whirl_values
 
         for mark, whirl_dir in zip(['^', 'o', 'v'],
                                    [0., 0.5, 1.]):
@@ -131,7 +131,7 @@ class CampbellResults(Results):
         ax.set_xlabel('Rotor speed ($rad/s$)')
         ax.set_ylabel('Damped natural frequencies ($rad/s$)')
 
-        return ax
+        return fig, ax
 
 
 class FrequencyResponseResults(Results):
