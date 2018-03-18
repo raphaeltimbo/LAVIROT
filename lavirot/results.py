@@ -390,6 +390,7 @@ class ForcedResponseResults(Results):
             mpl.ticker.MaxNLocator(prune='upper'))
 
         ax.set_xlabel('Frequency (rad/s)')
+        ax.legend()
 
         return ax
 
@@ -438,6 +439,8 @@ class ForcedResponseResults(Results):
         ax.set_ylabel('Phase')
         ax.set_xlabel('Frequency (rad/s)')
 
+        ax.legend()
+
         return ax
 
     def plot(self, dof, ax0=None, ax1=None,
@@ -471,10 +474,13 @@ class ForcedResponseResults(Results):
         if ax0 is None and ax1 is None:
             fig, (ax0, ax1) = plt.subplots(2)
 
-        ax0 = self.plot_magnitude(dof, ax=ax0)
-        ax1 = self.plot_phase(dof, ax=ax1)
+        ax0 = self.plot_magnitude(dof, ax=ax0, **kwargs)
+        # remove label from phase plot
+        kwargs.pop('label', None)
+        ax1 = self.plot_phase(dof, ax=ax1, **kwargs)
 
         ax0.set_xlabel('')
+        ax0.legend()
 
         return ax0, ax1
 
