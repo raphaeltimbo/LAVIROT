@@ -742,7 +742,6 @@ class Rotor(object):
 
     def orbit(self):
         pass
-    #  TODO static methods as auxiliary functions
 
     def _lti(self):
         r"""Continuous-time linear time invariant system.
@@ -1266,8 +1265,6 @@ class Rotor(object):
                      % (dof//4, obs_dof))
 
         return ax
-
-    # TODO add frequency response - see vtoolbox
 
     def save_mat(self, file_name):
         """
