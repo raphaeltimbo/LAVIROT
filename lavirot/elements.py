@@ -7,7 +7,8 @@ import matplotlib.patches as mpatches
 from itertools import permutations
 from collections import Iterable
 from lavirot.materials import Material
-from lavirot.io import (load_bearing_seals_from_xltrc, load_disks_from_xltrc)
+from lavirot.io import (load_bearing_seals_from_xltrc, load_disks_from_xltrc,
+                        load_shaft_from_xltrc)
 
 
 __all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",
@@ -446,61 +447,8 @@ class ShaftElement(Element):
 
     @classmethod
     def load_from_xltrc(cls, file, sheet_name='Model'):
-        """Load shaft from xltrc.
-
-        This method will construct a shaft loading the geometry
-        and materials from a xltrc file.
-
-        Parameters
-        ----------
-        file : str
-            File path name.
-        sheet_name : str
-            Shaft sheet name. Default is 'Model'.
-
-        Returns
-        -------
-        shaft : list
-            List with the shaft elements.
-
-        Examples
-        --------
-        """
-        df = pd.read_excel(file, sheet_name=sheet_name)
-
-        geometry = pd.DataFrame(df.iloc[19:])
-        geometry = geometry.rename(columns=df.loc[18])
-        geometry = geometry.dropna(thresh=3)
-
-        material = df.iloc[3:13, 9:15]
-        material = material.rename(columns=df.iloc[0])
-        material = material.dropna(axis=0, how='all')
-
-        # change to SI units
-        if df.iloc[1, 1] == 'inches':
-            for dim in ['length', 'od_Left', 'id_Left',
-                        'od_Right', 'id_Right']:
-                geometry[dim] = geometry[dim] * 0.0254
-
-            geometry['axial'] = geometry['axial'] * 4.44822161
-
-            for prop in ['Elastic Modulus E', 'Shear Modulus G']:
-                material[prop] = material[prop] * 6894.757
-
-            material['Density   r'] = material['Density   r'] * 27679.904
-
-        colors = ['#636363', '#969696', '#bdbdbd', '#d9d9d9',
-                  '#636363', '#969696', '#bdbdbd', '#d9d9d9']
-        materials = {}
-        for i, mat in material.iterrows():
-            materials[mat.Material] = Material(
-                name=f'Material{mat["Material"]}',
-                rho=mat['Density   r'],
-                E=mat['Elastic Modulus E'],
-                G_s=mat['Shear Modulus G'],
-                color=colors[mat['Material']]
-            )
-
+        # TODO docstrings should be here not in the io module
+        geometry, materials = load_shaft_from_xltrc(file, sheet_name)
         shaft = [ShaftElement(
             el.length, el.id_Left, el.od_Left,
             materials[el.matnum], n=el.elemnum-1)
