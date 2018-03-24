@@ -1047,8 +1047,8 @@ class BearingElement(Element):
 
     @classmethod
     def load_from_xltrc(cls, n, file, sheet_name='XLUseKCM'):
-        kwargs = load_bearing_seals_from_xltrc(n, file, sheet_name)
-        return cls(**kwargs)
+        kwargs = load_bearing_seals_from_xltrc(file, sheet_name)
+        return cls(n, **kwargs)
 
 
 class SealElement(BearingElement):
