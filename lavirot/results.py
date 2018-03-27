@@ -116,15 +116,14 @@ class CampbellResults(Results):
             cbar.ax.set_ylabel('log dec')
             cbar.solids.set_edgecolor("face")
 
-            label_color = cbar.cmap(cbar.vmax, alpha=0.3)
             forward_label = mpl.lines.Line2D([], [], marker='^', lw=0,
-                                             color=label_color,
+                                             color='tab:blue', alpha=0.3,
                                              label='Forward')
             backward_label = mpl.lines.Line2D([], [], marker='v', lw=0,
-                                              color=label_color,
+                                              color='tab:blue', alpha=0.3,
                                               label='Backward')
             mixed_label = mpl.lines.Line2D([], [], marker='o', lw=0,
-                                           color=label_color,
+                                           color='tab:blue', alpha=0.3,
                                            label='Mixed')
 
             legend = plt.legend(
