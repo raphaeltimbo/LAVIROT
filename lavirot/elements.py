@@ -7,8 +7,8 @@ import matplotlib.patches as mpatches
 from itertools import permutations
 from collections import Iterable
 from lavirot.materials import Material
-from lavirot.io import (load_bearing_seals_from_xltrc, load_disks_from_xltrc,
-                        load_shaft_from_xltrc)
+from lavirot.io import (load_bearing_seals_from_yaml, load_bearing_seals_from_xltrc,
+                        load_disks_from_xltrc, load_shaft_from_xltrc)
 
 
 __all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",
@@ -1044,6 +1044,11 @@ class BearingElement(Element):
         ax.legend()
 
         return ax
+
+    @classmethod
+    def load_from_yaml(cls, n, file):
+        kwargs = load_bearing_seals_from_yaml(file)
+        return cls(n, **kwargs)
 
     @classmethod
     def load_from_xltrc(cls, n, file, sheet_name='XLUseKCM'):
