@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import yaml
 from .materials import Material
 
 __all__ = ['load_bearing_seals_from_xltrc', 'load_disks_from_xltrc',
@@ -19,6 +20,35 @@ def table_limits_xltrc(df, start_col=0):
     return start, end
 
 
+def load_bearing_seals_from_yaml(file):
+    """Load bearing yaml.
+
+    This method will construct a bearing loading the coefficients
+    from an yaml file.
+
+    Parameters
+    ----------
+    n: int
+        Node in which the bearing will be inserted.
+    file : str
+        File path name.
+
+    Returns
+    -------
+    bearing : lr.BearingElement
+        A bearing element.
+
+    Examples
+    --------
+    """
+    with open(file, 'r') as f:
+        coefficients = yaml.load(f)
+
+    coefficients = {k: np.array(v) for k, v in coefficients.items()}
+
+    return coefficients
+
+
 def load_bearing_seals_from_xltrc(file, sheet_name='XLUseKCM'):
     """Load bearing from xltrc.
 
@@ -31,7 +61,9 @@ def load_bearing_seals_from_xltrc(file, sheet_name='XLUseKCM'):
         Node in which the bearing will be inserted.
     file : str
         File path name.
-    sheet_name : str Bearing sheet name. Default is 'XLUseKCM'.
+    sheet_name : str
+        Bearing sheet name. Default is 'XLUseKCM'.
+
     Returns
     -------
     bearing : lr.BearingElement
