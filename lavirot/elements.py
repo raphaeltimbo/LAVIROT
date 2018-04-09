@@ -811,7 +811,9 @@ class BearingElement(Element):
             if ax is None:
                 ax = plt.gca()
 
-            ax.plot(self.w, self, **kwargs)
+            w_range = np.linspace(min(self.w), max(self.w), 30)
+
+            ax.plot(w_range, self.interpolated(w_range), **kwargs)
             ax.set_xlabel('Speed (rad/s)')
             ax.ticklabel_format(style='sci', scilimits=(0, 0), axis='y')
 
