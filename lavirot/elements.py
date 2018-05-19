@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 import pandas as pd
 import scipy.interpolate as interpolate
@@ -779,7 +780,11 @@ class BearingElement(Element):
 
             if len(obj) > 1:
                 try:
-                    obj.interpolated = interpolate.UnivariateSpline(w, obj)
+                    with warnings.catch_warnings():
+                        warnings.simplefilter('ignore')
+                        obj.interpolated = interpolate.UnivariateSpline(w, obj)
+                #  dfitpack.error is not exposed by scipy
+                #  so a bare except is used
                 except:
                     raise ValueError('Arguments (coefficients and w)'
                                      ' must have the same dimension')
