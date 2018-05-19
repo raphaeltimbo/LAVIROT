@@ -1,4 +1,5 @@
 import os
+import warnings
 import numpy as np
 import pandas as pd
 import scipy.linalg as la
@@ -245,8 +246,10 @@ class Rotor(object):
         self.wd = (np.imag(self.evalues))[:wn_len]
         self.damping_ratio = (-np.real(self.evalues) /
                               np.absolute(self.evalues))[:wn_len]
-        self.log_dec = (2*np.pi*self.damping_ratio /
-                        np.sqrt(1 - self.damping_ratio**2))
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            self.log_dec = (2*np.pi*self.damping_ratio /
+                            np.sqrt(1 - self.damping_ratio**2))
         self.lti = self._lti()
 
     @property
