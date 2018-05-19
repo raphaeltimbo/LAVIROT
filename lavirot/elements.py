@@ -2,13 +2,9 @@ import numpy as np
 import pandas as pd
 import scipy.interpolate as interpolate
 import matplotlib.pyplot as plt
-import matplotlib as mpl
 import matplotlib.patches as mpatches
-from itertools import permutations
-from collections import Iterable
-from lavirot.materials import Material
-from lavirot.io import (load_bearing_seals_from_yaml, load_bearing_seals_from_xltrc,
-                        load_disks_from_xltrc, load_shaft_from_xltrc)
+from lavirot.data_io.read_xl import (load_bearing_seals_from_yaml, load_bearing_seals_from_xltrc,
+                                     load_disks_from_xltrc, load_shaft_from_xltrc)
 
 
 __all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",

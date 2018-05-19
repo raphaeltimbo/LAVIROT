@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import yaml
-from .materials import Material
+from lavirot.materials import Material
 
 __all__ = ['load_bearing_seals_from_xltrc', 'load_disks_from_xltrc',
            'load_shaft_from_xltrc']
