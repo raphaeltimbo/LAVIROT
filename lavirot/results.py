@@ -98,7 +98,6 @@ class CampbellResults(Results):
         for mark, whirl_dir in zip(['^', 'o', 'v'],
                                    [0., 0.5, 1.]):
             for i in range(wd.shape[1]):
-                # get only forward
                 wd_i = wd[:, i]
                 whirl_i = whirl[:, i]
                 log_dec_i = log_dec[:, i]
