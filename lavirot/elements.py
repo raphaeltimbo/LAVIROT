@@ -776,13 +776,15 @@ class BearingElement(Element):
                     input_array = [input_array]
 
             obj = np.asarray(input_array, dtype=np.float64).view(cls)
-            obj.w = w
+            obj.w = np.array(w, dtype=np.float)
 
             if len(obj) > 1:
                 try:
                     with warnings.catch_warnings():
                         warnings.simplefilter('ignore')
-                        obj.interpolated = interpolate.UnivariateSpline(w, obj)
+                        obj.interpolated = interpolate.UnivariateSpline(
+                            obj.w, obj
+                        )
                 #  dfitpack.error is not exposed by scipy
                 #  so a bare except is used
                 except:
