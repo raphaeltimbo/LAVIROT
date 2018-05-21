@@ -767,7 +767,7 @@ class BearingElement(Element):
         Helper class to create coefficients (kxx, kxy...)
         """
 
-        def __new__(cls, input_array, w=None):
+        def __new__(cls, input_array, w=None, interpolated=None):
 
             if isinstance(input_array, (int, float)):
                 if w is not None:
@@ -805,6 +805,11 @@ class BearingElement(Element):
             # handle objects created through slices (see __getitem__)
             try:
                 self.w = getattr(obj, 'w', None).__getitem__(obj.slice)
+                with warnings.catch_warnings():
+                    warnings.simplefilter('ignore')
+                    self.interpolated = interpolate.UnivariateSpline(
+                        self.w, obj.__getitem__(obj.slice)
+                    )
                 del obj.slice
             except (AttributeError, IndexError):
                 self.w = getattr(obj, 'w', None)
