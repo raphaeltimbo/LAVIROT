@@ -20,7 +20,7 @@ from cycler import cycler
 from ross.elements import *
 from ross.materials import steel
 from ross.results import (CampbellResults, FrequencyResponseResults,
-                             ForcedResponseResults, ModeShapeResults)
+                          ForcedResponseResults, ModeShapeResults)
 
 
 __all__ = ['Rotor', 'rotor_example']
