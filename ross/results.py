@@ -587,8 +587,8 @@ class ModeShapeResults(Results):
         ax.set_ylim(-2, 2)
         ax.set_xlim(zn_cl0 - 0.1, zn_cl1 + 0.1)
 
-        fig.text(0, 0.15, f'$speed$ = {self.w:.1f} rad/s')
-        fig.text(0, 0.1, f'$\omega_d$ = {self.wd[mode]:.1f} rad/s')
-        fig.text(0, 0.05, f'$log dec$ = {self.log_dec[mode]:.1f}')
+        ax.set_title(f'$speed$ = {self.w:.1f} rad/s\n$'
+                     f'\omega_d$ = {self.wd[mode]:.1f} rad/s\n'
+                     f'$log dec$ = {self.log_dec[mode]:.1f}')
 
         return fig, ax
