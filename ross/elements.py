@@ -4,7 +4,7 @@ import pandas as pd
 import scipy.interpolate as interpolate
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-from lavirot.data_io.read_xl import (
+from ross.data_io.read_xl import (
     load_bearing_seals_from_yaml, load_bearing_seals_from_xltrc,
     load_disks_from_xltrc, load_shaft_from_xltrc)
 
@@ -49,7 +49,7 @@ class ShaftElement(Element):
         Inner diameter of the element.
     o_d : float
         Outer diameter of the element.
-    material : lavirot.material
+    material : ross.material
         Shaft material.
     n : int, optional
         Element number (coincident with it's first node).
@@ -93,7 +93,7 @@ class ShaftElement(Element):
 
     Examples
     --------
-    >>> from lavirot.materials import steel
+    >>> from ross.materials import steel
     >>> le = 0.25
     >>> i_d = 0
     >>> o_d = 0.05
@@ -392,7 +392,7 @@ class ShaftElement(Element):
             Young's modulus.
         G_s : float
             Shear modulus.
-        material : lavirot.material
+        material : ross.material
             Shaft material.
         n : int, optional
             Element number (coincident with it's first node).
@@ -421,7 +421,7 @@ class ShaftElement(Element):
         Examples
         --------
         >>> # shaft material
-        >>> from lavirot.materials import steel
+        >>> from ross.materials import steel
         >>> # shaft inner and outer diameters
         >>> si_d = 0
         >>> so_d = 0.01585
@@ -644,7 +644,7 @@ class DiskElement(LumpedDiskElement):
 
     Examples
     --------
-    >>> from lavirot.materials import steel
+    >>> from ross.materials import steel
     >>> disk = DiskElement(0, steel, 0.07, 0.05, 0.28)
     >>> disk.Ip
     0.32956362089137037

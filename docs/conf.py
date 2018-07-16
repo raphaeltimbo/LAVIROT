@@ -22,7 +22,7 @@ import sphinx_bootstrap_theme
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('/lavirot'))
+sys.path.insert(0, os.path.abspath('/ross'))
 sys.path.insert(0, os.path.abspath('sphinxext'))
 
 # -- General configuration ------------------------------------------------
@@ -92,7 +92,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'lavirot'
+project = 'ross'
 copyright = '2016, Lavi'
 author = 'Lavi'
 
@@ -167,7 +167,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # theme further.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    'navbar_title': "lavirot",
+    'navbar_title': "ross",
 
     # Tab name for entire site. (Default: "Site")
     'navbar_site_name': "Site",
@@ -375,7 +375,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'lavirot', 'Lavirot Documentation',
+    (master_doc, 'ross', 'Lavirot Documentation',
      [author], 1)
 ]
 

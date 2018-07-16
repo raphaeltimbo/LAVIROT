@@ -17,9 +17,9 @@ from matplotlib.colors import ListedColormap
 from mpl_toolkits.mplot3d import Axes3D
 from cycler import cycler
 
-from lavirot.elements import *
-from lavirot.materials import steel
-from lavirot.results import (CampbellResults, FrequencyResponseResults,
+from ross.elements import *
+from ross.materials import steel
+from ross.results import (CampbellResults, FrequencyResponseResults,
                              ForcedResponseResults, ModeShapeResults)
 
 

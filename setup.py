@@ -1,13 +1,13 @@
 # from distutils.core import setup
 from setuptools import setup
 
-setup(name='lavirot',
+setup(name='ross',
       version='0.1.5b',
-      description='lavirot',
+      description='ross',
       author='Lavi',
       author_email='raphaelts@gmail.com',
-      packages=['lavirot'],
-      package_data={'lavirot': ['styles/*']},
+      packages=['ross'],
+      package_data={'ross': ['styles/*']},
       setup_requires=['pytest-runner'],
       tests_require=['pytest']
      )
