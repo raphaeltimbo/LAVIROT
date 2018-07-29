@@ -967,11 +967,12 @@ class SealElement(BearingElement):
                  kxx, cxx,
                  kyy=None, kxy=0, kyx=0,
                  cyy=None, cxy=0, cyx=0,
-                 w=None):
+                 w=None, seal_leakage=None):
         super().__init__(n=n, w=w,
                          kxx=kxx, kxy=kxy, kyx=kyx, kyy=kyy,
                          cxx=cxx, cxy=cxy, cyx=cyx, cyy=cyy)
 
+        self.seal_leakage = seal_leakage
         self.color = '#77ACA2'
 
     def patch(self, ax, position):
