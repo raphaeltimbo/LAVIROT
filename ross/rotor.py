@@ -933,8 +933,6 @@ class Rotor(object):
 
         return forced_response
 
-        return results
-
     def time_response(self, F, t, ic=None):
         r"""Time response for a rotor.
 
