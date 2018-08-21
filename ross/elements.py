@@ -10,7 +10,7 @@ from ross.data_io.read_xl import (
 
 
 __all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",
-           "BearingElement", "SealElement"]
+           "BearingElement", "SealElement", "IsotSealElement"]
 
 
 class Element:
@@ -1011,3 +1011,53 @@ class SealElement(BearingElement):
                          [zpos, -ypos*1.1]]
         ax.add_patch(mpatches.Polygon(seal_points_u, facecolor=self.color))
         ax.add_patch(mpatches.Polygon(seal_points_l, facecolor=self.color))
+
+
+class IsotSealElement(SealElement):
+    def __init__(self, n,
+                 kxx, cxx,
+                 kyy=None, kxy=0, kyx=0,
+                 cyy=None, cxy=0, cyx=0,
+                 w=None, seal_leakage=None,
+                 absolute_viscosity=None, cell_vol_to_area_ratio=None, 
+                 compressibility_factor=None, entrance_loss_coefficient=None,
+                 exit_clearance=None, exit_recovery_factor=None, 
+                 inlet_clearance=None, inlet_preswirl_ratio=None, 
+                 molecular_weight=None, number_integr_steps=None, 
+                 p_exit=None, p_supply=None,
+                 reservoir_temperature=None, seal_diameter=None, seal_length=None,
+                 specific_heat_ratio=None,
+                 speed=None,
+                 tolerance_percentage=None,
+                 turbulence_coef_mr=None,
+                 turbulence_coef_ms=None,
+                 turbulence_coef_nr=None,
+                 turbulence_coef_ns=None
+                 ):
+        super().__init__(n=n, w=w,
+                         kxx=kxx, kxy=kxy, kyx=kyx, kyy=kyy,
+                         cxx=cxx, cxy=cxy, cyx=cyx, cyy=cyy,
+                         seal_leakage=seal_leakage)
+
+        self.absolute_viscosity = absolute_viscosity
+        self.cell_vol_to_area_ratio = cell_vol_to_area_ratio
+        self.compressibility_factor = compressibility_factor
+        self.entrance_loss_coefficient = entrance_loss_coefficient
+        self.exit_clearance = exit_clearance
+        self.exit_recovery_factor = exit_recovery_factor
+        self.inlet_clearance = inlet_clearance
+        self.inlet_preswirl_ratio = inlet_preswirl_ratio
+        self.molecular_weight = molecular_weight
+        self.number_integr_steps = number_integr_steps
+        self.p_exit = p_exit
+        self.p_supply = p_supply
+        self.reservoir_temperature = reservoir_temperature
+        self.seal_diameter = seal_diameter
+        self.seal_length = seal_length
+        self.specific_heat_ratio = specific_heat_ratio
+        self.speed = speed
+        self.tolerance_percentage = tolerance_percentage
+        self.turbulence_coef_mr = turbulence_coef_mr
+        self.turbulence_coef_ms = turbulence_coef_ms
+        self.turbulence_coef_nr = turbulence_coef_nr
+        self.turbulence_coef_ns = turbulence_coef_ns
