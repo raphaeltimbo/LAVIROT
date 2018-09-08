@@ -1,5 +1,6 @@
 import os
 import warnings
+import pickle
 import numpy as np
 import pandas as pd
 import scipy.linalg as la
@@ -1282,6 +1283,31 @@ class Rotor(object):
                'nodes': self.nodes_pos}
 
         sio.savemat('%s/%s.mat' % (os.getcwd(), file_name), dic)
+
+    def save(self, file_name):
+        """Save rotor to binary file.
+
+        Parameters
+        ----------
+        file_name : str
+        """
+        with open(file_name, 'wb') as f:
+            pickle.dump(self, f)
+
+    @staticmethod
+    def load(file_name):
+        """Load rotor from binary file.
+
+        Parameters
+        ----------
+        file_name : str
+
+        Returns
+        -------
+        rotor : ross.rotor.Rotor
+        """
+        with open(file_name, 'rb') as f:
+            return pickle.load(f)
 
 
 def rotor_example():
