@@ -1137,7 +1137,8 @@ class Rotor(object):
 
         if stiffness_range is None:
             if self.rated_w is not None:
-                k = self.bearing_seal_elements[0].kxx(self.rated_w)
+                bearing = self.bearing_seal_elements[0]
+                k = bearing.kxx.interpolated(self.rated_w)
                 k = int(np.log10(k))
                 stiffness_range = (k - 3, k + 3)
             else:
@@ -1164,10 +1165,10 @@ class Rotor(object):
 
         bearing0 = bearings_elements[0]
 
-        ax.plot(bearing0.kxx(bearing0.w), bearing0.w,
+        ax.plot(bearing0.kxx.interpolated(bearing0.w), bearing0.w,
                 marker='o', color='k', alpha=0.25,
                 markersize=5, lw=0, label='kxx')
-        ax.plot(bearing0.kyy(bearing0.w), bearing0.w,
+        ax.plot(bearing0.kyy.interpolated(bearing0.w), bearing0.w,
                 marker='s', color='k', alpha=0.25,
                 markersize=5, lw=0, label='kyy')
         ax.legend()

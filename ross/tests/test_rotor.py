@@ -615,3 +615,15 @@ def test_save_load(rotor5):
     assert_allclose(rotor5.evalues, rotor_5.evalues)
     assert_allclose(rotor5.bearing_seal_elements[0].kxx.interpolated(0),
                     rotor_5.bearing_seal_elements[0].kxx.interpolated(0))
+
+
+def test_plot_ucs(rotor5):
+    x_data_exp = np.array([1000000., 1832980.710832, 3359818.286284,
+                           6158482.11066, 11288378.916847])
+    y_data_exp = np.array([89.619235, 120.896554, 162.592464, 217.425534,
+                           287.645964])
+    ax = rotor5.plot_ucs()
+    l0 = ax.get_lines()[0]
+    x_data, y_data = l0.get_data()
+    assert_allclose(x_data[:5], x_data_exp)
+    assert_allclose(y_data[:5], y_data_exp)
