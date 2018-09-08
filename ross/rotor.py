@@ -985,10 +985,6 @@ class Rotor(object):
         Examples:
 
         """
-        plt.rcParams['figure.figsize'] = (12, 6)
-        plt.rcParams['xtick.labelsize'] = 0
-        plt.rcParams['ytick.labelsize'] = 0
-
         if ax is None:
             ax = plt.gca()
 
@@ -1002,6 +998,8 @@ class Rotor(object):
 
         ax.set_ylim(-1.2 * max_diameter, 1.2 * max_diameter)
         ax.axis('equal')
+        ax.set_xlabel('Axial location (m)')
+        ax.set_ylabel('Shaft radius (m)')
 
         #  plot nodes
         for node, position in enumerate(self.nodes_pos[::nodes]):
@@ -1027,8 +1025,6 @@ class Rotor(object):
         for bearing in self.bearing_seal_elements:
             position = (self.nodes_pos[bearing.n], -self.nodes_o_d[bearing.n])
             bearing.patch(ax, position)
-
-        mpl.rcParams.update(_orig_rc_params)
 
         return ax
 
