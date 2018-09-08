@@ -719,6 +719,61 @@ class DiskElement(LumpedDiskElement):
         ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=self.color))
 
 
+class _Coefficient:
+    def __init__(self, coefficient, w=None, interpolated=None):
+        if isinstance(coefficient, (int, float)):
+            if w is not None:
+                coefficient = [coefficient for _ in range(len(w))]
+            else:
+                coefficient = [coefficient]
+
+        self.coefficient = coefficient
+        self.w = w
+
+        if len(self.coefficient) > 1:
+            try:
+                with warnings.catch_warnings():
+                    warnings.simplefilter('ignore')
+                    self.interpolated = interpolate.UnivariateSpline(
+                        self.w, self.coefficient
+                    )
+            #  dfitpack.error is not exposed by scipy
+            #  so a bare except is used
+            except:
+                raise ValueError('Arguments (coefficients and w)'
+                                 ' must have the same dimension')
+        else:
+            self.interpolated = lambda x: np.array(self.coefficient[0])
+
+    def plot(self, ax=None, **kwargs):
+        if ax is None:
+            ax = plt.gca()
+
+        w_range = np.linspace(min(self.w), max(self.w), 30)
+
+        ax.plot(w_range, self.interpolated(w_range), **kwargs)
+        ax.set_xlabel('Speed (rad/s)')
+        ax.ticklabel_format(style='sci', scilimits=(0, 0), axis='y')
+
+        return ax
+
+
+class _Stiffness_Coefficient(_Coefficient):
+    def plot(self, **kwargs):
+        ax = super().plot(**kwargs)
+        ax.set_ylabel('Stiffness ($N/m$)')
+
+        return ax
+
+
+class _Damping_Coefficient(_Coefficient):
+    def plot(self, **kwargs):
+        ax = super().plot(**kwargs)
+        ax.set_ylabel('Damping ($Ns/m$)')
+
+        return ax
+
+
 class BearingElement(Element):
     #  TODO detail this class attributes inside the docstring
     """A bearing element.
@@ -762,86 +817,6 @@ class BearingElement(Element):
 
     """
 
-    class _Coefficient(np.ndarray):
-        """
-        Helper class to create coefficients (kxx, kxy...)
-        """
-
-        def __new__(cls, input_array, w=None, interpolated=None):
-
-            if isinstance(input_array, (int, float)):
-                if w is not None:
-                    input_array = [input_array for _ in range(len(w))]
-                else:
-                    input_array = [input_array]
-
-            obj = np.asarray(input_array, dtype=np.float64).view(cls)
-            obj.w = np.array(w, dtype=np.float)
-
-            if len(obj) > 1:
-                try:
-                    with warnings.catch_warnings():
-                        warnings.simplefilter('ignore')
-                        obj.interpolated = interpolate.UnivariateSpline(
-                            obj.w, obj
-                        )
-                #  dfitpack.error is not exposed by scipy
-                #  so a bare except is used
-                except:
-                    raise ValueError('Arguments (coefficients and w)'
-                                     ' must have the same dimension')
-            else:
-                obj.interpolated = lambda x: np.array(obj[0])
-
-            return obj
-
-        def __getitem__(self, *args, **kwargs):
-            self.slice = args
-            return super().__getitem__(*args, **kwargs)
-
-        def __array_finalize__(self, obj):
-            # see InfoArray.__array_finalize__ for comments
-            if obj is None:
-                return
-
-            # handle objects created through slices (see __getitem__)
-            try:
-                self.w = getattr(obj, 'w', None).__getitem__(obj.slice)
-                with warnings.catch_warnings():
-                    warnings.simplefilter('ignore')
-                    self.interpolated = interpolate.UnivariateSpline(
-                        self.w, obj.__getitem__(obj.slice)
-                    )
-                del obj.slice
-            except (AttributeError, IndexError):
-                self.w = getattr(obj, 'w', None)
-
-        def plot(self, ax=None, **kwargs):
-            if ax is None:
-                ax = plt.gca()
-
-            w_range = np.linspace(min(self.w), max(self.w), 30)
-
-            ax.plot(w_range, self.interpolated(w_range), **kwargs)
-            ax.set_xlabel('Speed (rad/s)')
-            ax.ticklabel_format(style='sci', scilimits=(0, 0), axis='y')
-
-            return ax
-
-    class _Stiffness_Coefficient(_Coefficient):
-        def plot(self, **kwargs):
-            ax = super().plot(**kwargs)
-            ax.set_ylabel('Stiffness ($N/m$)')
-
-            return ax
-
-    class _Damping_Coefficient(_Coefficient):
-        def plot(self, **kwargs):
-            ax = super().plot(**kwargs)
-            ax.set_ylabel('Damping ($Ns/m$)')
-
-            return ax
-
     #  TODO implement for more complex cases (kxy, kthetatheta etc.)
     #  TODO consider kxx, kxy, kyx, kyy, cxx, cxy, cyx, cyy, mxx, myy, myx, myy (to import from XLTRC)
     #  TODO add speed as an argument
@@ -870,13 +845,13 @@ class BearingElement(Element):
 
         for arg in args:
             if arg[0] == 'k':
-                coefficients[arg] = self._Stiffness_Coefficient(
+                coefficients[arg] = _Stiffness_Coefficient(
                     args_dict[arg], args_dict['w'])
             else:
-                coefficients[arg] = self._Damping_Coefficient(
+                coefficients[arg] = _Damping_Coefficient(
                     args_dict[arg], args_dict['w'])
 
-        coefficients_len = [len(v) for v in coefficients.values()]
+        coefficients_len = [len(v.coefficient) for v in coefficients.values()]
 
         if w is not None:
             coefficients_len.append(len(args_dict['w']))

@@ -608,8 +608,10 @@ def test_loaded_rotor(rotor5):
     assert rotor5.L == 1.65325
 
 
-def test_save_load(rotor1):
-    rotor1.save('rotor1.pck')
-    rotor_1 = Rotor.load('rotor1.pck')
+def test_save_load(rotor5):
+    rotor5.save('rotor5.pck')
+    rotor_5 = Rotor.load('rotor5.pck')
 
-    assert_allclose(rotor1.evalues, rotor_1.evalues)
+    assert_allclose(rotor5.evalues, rotor_5.evalues)
+    assert_allclose(rotor5.bearing_seal_elements[0].kxx.interpolated(0),
+                    rotor_5.bearing_seal_elements[0].kxx.interpolated(0))
