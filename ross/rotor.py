@@ -1032,7 +1032,7 @@ class Rotor(object):
 
         return ax
 
-    def campbell(self, speed_range, frequencies=6):
+    def campbell(self, speed_range, frequencies=6, frequency_type='wd'):
         r"""Calculates the Campbell diagram.
 
         This function will calculate the damped natural frequencies
@@ -1064,21 +1064,29 @@ class Rotor(object):
         """
         rotor_current_speed = self.w
 
-        # store in results [speeds(x axis), frequencies[0] or logdec[1] or whirl[2](y axis), 3]
+        # store in results [speeds(x axis), frequencies[0] or logdec[1] or
+        # whirl[2](y axis), 3]
         results = np.zeros([len(speed_range), frequencies, 3])
 
         for i, w in enumerate(speed_range):
             self.w = w
 
-            results[i, :, 0] = self.wd[:frequencies]
-            results[i, :, 1] = self.log_dec[:frequencies]
-            results[i, :, 2] = self.whirl_values()[:frequencies]
+            if frequency_type == 'wd':
+                results[i, :, 0] = self.wd[:frequencies]
+                results[i, :, 1] = self.log_dec[:frequencies]
+                results[i, :, 2] = self.whirl_values()[:frequencies]
+            else:
+                idx = self.wn.argsort()
+                results[i, :, 0] = self.wn[idx][:frequencies]
+                results[i, :, 1] = self.log_dec[idx][:frequencies]
+                results[i, :, 2] = self.whirl_values()[idx][:frequencies]
 
-        results = CampbellResults(results, 
-                new_attributes={'speed_range': speed_range,
-                                'wd': results[..., 0], 
-                                'log_dec': results[..., 1],
-                                'whirl_values': results[..., 2]})
+        results = CampbellResults(
+            results,
+            new_attributes={'speed_range': speed_range,
+                            'wd': results[..., 0],
+                            'log_dec': results[..., 1],
+                            'whirl_values': results[..., 2]})
 
         self.w = rotor_current_speed
 
