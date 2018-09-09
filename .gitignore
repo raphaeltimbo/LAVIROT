@@ -118,3 +118,5 @@ imgs/
 /lavirot/notebooks/
 .pytest_cache/
 
+rotor5.pck
+.vscode/settings.json
