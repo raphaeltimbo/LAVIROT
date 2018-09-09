@@ -748,13 +748,12 @@ class Rotor(object):
         pass
 
     def _lti(self):
-        r"""Continuous-time linear time invariant system.
+        """Continuous-time linear time invariant system.
 
         This method is used to create a Continuous-time linear
         time invariant system for the mdof system.
         From this system we can obtain poles, impulse response,
         generate a bode, etc.
-
         """
         Z = np.zeros((self.ndof, self.ndof))
         I = np.eye(self.ndof)
@@ -935,7 +934,7 @@ class Rotor(object):
         return forced_response
 
     def time_response(self, F, t, ic=None):
-        r"""Time response for a rotor.
+        """Time response for a rotor.
 
         This method returns the time response for a rotor
         given a force, time and initial conditions.
@@ -965,7 +964,7 @@ class Rotor(object):
         return signal.lsim(self.lti, F, t, X0=ic)
 
     def plot_rotor(self, nodes=1, ax=None):
-        """ Plots a rotor object.
+        """Plots a rotor object.
 
         This function will take a rotor object and plot its shaft,
         disks and bearing elements
@@ -983,7 +982,6 @@ class Rotor(object):
             Returns the axes object with the plot.
 
         Examples:
-
         """
         if ax is None:
             ax = plt.gca()
@@ -1029,7 +1027,7 @@ class Rotor(object):
         return ax
 
     def campbell(self, speed_range, frequencies=6, frequency_type='wd'):
-        r"""Calculates the Campbell diagram.
+        """Calculates the Campbell diagram.
 
         This function will calculate the damped natural frequencies
         for a speed range.
@@ -1278,9 +1276,7 @@ class Rotor(object):
         return ax
 
     def save_mat(self, file_name):
-        """
-        Save matrices and rotor model to a .mat file.
-        """
+        """Save matrices and rotor model to a .mat file."""
         dic = {'M': self.M(),
                'K': self.K(),
                'C': self.C(),
@@ -1316,7 +1312,7 @@ class Rotor(object):
 
 
 def rotor_example():
-    r"""This function returns an instance of a simple rotor with
+    """This function returns an instance of a simple rotor with
     two shaft elements, one disk and two simple bearings.
     The purpose of this is to make available a simple model
     so that doctest can be written using this.
@@ -1334,7 +1330,6 @@ def rotor_example():
     >>> np.round(rotor.wd[:4])
     array([  83.,   87.,  255.,  274.])
     """
-
     #  Rotor without damping with 2 shaft elements 1 disk and 2 bearings
     i_d = 0
     o_d = 0.05
