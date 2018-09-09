@@ -5,7 +5,7 @@ some of the most common materials used in rotors.
 """
 import numpy as np
 
-__all__ = ['Material', 'Oil']
+__all__ = ["Material", "Oil"]
 
 
 class Material:
@@ -40,21 +40,23 @@ class Material:
     class AvailableMaterials:
         pass
 
-    def __init__(self, name=None, rho=None, E=None, G_s=None, Poisson=None,
-                 color='#525252'):
+    def __init__(
+        self, name=None, rho=None, E=None, G_s=None, Poisson=None, color="#525252"
+    ):
         if rho is None:
-            raise ValueError('Density (rho) not provided.')
+            raise ValueError("Density (rho) not provided.")
 
-        if name is not None and ' ' in name:
-            raise ValueError('Spaces are not allowed in Material name')
+        if name is not None and " " in name:
+            raise ValueError("Spaces are not allowed in Material name")
 
         none_args = []
-        for arg in ['E', 'G_s', 'Poisson']:
+        for arg in ["E", "G_s", "Poisson"]:
             if locals()[arg] is None:
                 none_args.append(arg)
         if len(none_args) > 1:
-            raise ValueError('At least 2 arguments from E, G_s'
-                             'and Poisson should be provided ')
+            raise ValueError(
+                "At least 2 arguments from E, G_s" "and Poisson should be provided "
+            )
 
         self.name = name
         self.rho = rho
@@ -62,11 +64,11 @@ class Material:
         self.G_s = G_s
         self.Poisson = Poisson
         if E is None:
-            self.E = G_s*(2*(1 + Poisson))
+            self.E = G_s * (2 * (1 + Poisson))
         elif G_s is None:
-            self.G_s = E/(2*(1 + Poisson))
+            self.G_s = E / (2 * (1 + Poisson))
         elif Poisson is None:
-            self.Poisson = (E/(2*G_s)) - 1
+            self.Poisson = (E / (2 * G_s)) - 1
 
         self.color = color  # this can be used in the plots
 
@@ -74,24 +76,25 @@ class Material:
             setattr(self.AvailableMaterials, name, self)
 
     def __repr__(self):
-        return f'{self.name}'
+        return f"{self.name}"
 
     def __str__(self):
         return (
-            f'{self.name}'
+            f"{self.name}"
             f'\n{35*"-"}'
-            f'\nDensity         (N/m**3): {float(self.rho):{2}.{8}}'
-            f'\nYoung`s modulus (N/m**2): {float(self.E):{2}.{8}}'
-            f'\nShear modulus   (N/m**2): {float(self.G_s):{2}.{8}}'
-            f'\nPoisson coefficient     : {float(self.Poisson):{2}.{8}}')
+            f"\nDensity         (N/m**3): {float(self.rho):{2}.{8}}"
+            f"\nYoung`s modulus (N/m**2): {float(self.E):{2}.{8}}"
+            f"\nShear modulus   (N/m**2): {float(self.G_s):{2}.{8}}"
+            f"\nPoisson coefficient     : {float(self.Poisson):{2}.{8}}"
+        )
 
 
 #####################################################################
 # Available materials
 #####################################################################
 
-steel = Material(name='Steel', rho=7810, E=211e9, G_s=81.2e9)
-AISI4140 = Material(name='AISI4140', rho=7850, E=203.2e9, G_s=80e9)
+steel = Material(name="Steel", rho=7810, E=211e9, G_s=81.2e9)
+AISI4140 = Material(name="AISI4140", rho=7850, E=203.2e9, G_s=80e9)
 
 #####################################################################
 
@@ -128,12 +131,19 @@ Class used to create an oil and define its properties.
     class AvailableOils:
         pass
 
-    def __init__(self, name=None, exp_coeff=0.00076,
-                 t_a=None, mu_a=None, rho_a=None,
-                 t_b=None, mu_b=None):
+    def __init__(
+        self,
+        name=None,
+        exp_coeff=0.00076,
+        t_a=None,
+        mu_a=None,
+        rho_a=None,
+        t_b=None,
+        mu_b=None,
+    ):
 
-        if name is not None and ' ' in name:
-            raise ValueError('Spaces are not allowed in Oil name')
+        if name is not None and " " in name:
+            raise ValueError("Spaces are not allowed in Oil name")
 
         self.name = name
         self.exp_coeff = exp_coeff
@@ -162,7 +172,7 @@ Class used to create an oil and define its properties.
         ta = self.t_a
         tb = self.t_b
 
-        v = va * np.exp((np.log(vb/va)*(T - ta))/(tb - ta))
+        v = va * np.exp((np.log(vb / va) * (T - ta)) / (tb - ta))
 
         return v
 
@@ -182,7 +192,7 @@ Class used to create an oil and define its properties.
         Applied tribology: bearing design and lubrication.
         pg. 52
         """
-        return 1800*(1 + 0.002*T)
+        return 1800 * (1 + 0.002 * T)
 
     @staticmethod
     def thermal_conductivity(T):
@@ -193,7 +203,8 @@ Class used to create an oil and define its properties.
         Applied tribology: bearing design and lubrication.
         pg. 52
         """
-        return 0.1312*(1 - (6.3*1e-4)*T)
+        return 0.1312 * (1 - (6.3 * 1e-4) * T)
+
 
 # TODO add better docstrings to methods.
 
@@ -202,9 +213,21 @@ Class used to create an oil and define its properties.
 #####################################################################
 
 
-iso_vg32 = Oil(name='ISO_VG32', t_a=40, rho_a=856.8, mu_a=0.0255768159199483,
-               t_b=100, mu_b=0.0042050707290448133)
-iso_vg46 = Oil(name='ISO_VG46', t_a=40, rho_a=855.7, mu_a=0.0374733067635071,
-               t_b=100, mu_b=0.00527934606479555)
+iso_vg32 = Oil(
+    name="ISO_VG32",
+    t_a=40,
+    rho_a=856.8,
+    mu_a=0.0255768159199483,
+    t_b=100,
+    mu_b=0.0042050707290448133,
+)
+iso_vg46 = Oil(
+    name="ISO_VG46",
+    t_a=40,
+    rho_a=855.7,
+    mu_a=0.0374733067635071,
+    t_b=100,
+    mu_b=0.00527934606479555,
+)
 
 #####################################################################
