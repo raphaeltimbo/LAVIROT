@@ -479,6 +479,7 @@ class ForcedResponseResults(Results):
         ax0 = self.plot_magnitude(dof, ax=ax0, **kwargs)
         # remove label from phase plot
         kwargs.pop('label', None)
+        kwargs.pop('units', None)
         ax1 = self.plot_phase(dof, ax=ax1, **kwargs)
 
         ax0.set_xlabel('')
