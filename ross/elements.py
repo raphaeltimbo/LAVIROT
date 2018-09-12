@@ -5,16 +5,26 @@ import scipy.interpolate as interpolate
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from ross.data_io.read_xl import (
-    load_bearing_seals_from_yaml, load_bearing_seals_from_xltrc,
-    load_disks_from_xltrc, load_shaft_from_xltrc)
+    load_bearing_seals_from_yaml,
+    load_bearing_seals_from_xltrc,
+    load_disks_from_xltrc,
+    load_shaft_from_xltrc,
+)
 
 
-__all__ = ["ShaftElement", "LumpedDiskElement", "DiskElement",
-           "BearingElement", "SealElement", "IsotSealElement"]
+__all__ = [
+    "ShaftElement",
+    "LumpedDiskElement",
+    "DiskElement",
+    "BearingElement",
+    "SealElement",
+    "IsotSealElement",
+]
 
 
 class Element:
     """Element class."""
+
     def __init__(self):
         pass
 
@@ -24,7 +34,7 @@ class Element:
         A pandas series with the element properties as variables.
         """
         attributes = self.__dict__
-        attributes['type'] = self.__class__.__name__
+        attributes["type"] = self.__class__.__name__
         return pd.Series(attributes)
 
 
@@ -110,13 +120,19 @@ class ShaftElement(Element):
     #  TODO detail this class attributes inside the docstring
     #  TODO add __repr__ to the class
     #  TODO add load from .xls -> sheet More
-    def __init__(self, L, i_d, o_d, material,
-                 n=None,
-                 axial_force=0, torque=0,
-                 shear_effects=True,
-                 rotary_inertia=True,
-                 gyroscopic=True
-                 ):
+    def __init__(
+        self,
+        L,
+        i_d,
+        o_d,
+        material,
+        n=None,
+        axial_force=0,
+        torque=0,
+        shear_effects=True,
+        rotary_inertia=True,
+        gyroscopic=True,
+    ):
 
         self.shear_effects = shear_effects
         self.rotary_inertia = rotary_inertia
@@ -145,28 +161,31 @@ class ShaftElement(Element):
         self.Poisson = material.Poisson
         self.color = material.color
         self.rho = material.rho
-        self.A = np.pi*(o_d**2 - i_d**2)/4
+        self.A = np.pi * (o_d ** 2 - i_d ** 2) / 4
         self.volume = self.A * self.L
         self.m = self.rho * self.volume
         #  Ie is the second moment of area of the cross section about
         #  the neutral plane Ie = pi*r**2/4
-        self.Ie = np.pi*(o_d**4 - i_d**4)/64
+        self.Ie = np.pi * (o_d ** 4 - i_d ** 4) / 64
         phi = 0
 
         if shear_effects:
             #  Shear coefficient (phi)
-            r = i_d/o_d
-            r2 = r*r
-            r12 = (1 + r2)**2
+            r = i_d / o_d
+            r2 = r * r
+            r12 = (1 + r2) ** 2
             #  kappa as per Hutchinson (2001)
             # kappa = 6*r12*((1+self.poisson)/
             #           ((r12*(7 + 12*self.poisson + 4*self.poisson**2) +
             #             4*r2*(5 + 6*self.poisson + 2*self.poisson**2))))
             #  kappa as per Cowper (1996)
-            kappa = 6*r12*((1+self.Poisson) /
-                           ((r12*(7 + 6*self.Poisson) +
-                           r2*(20 + 12*self.Poisson))))
-            phi = 12*self.E*self.Ie/(self.G_s*kappa*self.A*L**2)
+            # fmt: off
+            kappa = 6 * r12 * (
+                (1 + self.Poisson)
+                / r12 * (7 + 6 * self.Poisson) + r2 * (20 + 12 * self.Poisson)
+            )
+            # fmt: on
+            phi = 12 * self.E * self.Ie / (self.G_s * kappa * self.A * L ** 2)
 
         self.phi = phi
 
@@ -182,20 +201,17 @@ class ShaftElement(Element):
             self.n_r = value + 1
 
     def __repr__(self):
-        return f'{self.__class__.__name__}' \
-               f'(L={self.L:{0}.{5}}, i_d={self.i_d:{0}.{5}}, ' \
-               f'o_d={self.o_d:{0}.{5}}, material={self.material!r}, ' \
-               f'n={self.n})'
+        return f"{self.__class__.__name__}" f"(L={self.L:{0}.{5}}, i_d={self.i_d:{0}.{5}}, " f"o_d={self.o_d:{0}.{5}}, material={self.material!r}, " f"n={self.n})"
 
     def __str__(self):
         return (
-            f'\nElem. N:    {self.n}'
-            f'\nLenght:     {self.L:{10}.{5}}'
-            f'\nInt. Diam.: {self.i_d:{10}.{5}}'
-            f'\nOut. Diam.: {self.o_d:{10}.{5}}'
+            f"\nElem. N:    {self.n}"
+            f"\nLenght:     {self.L:{10}.{5}}"
+            f"\nInt. Diam.: {self.i_d:{10}.{5}}"
+            f"\nOut. Diam.: {self.o_d:{10}.{5}}"
             f'\n{35*"-"}'
-            f'\n{self.material}'
-            f'\n'
+            f"\n{self.material}"
+            f"\n"
         )
 
     def M(self):
@@ -220,12 +236,12 @@ class ShaftElement(Element):
         phi = self.phi
         L = self.L
 
-        m01 = 312 + 588*phi + 280*phi**2
-        m02 = (44 + 77*phi + 35*phi**2)*L
-        m03 = 108 + 252*phi + 140*phi**2
-        m04 = -(26 + 63*phi + 35*phi**2)*L
-        m05 = (8 + 14*phi + 7*phi**2)*L**2
-        m06 = -(6 + 14*phi + 7*phi**2)*L**2
+        m01 = 312 + 588 * phi + 280 * phi ** 2
+        m02 = (44 + 77 * phi + 35 * phi ** 2) * L
+        m03 = 108 + 252 * phi + 140 * phi ** 2
+        m04 = -(26 + 63 * phi + 35 * phi ** 2) * L
+        m05 = (8 + 14 * phi + 7 * phi ** 2) * L ** 2
+        m06 = -(6 + 14 * phi + 7 * phi ** 2) * L ** 2
         # fmt: off
         M = np.array([[m01,     0,     0,   m02,   m03,     0,     0,   m04],
                       [  0,   m01,  -m02,     0,     0,   m03,  -m04,     0],
@@ -236,13 +252,13 @@ class ShaftElement(Element):
                       [  0,  -m04,   m06,     0,     0,   m02,   m05,     0],
                       [m04,     0,     0,   m06,  -m02,     0,     0,   m05]])
         # fmt: on
-        M = self.rho * self.A * self.L * M/(840*(1 + phi)**2)
+        M = self.rho * self.A * self.L * M / (840 * (1 + phi) ** 2)
 
         if self.rotary_inertia:
             ms1 = 36
-            ms2 = (3 - 15*phi)*L
-            ms3 = (4 + 5*phi + 10*phi**2)*L**2
-            ms4 = (-1 - 5*phi + 5*phi**2)*L**2
+            ms2 = (3 - 15 * phi) * L
+            ms3 = (4 + 5 * phi + 10 * phi ** 2) * L ** 2
+            ms4 = (-1 - 5 * phi + 5 * phi ** 2) * L ** 2
             # fmt: off
             Ms = np.array([[ms1,      0,     0,   ms2,  -ms1,     0,     0,   ms2],
                            [   0,   ms1,  -ms2,     0,     0,  -ms1,  -ms2,     0],
@@ -253,7 +269,7 @@ class ShaftElement(Element):
                            [   0,  -ms2,   ms4,     0,     0,   ms2,   ms3,     0],
                            [ ms2,     0,     0,   ms4,  -ms2,     0,     0,   ms3]])
             # fmt: on
-            Ms = self.rho * self.Ie * Ms/(30*L*(1 + phi)**2)
+            Ms = self.rho * self.Ie * Ms / (30 * L * (1 + phi) ** 2)
             M = M + Ms
 
         return M
@@ -291,7 +307,7 @@ class ShaftElement(Element):
             [6*L,    0,            0, (2-phi)*L**2, -6*L,     0,            0, (4+phi)*L**2]
         ])
         # fmt: on
-        K = self.E * self.Ie * K/((1 + phi)*L**3)
+        K = self.E * self.Ie * K / ((1 + phi) * L ** 3)
 
         return K
 
@@ -322,8 +338,8 @@ class ShaftElement(Element):
         if self.gyroscopic:
             g1 = 36
             g2 = (3 - 15 * phi) * L
-            g3 = (4 + 5 * phi + 10 * phi**2) * L**2
-            g4 = (-1 - 5 * phi + 5 * phi**2) * L**2
+            g3 = (4 + 5 * phi + 10 * phi ** 2) * L ** 2
+            g4 = (-1 - 5 * phi + 5 * phi ** 2) * L ** 2
             # fmt: off
             G = np.array([[  0, -g1,  g2,   0,   0,  g1,  g2,   0],
                           [ g1,   0,   0,  g2, -g1,   0,   0,  g2],
@@ -334,7 +350,7 @@ class ShaftElement(Element):
                           [-g2,   0,   0, -g4,  g2,   0,   0, -g3],
                           [  0, -g2,  g4,   0,   0,  g2,  g3,   0]])
             # fmt: on
-            G = - self.rho * self.Ie * G / (15 * L * (1 + phi)**2)
+            G = -self.rho * self.Ie * G / (15 * L * (1 + phi) ** 2)
 
         return G
 
@@ -361,23 +377,45 @@ class ShaftElement(Element):
         height = self.o_d - self.i_d
 
         #  plot the upper half of the shaft
-        ax.add_patch(mpatches.Rectangle(position_u, width, height,
-                                        linestyle='--', linewidth=0.5,
-                                        ec='k', fc=self.color, alpha=0.8))
+        ax.add_patch(
+            mpatches.Rectangle(
+                position_u,
+                width,
+                height,
+                linestyle="--",
+                linewidth=0.5,
+                ec="k",
+                fc=self.color,
+                alpha=0.8,
+            )
+        )
         #  plot the lower half of the shaft
-        ax.add_patch(mpatches.Rectangle(position_l, width, height,
-                                        linestyle='--', linewidth=0.5,
-                                        ec='k', fc=self.color, alpha=0.8))
-
+        ax.add_patch(
+            mpatches.Rectangle(
+                position_l,
+                width,
+                height,
+                linestyle="--",
+                linewidth=0.5,
+                ec="k",
+                fc=self.color,
+                alpha=0.8,
+            )
+        )
 
     @classmethod
-    def section(cls, L, ne,
-                si_d, so_d, material,
-                n=None,
-                shear_effects=True,
-                rotary_inertia=True,
-                gyroscopic=True
-                ):
+    def section(
+        cls,
+        L,
+        ne,
+        si_d,
+        so_d,
+        material,
+        n=None,
+        shear_effects=True,
+        rotary_inertia=True,
+        gyroscopic=True,
+    ):
         """Shaft section constructor.
 
         This method will create a shaft section with length 'L'
@@ -435,23 +473,27 @@ class ShaftElement(Element):
 
         le = L / ne
 
-        elements = [cls(le, si_d, so_d, material,
-                        n,
-                        shear_effects,
-                        rotary_inertia,
-                        gyroscopic)
-                    for _ in range(ne)]
+        elements = [
+            cls(le, si_d, so_d, material, n, shear_effects, rotary_inertia, gyroscopic)
+            for _ in range(ne)
+        ]
 
         return elements
 
     @classmethod
-    def load_from_xltrc(cls, file, sheet_name='Model'):
+    def load_from_xltrc(cls, file, sheet_name="Model"):
         # TODO docstrings should be here not in the io module
         geometry, materials = load_shaft_from_xltrc(file, sheet_name)
-        shaft = [ShaftElement(
-            el.length, el.id_Left, el.od_Left,
-            materials[el.matnum], n=el.elemnum-1)
-            for i, el in geometry.iterrows()]
+        shaft = [
+            ShaftElement(
+                el.length,
+                el.id_Left,
+                el.od_Left,
+                materials[el.matnum],
+                n=el.elemnum - 1,
+            )
+            for i, el in geometry.iterrows()
+        ]
 
         return shaft
 
@@ -489,6 +531,7 @@ class LumpedDiskElement(Element):
      >>> disk.Ip
      0.32956362
      """
+
     def __init__(self, n, m, Id, Ip):
         self.n = n
         self.n_l = n
@@ -497,7 +540,7 @@ class LumpedDiskElement(Element):
         self.m = m
         self.Id = Id
         self.Ip = Ip
-        self.color = '#bc625b'
+        self.color = "#bc625b"
 
     def M(self):
         """
@@ -585,27 +628,32 @@ class LumpedDiskElement(Element):
         hw = 0.005
 
         #  node (x pos), outer diam. (y pos)
-        disk_points_u = [[zpos, ypos],  # upper
-                         [zpos + hw, ypos + D],
-                         [zpos - hw, ypos + D],
-                         [zpos, ypos]]
-        disk_points_l = [[zpos, -ypos],  # lower
-                         [zpos + hw, -(ypos + D)],
-                         [zpos - hw, -(ypos + D)],
-                         [zpos, -ypos]]
+        disk_points_u = [
+            [zpos, ypos],  # upper
+            [zpos + hw, ypos + D],
+            [zpos - hw, ypos + D],
+            [zpos, ypos],
+        ]
+        disk_points_l = [
+            [zpos, -ypos],  # lower
+            [zpos + hw, -(ypos + D)],
+            [zpos - hw, -(ypos + D)],
+            [zpos, -ypos],
+        ]
         ax.add_patch(mpatches.Polygon(disk_points_u, facecolor=self.color))
         ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=self.color))
 
-        ax.add_patch(mpatches.Circle(xy=(zpos, ypos + D),
-                                     radius=0.01, color=self.color))
-        ax.add_patch(mpatches.Circle(xy=(zpos, -(ypos + D)),
-                                     radius=0.01, color=self.color))
+        ax.add_patch(
+            mpatches.Circle(xy=(zpos, ypos + D), radius=0.01, color=self.color)
+        )
+        ax.add_patch(
+            mpatches.Circle(xy=(zpos, -(ypos + D)), radius=0.01, color=self.color)
+        )
 
     @classmethod
-    def load_from_xltrc(cls, file, sheet_name='More'):
+    def load_from_xltrc(cls, file, sheet_name="More"):
         df = load_disks_from_xltrc(file, sheet_name)
-        disks = [cls(d.n-1, d.Mass, d.It, d.Ip)
-                 for _, d in df.iterrows()]
+        disks = [cls(d.n - 1, d.Mass, d.It, d.Ip) for _, d in df.iterrows()]
 
         return disks
 
@@ -654,7 +702,7 @@ class DiskElement(LumpedDiskElement):
     #  TODO add __repr__ to the class
     def __init__(self, n, material, width, i_d, o_d):
         if not isinstance(n, int):
-            raise TypeError(f'n should be int, not {n.__class__.__name__}')
+            raise TypeError(f"n should be int, not {n.__class__.__name__}")
         self.n = n
         self.n_l = n
         self.n_r = n
@@ -671,11 +719,13 @@ class DiskElement(LumpedDiskElement):
         self.i_d_r = i_d
         self.o_d_r = o_d
 
-        self.m = 0.25 * self.rho * np.pi * width * (o_d**2 - i_d**2)
-        self.Id = (0.015625 * self.rho * np.pi * width*(o_d**4 - i_d**4)
-                   + self.m*(width**2)/12)
-        self.Ip = 0.03125 * self.rho * np.pi * width * (o_d**4 - i_d**4)
-        self.color = '#bc625b'
+        self.m = 0.25 * self.rho * np.pi * width * (o_d ** 2 - i_d ** 2)
+        self.Id = (
+            0.015625 * self.rho * np.pi * width * (o_d ** 4 - i_d ** 4)
+            + self.m * (width ** 2) / 12
+        )
+        self.Ip = 0.03125 * self.rho * np.pi * width * (o_d ** 4 - i_d ** 4)
+        self.color = "#bc625b"
 
         super().__init__(self.n, self.m, self.Id, self.Ip)
 
@@ -704,18 +754,22 @@ class DiskElement(LumpedDiskElement):
         hw = self.width / 2  # half width
 
         #  node (x pos), outer diam. (y pos)
-        disk_points_u = [[zpos, ypos],  # upper
-                         [zpos + hw, ypos + 0.1 * D],
-                         [zpos + hw, ypos + 0.9 * D],
-                         [zpos - hw, ypos + 0.9 * D],
-                         [zpos - hw, ypos + 0.1 * D],
-                         [zpos, ypos]]
-        disk_points_l = [[zpos, -ypos],  # lower
-                         [zpos + hw, -(ypos + 0.1 * D)],
-                         [zpos + hw, -(ypos + 0.9 * D)],
-                         [zpos - hw, -(ypos + 0.9 * D)],
-                         [zpos - hw, -(ypos + 0.1 * D)],
-                         [zpos, -ypos]]
+        disk_points_u = [
+            [zpos, ypos],  # upper
+            [zpos + hw, ypos + 0.1 * D],
+            [zpos + hw, ypos + 0.9 * D],
+            [zpos - hw, ypos + 0.9 * D],
+            [zpos - hw, ypos + 0.1 * D],
+            [zpos, ypos],
+        ]
+        disk_points_l = [
+            [zpos, -ypos],  # lower
+            [zpos + hw, -(ypos + 0.1 * D)],
+            [zpos + hw, -(ypos + 0.9 * D)],
+            [zpos - hw, -(ypos + 0.9 * D)],
+            [zpos - hw, -(ypos + 0.1 * D)],
+            [zpos, -ypos],
+        ]
         ax.add_patch(mpatches.Polygon(disk_points_u, facecolor=self.color))
         ax.add_patch(mpatches.Polygon(disk_points_l, facecolor=self.color))
 
@@ -734,15 +788,16 @@ class _Coefficient:
         if len(self.coefficient) > 1:
             try:
                 with warnings.catch_warnings():
-                    warnings.simplefilter('ignore')
+                    warnings.simplefilter("ignore")
                     self.interpolated = interpolate.UnivariateSpline(
                         self.w, self.coefficient
                     )
             #  dfitpack.error is not exposed by scipy
             #  so a bare except is used
             except:
-                raise ValueError('Arguments (coefficients and w)'
-                                 ' must have the same dimension')
+                raise ValueError(
+                    "Arguments (coefficients and w)" " must have the same dimension"
+                )
         else:
             self.interpolated = lambda x: np.array(self.coefficient[0])
 
@@ -753,8 +808,8 @@ class _Coefficient:
         w_range = np.linspace(min(self.w), max(self.w), 30)
 
         ax.plot(w_range, self.interpolated(w_range), **kwargs)
-        ax.set_xlabel('Speed (rad/s)')
-        ax.ticklabel_format(style='sci', scilimits=(0, 0), axis='y')
+        ax.set_xlabel("Speed (rad/s)")
+        ax.ticklabel_format(style="sci", scilimits=(0, 0), axis="y")
 
         return ax
 
@@ -762,7 +817,7 @@ class _Coefficient:
 class _Stiffness_Coefficient(_Coefficient):
     def plot(self, **kwargs):
         ax = super().plot(**kwargs)
-        ax.set_ylabel('Stiffness ($N/m$)')
+        ax.set_ylabel("Stiffness ($N/m$)")
 
         return ax
 
@@ -770,7 +825,7 @@ class _Stiffness_Coefficient(_Coefficient):
 class _Damping_Coefficient(_Coefficient):
     def plot(self, **kwargs):
         ax = super().plot(**kwargs)
-        ax.set_ylabel('Damping ($Ns/m$)')
+        ax.set_ylabel("Damping ($Ns/m$)")
 
         return ax
 
@@ -826,44 +881,43 @@ class BearingElement(Element):
     #  TODO create tests to evaluate interpolation
     #  TODO create tests for different cases of bearing instantiation
 
-    def __init__(self, n,
-                 kxx, cxx,
-                 kyy=None, kxy=0, kyx=0,
-                 cyy=None, cxy=0, cyx=0,
-                 w=None):
+    def __init__(
+        self, n, kxx, cxx, kyy=None, kxy=0, kyx=0, cyy=None, cxy=0, cyx=0, w=None
+    ):
 
-        args = ['kxx', 'kyy', 'kxy', 'kyx',
-                'cxx', 'cyy', 'cxy', 'cyx']
+        args = ["kxx", "kyy", "kxy", "kyx", "cxx", "cyy", "cxy", "cyx"]
 
         # all args to coefficients
         args_dict = locals()
         coefficients = {}
 
         if kyy is None:
-            args_dict['kyy'] = kxx
+            args_dict["kyy"] = kxx
         if cyy is None:
-            args_dict['cyy'] = cxx
+            args_dict["cyy"] = cxx
 
         for arg in args:
-            if arg[0] == 'k':
+            if arg[0] == "k":
                 coefficients[arg] = _Stiffness_Coefficient(
-                    args_dict[arg], args_dict['w'])
+                    args_dict[arg], args_dict["w"]
+                )
             else:
-                coefficients[arg] = _Damping_Coefficient(
-                    args_dict[arg], args_dict['w'])
+                coefficients[arg] = _Damping_Coefficient(args_dict[arg], args_dict["w"])
 
         coefficients_len = [len(v.coefficient) for v in coefficients.values()]
 
         if w is not None:
-            coefficients_len.append(len(args_dict['w']))
+            coefficients_len.append(len(args_dict["w"]))
             if len(set(coefficients_len)) > 1:
-                raise ValueError('Arguments (coefficients and w)'
-                                 ' must have the same dimension')
+                raise ValueError(
+                    "Arguments (coefficients and w)" " must have the same dimension"
+                )
         else:
             for c in coefficients_len:
                 if c != 1:
-                    raise ValueError('Arguments (coefficients and w)'
-                                     ' must have the same dimension')
+                    raise ValueError(
+                        "Arguments (coefficients and w)" " must have the same dimension"
+                    )
 
         for k, v in coefficients.items():
             setattr(self, k, v)
@@ -873,10 +927,10 @@ class BearingElement(Element):
         self.n_r = n
 
         self.w = np.array(w, dtype=np.float64)
-        self.color = '#355d7a'
+        self.color = "#355d7a"
 
     def __repr__(self):
-        return '%s' % self.__class__.__name__
+        return "%s" % self.__class__.__name__
 
     def K(self, w):
         kxx = self.kxx.interpolated(w)
@@ -884,8 +938,7 @@ class BearingElement(Element):
         kxy = self.kxy.interpolated(w)
         kyx = self.kyx.interpolated(w)
 
-        K = np.array([[kxx, kxy],
-                      [kyx, kyy]])
+        K = np.array([[kxx, kxy], [kyx, kyy]])
 
         return K
 
@@ -895,8 +948,7 @@ class BearingElement(Element):
         cxy = self.cxy.interpolated(w)
         cyx = self.cyx.interpolated(w)
 
-        C = np.array([[cxx, cxy],
-                      [cyx, cyy]])
+        C = np.array([[cxx, cxy], [cyx, cyy]])
 
         return C
 
@@ -921,10 +973,12 @@ class BearingElement(Element):
         h = -0.75 * ypos  # height
 
         #  node (x pos), outer diam. (y pos)
-        bearing_points = [[zpos, ypos],  # upper
-                          [zpos + h / 2, ypos - h],
-                          [zpos - h / 2, ypos - h],
-                          [zpos, ypos]]
+        bearing_points = [
+            [zpos, ypos],  # upper
+            [zpos + h / 2, ypos - h],
+            [zpos - h / 2, ypos - h],
+            [zpos, ypos],
+        ]
         ax.add_patch(mpatches.Polygon(bearing_points, color=self.color, picker=True))
 
     @classmethod
@@ -933,23 +987,41 @@ class BearingElement(Element):
         return cls(n, **kwargs)
 
     @classmethod
-    def load_from_xltrc(cls, n, file, sheet_name='XLUseKCM'):
+    def load_from_xltrc(cls, n, file, sheet_name="XLUseKCM"):
         kwargs = load_bearing_seals_from_xltrc(file, sheet_name)
         return cls(n, **kwargs)
 
 
 class SealElement(BearingElement):
-    def __init__(self, n,
-                 kxx, cxx,
-                 kyy=None, kxy=0, kyx=0,
-                 cyy=None, cxy=0, cyx=0,
-                 w=None, seal_leakage=None):
-        super().__init__(n=n, w=w,
-                         kxx=kxx, kxy=kxy, kyx=kyx, kyy=kyy,
-                         cxx=cxx, cxy=cxy, cyx=cyx, cyy=cyy)
+    def __init__(
+        self,
+        n,
+        kxx,
+        cxx,
+        kyy=None,
+        kxy=0,
+        kyx=0,
+        cyy=None,
+        cxy=0,
+        cyx=0,
+        w=None,
+        seal_leakage=None,
+    ):
+        super().__init__(
+            n=n,
+            w=w,
+            kxx=kxx,
+            kxy=kxy,
+            kyx=kyx,
+            kyy=kyy,
+            cxx=cxx,
+            cxy=cxy,
+            cyx=cyx,
+            cyy=cyy,
+        )
 
         self.seal_leakage = seal_leakage
-        self.color = '#77ACA2'
+        self.color = "#77ACA2"
 
     def patch(self, ax, position):
         """Seal element patch.
@@ -973,47 +1045,76 @@ class SealElement(BearingElement):
         # TODO adapt hw according to bal drum diameter
 
         #  node (x pos), outer diam. (y pos)
-        seal_points_u = [[zpos, ypos*1.1],  # upper
-                         [zpos + hw, ypos*1.1],
-                         [zpos + hw, ypos*1.3],
-                         [zpos - hw, ypos*1.3],
-                         [zpos - hw, ypos*1.1],
-                         [zpos, ypos*1.1]]
-        seal_points_l = [[zpos, -ypos*1.1],  # lower
-                         [zpos + hw, -(ypos*1.1)],
-                         [zpos + hw, -(ypos*1.3)],
-                         [zpos - hw, -(ypos*1.3)],
-                         [zpos - hw, -(ypos*1.1)],
-                         [zpos, -ypos*1.1]]
+        seal_points_u = [
+            [zpos, ypos * 1.1],  # upper
+            [zpos + hw, ypos * 1.1],
+            [zpos + hw, ypos * 1.3],
+            [zpos - hw, ypos * 1.3],
+            [zpos - hw, ypos * 1.1],
+            [zpos, ypos * 1.1],
+        ]
+        seal_points_l = [
+            [zpos, -ypos * 1.1],  # lower
+            [zpos + hw, -(ypos * 1.1)],
+            [zpos + hw, -(ypos * 1.3)],
+            [zpos - hw, -(ypos * 1.3)],
+            [zpos - hw, -(ypos * 1.1)],
+            [zpos, -ypos * 1.1],
+        ]
         ax.add_patch(mpatches.Polygon(seal_points_u, facecolor=self.color))
         ax.add_patch(mpatches.Polygon(seal_points_l, facecolor=self.color))
 
 
 class IsotSealElement(SealElement):
-    def __init__(self, n,
-                 kxx, cxx,
-                 kyy=None, kxy=0, kyx=0,
-                 cyy=None, cxy=0, cyx=0,
-                 w=None, seal_leakage=None,
-                 absolute_viscosity=None, cell_vol_to_area_ratio=None, 
-                 compressibility_factor=None, entrance_loss_coefficient=None,
-                 exit_clearance=None, exit_recovery_factor=None, 
-                 inlet_clearance=None, inlet_preswirl_ratio=None, 
-                 molecular_weight=None, number_integr_steps=None, 
-                 p_exit=None, p_supply=None,
-                 reservoir_temperature=None, seal_diameter=None, seal_length=None,
-                 specific_heat_ratio=None,
-                 speed=None,
-                 tolerance_percentage=None,
-                 turbulence_coef_mr=None,
-                 turbulence_coef_ms=None,
-                 turbulence_coef_nr=None,
-                 turbulence_coef_ns=None
-                 ):
-        super().__init__(n=n, w=w,
-                         kxx=kxx, kxy=kxy, kyx=kyx, kyy=kyy,
-                         cxx=cxx, cxy=cxy, cyx=cyx, cyy=cyy,
-                         seal_leakage=seal_leakage)
+    def __init__(
+        self,
+        n,
+        kxx,
+        cxx,
+        kyy=None,
+        kxy=0,
+        kyx=0,
+        cyy=None,
+        cxy=0,
+        cyx=0,
+        w=None,
+        seal_leakage=None,
+        absolute_viscosity=None,
+        cell_vol_to_area_ratio=None,
+        compressibility_factor=None,
+        entrance_loss_coefficient=None,
+        exit_clearance=None,
+        exit_recovery_factor=None,
+        inlet_clearance=None,
+        inlet_preswirl_ratio=None,
+        molecular_weight=None,
+        number_integr_steps=None,
+        p_exit=None,
+        p_supply=None,
+        reservoir_temperature=None,
+        seal_diameter=None,
+        seal_length=None,
+        specific_heat_ratio=None,
+        speed=None,
+        tolerance_percentage=None,
+        turbulence_coef_mr=None,
+        turbulence_coef_ms=None,
+        turbulence_coef_nr=None,
+        turbulence_coef_ns=None,
+    ):
+        super().__init__(
+            n=n,
+            w=w,
+            kxx=kxx,
+            kxy=kxy,
+            kyx=kyx,
+            kyy=kyy,
+            cxx=cxx,
+            cxy=cxy,
+            cyx=cyx,
+            cyy=cyy,
+            seal_leakage=seal_leakage,
+        )
 
         self.absolute_viscosity = absolute_viscosity
         self.cell_vol_to_area_ratio = cell_vol_to_area_ratio
