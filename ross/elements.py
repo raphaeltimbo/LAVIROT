@@ -226,7 +226,7 @@ class ShaftElement(Element):
         m04 = -(26 + 63*phi + 35*phi**2)*L
         m05 = (8 + 14*phi + 7*phi**2)*L**2
         m06 = -(6 + 14*phi + 7*phi**2)*L**2
-
+        # fmt: off
         M = np.array([[m01,     0,     0,   m02,   m03,     0,     0,   m04],
                       [  0,   m01,  -m02,     0,     0,   m03,  -m04,     0],
                       [  0,  -m02,   m05,     0,     0,   m04,   m06,     0],
@@ -235,7 +235,7 @@ class ShaftElement(Element):
                       [  0,   m03,   m04,     0,     0,   m01,   m02,     0],
                       [  0,  -m04,   m06,     0,     0,   m02,   m05,     0],
                       [m04,     0,     0,   m06,  -m02,     0,     0,   m05]])
-
+        # fmt: on
         M = self.rho * self.A * self.L * M/(840*(1 + phi)**2)
 
         if self.rotary_inertia:
@@ -243,6 +243,7 @@ class ShaftElement(Element):
             ms2 = (3 - 15*phi)*L
             ms3 = (4 + 5*phi + 10*phi**2)*L**2
             ms4 = (-1 - 5*phi + 5*phi**2)*L**2
+            # fmt: off
             Ms = np.array([[ms1,      0,     0,   ms2,  -ms1,     0,     0,   ms2],
                            [   0,   ms1,  -ms2,     0,     0,  -ms1,  -ms2,     0],
                            [   0,  -ms2,   ms3,     0,     0,   ms2,   ms4,     0],
@@ -251,7 +252,7 @@ class ShaftElement(Element):
                            [   0,  -ms1,   ms2,     0,     0,   ms1,   ms2,     0],
                            [   0,  -ms2,   ms4,     0,     0,   ms2,   ms3,     0],
                            [ ms2,     0,     0,   ms4,  -ms2,     0,     0,   ms3]])
-
+            # fmt: on
             Ms = self.rho * self.Ie * Ms/(30*L*(1 + phi)**2)
             M = M + Ms
 
@@ -278,7 +279,7 @@ class ShaftElement(Element):
         """
         phi = self.phi
         L = self.L
-
+        # fmt: off
         K = np.array([
             [12,     0,            0,          6*L,  -12,     0,            0,          6*L],
             [0,     12,         -6*L,            0,    0,   -12,         -6*L,            0],
@@ -289,7 +290,7 @@ class ShaftElement(Element):
             [0,   -6*L, (2-phi)*L**2,            0,    0,   6*L, (4+phi)*L**2,            0],
             [6*L,    0,            0, (2-phi)*L**2, -6*L,     0,            0, (4+phi)*L**2]
         ])
-
+        # fmt: on
         K = self.E * self.Ie * K/((1 + phi)*L**3)
 
         return K
@@ -323,7 +324,7 @@ class ShaftElement(Element):
             g2 = (3 - 15 * phi) * L
             g3 = (4 + 5 * phi + 10 * phi**2) * L**2
             g4 = (-1 - 5 * phi + 5 * phi**2) * L**2
-
+            # fmt: off
             G = np.array([[  0, -g1,  g2,   0,   0,  g1,  g2,   0],
                           [ g1,   0,   0,  g2, -g1,   0,   0,  g2],
                           [-g2,   0,   0, -g3,  g2,   0,   0, -g4],
@@ -332,7 +333,7 @@ class ShaftElement(Element):
                           [-g1,   0,   0, -g2,  g1,   0,   0, -g2],
                           [-g2,   0,   0, -g4,  g2,   0,   0, -g3],
                           [  0, -g2,  g4,   0,   0,  g2,  g3,   0]])
-
+            # fmt: on
             G = - self.rho * self.Ie * G / (15 * L * (1 + phi)**2)
 
         return G
@@ -522,12 +523,12 @@ class LumpedDiskElement(Element):
         """
         m = self.m
         Id = self.Id
-
+        # fmt: off
         M = np.array([[m, 0,  0,  0],
                        [0, m,  0,  0],
                        [0, 0, Id,  0],
                        [0, 0,  0, Id]])
-
+        # fmt: on
         return M
 
     def G(self):
@@ -554,12 +555,12 @@ class LumpedDiskElement(Element):
         """
 
         Ip = self.Ip
-
+        # fmt: off
         G = np.array([[0, 0,   0,  0],
                       [0, 0,   0,  0],
                       [0, 0,   0, Ip],
                       [0, 0, -Ip,  0]])
-
+        # fmt: on
         return G
 
     def patch(self, ax, position):
