@@ -182,7 +182,7 @@ class ShaftElement(Element):
             # fmt: off
             kappa = 6 * r12 * (
                 (1 + self.Poisson)
-                / r12 * (7 + 6 * self.Poisson) + r2 * (20 + 12 * self.Poisson)
+                / (r12 * (7 + 6 * self.Poisson) + r2 * (20 + 12 * self.Poisson))
             )
             # fmt: on
             phi = 12 * self.E * self.Ie / (self.G_s * kappa * self.A * L ** 2)
