@@ -85,11 +85,10 @@ class CampbellResults(Results):
         if fig is None and ax is None:
             fig, ax = plt.subplots()
 
-        speed_range = self.speed_range
-
-        wd = self.wd
-        log_dec = self.log_dec
-        whirl = self.whirl_values
+        wd = self[..., 0]
+        log_dec = self[..., 1]
+        whirl = self[..., 2]
+        speed_range = self[..., 3]
 
         default_values = dict(cmap='RdBu', vmin=0.1, vmax=2., s=20, alpha=0.5)
         for k, v in default_values.items():
@@ -97,16 +96,18 @@ class CampbellResults(Results):
 
         for mark, whirl_dir in zip(['^', 'o', 'v'],
                                    [0., 0.5, 1.]):
-            for i in range(wd.shape[1]):
+            num_frequencies = wd.shape[1]
+            for i in range(num_frequencies):
                 wd_i = wd[:, i]
                 whirl_i = whirl[:, i]
                 log_dec_i = log_dec[:, i]
+                speed_range_i = speed_range[:, i]
 
                 whirl_mask = (whirl_i == whirl_dir)
                 if whirl_mask.shape[0] == 0:
                     continue
                 else:
-                    im = ax.scatter(speed_range[whirl_mask], wd_i[whirl_mask],
+                    im = ax.scatter(speed_range_i[whirl_mask], wd_i[whirl_mask],
                                     c=log_dec_i[whirl_mask],
                                     marker=mark, **kwargs)
 
