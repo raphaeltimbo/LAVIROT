@@ -60,7 +60,7 @@ class Results(np.ndarray):
 
 
 class CampbellResults(Results):
-    def plot(self, harmonics=[1], fig=None, ax=None, **kwargs):
+    def plot(self, harmonics=[1], wn=False, fig=None, ax=None, **kwargs):
         """Plot campbell results.
 
         Parameters
@@ -86,6 +86,8 @@ class CampbellResults(Results):
             fig, ax = plt.subplots()
 
         wd = self[..., 0]
+        if wn is True:
+            wn = self[..., 4]
         log_dec = self[..., 1]
         whirl = self[..., 2]
         speed_range = self[..., 3]
@@ -98,7 +100,10 @@ class CampbellResults(Results):
                                    [0., 0.5, 1.]):
             num_frequencies = wd.shape[1]
             for i in range(num_frequencies):
-                wd_i = wd[:, i]
+                if wn is True:
+                    w_i = wn[:, i]
+                else:
+                    w_i = wd[:, i]
                 whirl_i = whirl[:, i]
                 log_dec_i = log_dec[:, i]
                 speed_range_i = speed_range[:, i]
@@ -107,7 +112,7 @@ class CampbellResults(Results):
                 if whirl_mask.shape[0] == 0:
                     continue
                 else:
-                    im = ax.scatter(speed_range_i[whirl_mask], wd_i[whirl_mask],
+                    im = ax.scatter(speed_range_i[whirl_mask], w_i[whirl_mask],
                                     c=log_dec_i[whirl_mask],
                                     marker=mark, **kwargs)
 

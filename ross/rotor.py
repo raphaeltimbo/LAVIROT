@@ -1060,7 +1060,7 @@ class Rotor(object):
 
         # store in results [speeds(x axis), frequencies[0] or logdec[1] or
         # whirl[2](y axis), 3]
-        results = np.zeros([len(speed_range), frequencies, 4])
+        results = np.zeros([len(speed_range), frequencies, 5])
 
         for i, w in enumerate(speed_range):
             self.w = w
@@ -1076,6 +1076,7 @@ class Rotor(object):
                 results[i, :, 2] = self.whirl_values()[idx][:frequencies]
 
             results[i, :, 3] = w
+            results[i, :, 4] = self.wn[:frequencies]
 
         results = CampbellResults(
             results,
