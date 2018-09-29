@@ -1087,6 +1087,7 @@ class IsotSealElement(SealElement):
         cxy_fd=None,
         cyx_fd=None,
         w_fd=None,
+        wfr=None,
         seal_leakage=None,
         absolute_viscosity=None,
         cell_vol_to_area_ratio=None,
@@ -1156,3 +1157,4 @@ class IsotSealElement(SealElement):
         self.cxy_fd = cxy_fd
         self.cyx_fd = cyx_fd
         self.w_fd = w_fd
+        self.wfr = wfr
