@@ -1078,6 +1078,9 @@ class IsotSealElement(SealElement):
         cxy=0,
         cyx=0,
         w=None,
+        exit_axial_mach_number=None,
+        exit_axial_reynolds_number=None,
+        exit_circumferential_reynolds_number=None,
         kxx_fd=None,
         cxx_fd=None,
         kyy_fd=None,
@@ -1148,6 +1151,9 @@ class IsotSealElement(SealElement):
         self.turbulence_coef_ms = turbulence_coef_ms
         self.turbulence_coef_nr = turbulence_coef_nr
         self.turbulence_coef_ns = turbulence_coef_ns
+        self.exit_axial_mach_number = exit_axial_mach_number,
+        self.exit_axial_reynolds_number = exit_axial_reynolds_number,
+        self.exit_circumferential_reynolds_number = exit_circumferential_reynolds_number
         self.kxx_fd = kxx_fd
         self.cxx_fd = cxx_fd
         self.kyy_fd = kyy_fd
