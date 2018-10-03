@@ -788,7 +788,8 @@ class Rotor(object):
         # TODO check if this is possible with linalg sparse
         # TODO test_freq_response is failing because evalues here are not sorted
         evals, psi, = la.eig(self.A(w))
-        psi_inv = la.inv(psi)  # TODO change to get psi_inv from la.eig
+        # TODO change to get psi_inv from la.eig - first evaluate performance gain
+        psi_inv = la.inv(psi)
 
         if modes is not None:
             n = self.ndof  # n dof -> number of modes
