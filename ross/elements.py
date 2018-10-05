@@ -1181,10 +1181,12 @@ class IsotSealElement(SealElement):
         return (self.cxx_fd - self.kxy_fd
                 / self.w_fd)
 
-    def effective_acoustic_velocity(self):
+    def effective_acoustic_velocity(self, gamma=0.69):
         zc = self.compressibility_factor  # dimensionless
         Rg = 8.3144598  # joule / (kelvin mole)
         T = self.reservoir_temperature + 273.15  # kelvin
         mw = self.molecular_weight / 1000  # kilogram / mole
-        c0 = (zc * T * Rg/mw) ** 0.5
+        H = self.inlet_clearance / 1000  # meter
+        Hd = self.cell_vol_to_area_ratio / 1000 / gamma  # meter
+        c0 = ((zc * T * Rg/mw) / (1 + (Hd / H))) ** 0.5
         return c0
