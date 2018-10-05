@@ -1164,11 +1164,27 @@ class IsotSealElement(SealElement):
         self.cyx_fd = cyx_fd
         self.w_fd = w_fd
         self.wfr = wfr
-        self.kxx_eff = (self.kxx.coefficient + self.cxy.coefficient
-                        * self.kxx.w)
-        self.cxx_eff = (self.cxx.coefficient - self.kxy.coefficient
-                        / self.cxx.w)
-        self.kxx_fd_eff = (self.kxx_fd + self.cxy_fd
-                           * self.w_fd)
-        self.cxx_fd_eff = (self.cxx_fd - self.kxy_fd
-                           / self.w_fd)
+
+    def kxx_eff(self):
+        return (self.kxx.coefficient + self.cxy.coefficient
+                * self.kxx.w)
+
+    def cxx_eff(self):
+        return (self.cxx.coefficient - self.kxy.coefficient
+                / self.cxx.w)
+
+    def kxx_fd_eff(self):
+        return (self.kxx_fd + self.cxy_fd
+                * self.w_fd)
+
+    def cxx_fd_eff(self):
+        return (self.cxx_fd - self.kxy_fd
+                / self.w_fd)
+
+    def effective_acoustic_velocity(self):
+        zc = self.compressibility_factor  # dimensionless
+        Rg = 8.3144598  # joule / (kelvin mole)
+        T = self.reservoir_temperature + 273.15  # kelvin
+        mw = self.molecular_weight / 1000  # kilogram / mole
+        c0 = (zc * T * Rg/mw) ** 0.5
+        return c0
