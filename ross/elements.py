@@ -1164,3 +1164,11 @@ class IsotSealElement(SealElement):
         self.cyx_fd = cyx_fd
         self.w_fd = w_fd
         self.wfr = wfr
+        self.kxx_eff = (self.kxx.coefficient + self.cxy.coefficient
+                        * self.kxx.w)
+        self.cxx_eff = (self.cxx.coefficient - self.kxy.coefficient
+                        / self.cxx.w)
+        self.kxx_fd_eff = (self.kxx_fd + self.cxy_fd
+                           * self.w_fd)
+        self.cxx_fd_eff = (self.cxx_fd - self.kxy_fd
+                           / self.w_fd)
